@@ -1,0 +1,2656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>卓正医疗 · 疫苗接种查询 v2026.06.29</title>
+<style>
+  :root {
+    --primary: #5A9B5F;
+    --primary-base: #8AC88D;
+    --primary-light: #C8E3C3;
+    --primary-soft: #EAF4E7;
+    --danger: #d93025;
+    --warning: #e6a817;
+    --success: #5A9B5F;
+    --bg: #f5f9f3;
+    --card-bg: #ffffff;
+    --text: #2c3e50;
+    --text-secondary: #6b7c93;
+    --border: #dde6da;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(90,155,95,0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .header {
+    background: linear-gradient(135deg, #5A9B5F 0%, #8AC88D 100%);
+    color: white;
+    padding: 24px 0;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(90,155,95,0.2);
+  }
+  .header h1 { font-size: 24px; font-weight: 600; }
+  .header p { font-size: 14px; opacity: 0.85; margin-top: 4px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
+
+  /* 桌面端：所有 layout-split 步骤都用左右两栏布局 */
+  @media (min-width: 1024px) {
+    .container.split-active { max-width: 1180px; }
+
+    .card.layout-split {
+      padding: 0;
+      background: transparent;
+      box-shadow: none;
+      border-radius: 0;
+    }
+    .card.layout-split .step-indicator,
+    .card.layout-split > .card-title {
+      background: #fff;
+      padding: 20px 24px;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      margin-bottom: 12px;
+    }
+    .card.layout-split > .card-title { display: flex; align-items: center; }
+
+    .layout-split-body {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    .layout-left {
+      position: sticky;
+      top: 16px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      padding: 16px;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+    }
+    /* step1 左侧的导航宽度更紧凑 */
+    #step1.layout-split .layout-split-body {
+      grid-template-columns: 240px 1fr;
+    }
+    .layout-left .search-box { margin-bottom: 12px; }
+    .layout-left .category-tabs {
+      flex-direction: column;
+      gap: 4px;
+      margin: 0;
+    }
+    .layout-left .category-tab {
+      width: 100%;
+      text-align: left;
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .layout-left .category-tab .count { margin-left: auto; }
+
+    .layout-right {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      padding: 20px 24px;
+      min-height: calc(100vh - 32px);
+    }
+    .layout-right .category-section:first-child .category-header { margin-top: 0; }
+
+    /* 左侧摘要卡内的样式 */
+    .vaccine-summary .summary-vaccine {
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary-soft) 0%, #fff 100%);
+      border: 1.5px solid var(--primary-light);
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+    .vaccine-summary .summary-vaccine .label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .vaccine-summary .summary-vaccine .name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+      line-height: 1.4;
+    }
+    .vaccine-summary .summary-vaccine .full-name {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+    .vaccine-summary .summary-block {
+      padding: 12px 14px;
+      background: #fafafa;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .vaccine-summary .summary-block .block-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .vaccine-summary .summary-item {
+      display: flex;
+      gap: 8px;
+      padding: 4px 0;
+      border-bottom: 1px dashed #eee;
+    }
+    .vaccine-summary .summary-item:last-child { border-bottom: none; }
+    .vaccine-summary .summary-item .k {
+      color: var(--text-secondary);
+      flex-shrink: 0;
+      min-width: 96px;
+    }
+    .vaccine-summary .summary-item .v {
+      color: var(--text-primary);
+      flex: 1;
+      word-break: break-all;
+    }
+    .btn-row-vertical {
+      flex-direction: column;
+      gap: 8px;
+    }
+    .btn-row-vertical .btn { width: 100%; }
+  }
+
+  /* 移动端：layout-split 降级为单栏顺序排列 */
+  @media (max-width: 1023px) {
+    .vaccine-summary .summary-vaccine {
+      padding: 12px;
+      background: var(--primary-soft);
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+    .vaccine-summary .summary-vaccine .label {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .vaccine-summary .summary-vaccine .name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    .vaccine-summary .summary-block { display: none; } /* 手机端隐藏左侧摘要列表 */
+  }
+
+  /* 桌面端：隐藏结论下方的移动端摘要 */
+  @media (min-width: 1024px) {
+    .mobile-summary { display: none; }
+  }
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+  }
+  .card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .icon { font-size: 22px; }
+  .step-indicator {
+    display: flex;
+    align-items: center;
+    margin-bottom: 28px;
+    gap: 0;
+  }
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    position: relative;
+  }
+  .step-circle {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+    background: var(--border);
+    color: #999;
+    transition: all 0.3s;
+  }
+  .step-item.active .step-circle {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(90,155,95,0.2);
+  }
+  .step-item.done .step-circle {
+    background: var(--success);
+    color: white;
+  }
+  .step-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #bbb;
+    white-space: nowrap;
+    transition: color 0.3s;
+  }
+  .step-item.active .step-label { color: var(--primary); font-weight: 600; }
+  .step-item.done .step-label { color: var(--success); }
+  .step-line {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    margin: 0 12px;
+    transition: background 0.3s;
+  }
+  .step-line.done { background: var(--success); }
+  @media (max-width: 480px) {
+    .step-label { font-size: 11px; }
+    .step-line { margin: 0 6px; }
+  }
+  .form-group { margin-bottom: 18px; }
+  .form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .form-hint {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  select, input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--text);
+    background: white;
+    transition: border-color 0.2s;
+    font-family: inherit;
+  }
+  select:focus, input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(90,155,95,0.15);
+  }
+  .radio-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .radio-option {
+    flex: 1;
+    min-width: 100px;
+  }
+  .radio-option input { display: none; }
+  .radio-option label {
+    display: block;
+    padding: 12px 16px;
+    text-align: center;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    background: white;
+  }
+  .radio-option input:checked + label {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    color: var(--primary);
+  }
+  .radio-option label:hover {
+    border-color: var(--primary);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    width: 100%;
+  }
+  .btn-primary:hover { background: #4A8B4F; }
+  .btn-secondary {
+    background: white;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+  }
+  .btn-secondary:hover { background: var(--primary-soft); }
+  .btn-outline {
+    background: white;
+    color: var(--text-secondary);
+    border: 1.5px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--text-secondary); }
+  .btn-row { display: flex; gap: 12px; margin-top: 20px; }
+  .result-box {
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+  .result-box.eligible {
+    background: var(--primary-soft);
+    border: 1.5px solid var(--primary);
+  }
+  .result-box.conditional {
+    background: #fff8e6;
+    border: 1.5px solid #e6a817;
+  }
+  .result-box.ineligible {
+    background: #fdecea;
+    border: 1.5px solid #d93025;
+  }
+  .result-box.info {
+    background: #e8f0fe;
+    border: 1.5px solid #4a90d9;
+  }
+  .result-icon { font-size: 28px; margin-bottom: 8px; }
+  .result-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .result-detail { color: var(--text-secondary); font-size: 14px; }
+  .result-detail ul { padding-left: 20px; margin-top: 8px; }
+  .result-detail li { margin-bottom: 4px; }
+  .vaccine-card {
+    padding: 14px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 10px;
+    background: #fff;
+  }
+  .vaccine-card:hover {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+  }
+  .vaccine-card.selected {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+  }
+  .vaccine-card .name { font-size: 16px; font-weight: 600; }
+  .vaccine-card .desc { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+
+  /* 分类视图 */
+  .category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0 18px;
+    padding-bottom: 2px;
+  }
+  .category-tab {
+    padding: 8px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    background: #fff;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .category-tab:hover {
+    border-color: var(--primary-base);
+    color: var(--primary);
+  }
+  .category-tab.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+  .category-tab .count {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 0 7px;
+    border-radius: 10px;
+    font-size: 12px;
+    background: rgba(0,0,0,.08);
+  }
+  .category-tab.active .count {
+    background: rgba(255,255,255,.25);
+    color: #fff;
+  }
+  .search-box {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    margin-bottom: 14px;
+    box-sizing: border-box;
+    transition: border-color .2s;
+  }
+  .search-box:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+  .category-section {
+    margin-bottom: 22px;
+  }
+  .category-section:last-child { margin-bottom: 0; }
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--border);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary);
+  }
+  .category-header .cat-icon { font-size: 18px; }
+  .category-header .cat-desc {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-secondary);
+  }
+  .vaccine-card .age-tag {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 1px 8px;
+    border-radius: 8px;
+    background: #eef5ec;
+    color: #5A9B5F;
+    font-size: 11px;
+    font-weight: 500;
+    vertical-align: middle;
+  }
+  /* 库存徽标：紧贴在 age-tag 后，颜色按状态区分 */
+  .vaccine-card .stock-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    vertical-align: middle;
+    cursor: help;
+  }
+  .stock-badge.stock-ok  { background: #e6f4e6; color: #2d7a36; }
+  .stock-badge.stock-low { background: #fff4d6; color: #b07700; }
+  .stock-badge.stock-out { background: #fbe5e5; color: #c0392b; }
+  .empty-hint {
+    padding: 32px 0;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+  /* 模式切换 Tab */
+  .mode-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+  .mode-tab {
+    flex: 1;
+    padding: 14px 20px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #fff;
+    color: var(--text-secondary);
+    border-bottom: 3px solid transparent;
+    user-select: none;
+  }
+  .mode-tab:hover { color: var(--primary); }
+  .mode-tab.active {
+    color: var(--primary);
+    background: var(--primary-soft);
+    border-bottom: 3px solid var(--primary);
+  }
+  .mode-tab .tab-icon { margin-right: 6px; }
+
+  /* 按月龄推荐视图 */
+  .schedule-view { padding: 0; }
+  .age-input-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 16px 20px;
+    background: var(--primary-soft);
+    border-radius: 12px;
+    border: 1.5px solid var(--primary-light);
+  }
+  .age-input-row label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary);
+    flex-shrink: 0;
+  }
+  .age-input-row input, .age-input-row select {
+    border-color: var(--primary-light);
+  }
+  .age-input-row input:focus, .age-input-row select:focus {
+    border-color: var(--primary);
+  }
+
+  .schedule-result-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background: #fff;
+    transition: all 0.15s;
+  }
+  .schedule-result-card:hover {
+    border-color: var(--primary-base);
+    background: var(--primary-soft);
+  }
+  .schedule-result-card .v-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .schedule-result-card .v-info { flex: 1; }
+  .schedule-result-card .v-name {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .schedule-result-card .v-note {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+  .schedule-result-card .v-stock { flex-shrink: 0; }
+  .schedule-result-card .v-link {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--primary);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .schedule-result-card .v-link:hover { background: #4A8B4F; }
+  .schedule-result-card .v-link.disabled {
+    background: var(--border);
+    color: var(--text-secondary);
+    cursor: default;
+  }
+
+  /* ===== 完整时间轴 — 紧凑表格式 ===== */
+  .timeline-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--primary);
+    transition: all 0.15s;
+    margin-top: 16px;
+    user-select: none;
+  }
+  .timeline-toggle:hover { background: var(--primary-soft); border-color: var(--primary); }
+  .timeline-toggle .chevron { transition: transform 0.3s; }
+  .timeline-toggle.expanded .chevron { transform: rotate(180deg); }
+  .timeline-panel { display: none; }
+  .timeline-panel.show { display: block; }
+
+  .tl-table {
+    margin-top: 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .tl-section-label {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary);
+    background: var(--primary-soft);
+    border-bottom: 1.5px solid var(--border);
+    letter-spacing: 0.5px;
+  }
+  .tl-section-label.adult {
+    color: #4a6fa5;
+    background: #f0f4ff;
+  }
+
+  .tl-row {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid #eef0f0;
+  }
+  .tl-row:last-child { border-bottom: none; }
+  .tl-row:hover { background: #fafdf9; }
+
+  .tl-age {
+    flex-shrink: 0;
+    width: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary);
+    background: #f5f9f3;
+    border-right: 1px solid #eef0f0;
+    text-align: center;
+    padding: 0 4px;
+  }
+  .tl-row.adult .tl-age {
+    color: #4a6fa5;
+    background: #f6f8fc;
+  }
+
+  .tl-vaxes {
+    flex: 1;
+    padding: 8px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    align-items: center;
+    min-height: 42px;
+  }
+
+  .tl-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    border-radius: 7px;
+    font-size: 14px;
+    line-height: 1.3;
+    background: #f0f7ee;
+    border: 1px solid #d8e8d4;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .tl-chip.free {
+    background: #eef3fe;
+    border-color: #c9d8f5;
+  }
+  .tl-chip.hk {
+    background: #fff8e8;
+    border-color: #f0d78c;
+  }
+  .tl-chip .tl-chip-note {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+  .tl-chip .badge,
+  .tl-chip .stock-badge {
+    font-size: 11px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .timeline-note {
+    padding: 12px 18px;
+    background: #fff8e6;
+    border: 1px solid #f0d78c;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.7;
+    margin-top: 16px;
+  }
+  .schedule-empty {
+    padding: 32px 0;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+
+  .hidden { display: none !important; }
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .tag-green { background: var(--primary-soft); color: var(--primary); }
+  .tag-yellow { background: #fff8e6; color: #b8860b; }
+  .tag-red { background: #fdecea; color: #d93025; }
+  .tag-blue { background: #e8f0fe; color: #4a90d9; }
+  .disclaimer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 24px;
+    padding: 12px;
+    background: #fff8e6;
+    border-radius: 8px;
+    border: 1px solid #f0d78c;
+  }
+  .checklist { margin-top: 12px; }
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .check-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .age-input-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .age-input-group select, .age-input-group input {
+    flex: 1;
+  }
+  @media (max-width: 480px) {
+    .card { padding: 20px; }
+    .radio-group { flex-direction: column; }
+    .age-input-group { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🛡️ 疫苗接种查询</h1>
+  <p>卓正医疗 · 预约端快速筛查工具</p>
+</div>
+
+<div class="container" id="page-container">
+
+  <!-- 模式切换 -->
+  <div class="mode-tabs" id="mode-tabs">
+    <div class="mode-tab active" onclick="switchMode('screen')" id="mode-screen">
+      <span class="tab-icon">💉</span>按疫苗筛查
+    </div>
+    <div class="mode-tab" onclick="switchMode('schedule')" id="mode-schedule">
+      <span class="tab-icon">📋</span>按月龄推荐
+    </div>
+  </div>
+
+  <!-- 按月龄推荐视图 -->
+  <div id="schedule-view" class="card hidden">
+    <div class="card-title"><span class="icon">📋</span> 输入月龄/年龄，查看推荐接种计划</div>
+
+    <div class="age-input-row">
+      <label>月龄 / 年龄：</label>
+      <input type="number" id="schedule-age" placeholder="请输入" min="0" max="120" style="flex:1"
+             oninput="renderScheduleResult()">
+      <select id="schedule-age-unit" onchange="renderScheduleResult()" style="flex:0.6">
+        <option value="months">月龄</option>
+        <option value="years">岁</option>
+      </select>
+    </div>
+
+    <div id="schedule-result">
+      <!-- JS 渲染 -->
+    </div>
+
+    <!-- 可展开的完整时间轴 -->
+    <div class="timeline-toggle" onclick="toggleTimeline()" id="timeline-toggle">
+      📖 展开完整推荐计划（1月→6岁 + 成人推荐） <span class="chevron">▼</span>
+    </div>
+    <div class="timeline-panel" id="timeline-panel">
+      <div id="timeline-content">
+        <!-- JS 渲染 -->
+      </div>
+      <div class="timeline-note">
+        <strong>附注：</strong><br>
+        1. 带*疫苗为香港疫苗，需前往卓正香港诊所接种<br>
+        2. 五联疫苗只能单独接种，其它疫苗可以2针同时接种<br>
+        3. 6岁百白破与ACYW135多糖不能同时接种（需分开预约）<br>
+        4. 推荐每年年底接种流感疫苗，≥6月龄即可；6月龄-8岁首次接种需2剂间隔1月<br>
+        5. 本计划基于卓正2023年12月31日更新版本，具体以医生面诊为准
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 1: Select Vaccine -->
+  <div id="step1" class="card layout-split">
+    <div class="step-indicator">
+      <div class="step-item active">
+        <div class="step-circle">1</div>
+        <div class="step-label">选择疫苗</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item">
+        <div class="step-circle">2</div>
+        <div class="step-label">信息筛查</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item">
+        <div class="step-circle">3</div>
+        <div class="step-label">查看结论</div>
+      </div>
+    </div>
+    <div class="card-title"><span class="icon">💉</span> 选择要查询的疫苗</div>
+
+    <div class="layout-split-body">
+      <!-- 左侧：搜索 + 分类导航 -->
+      <aside class="layout-left">
+        <input type="text" id="vaccine-search" class="search-box"
+               placeholder="🔍 搜索疫苗名称..."
+               oninput="filterVaccines()">
+
+        <div class="category-tabs" id="category-tabs">
+          <!-- 渲染：全部 / 婴幼儿 / 儿童 / 青少年 / 成人 / 老人 -->
+        </div>
+      </aside>
+
+      <!-- 右侧：疫苗卡片列表 -->
+      <section class="layout-right">
+        <div id="vaccine-list">
+          <!-- 由 JS 渲染分组卡片 -->
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Step 2: Screening Questions -->
+  <div id="step2" class="card layout-split hidden">
+    <div class="step-indicator">
+      <div class="step-item done">
+        <div class="step-circle">✓</div>
+        <div class="step-label">选择疫苗</div>
+      </div>
+      <div class="step-line done"></div>
+      <div class="step-item active">
+        <div class="step-circle">2</div>
+        <div class="step-label">信息筛查</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item">
+        <div class="step-circle">3</div>
+        <div class="step-label">查看结论</div>
+      </div>
+    </div>
+    <div class="card-title"><span class="icon">📋</span> 接种者信息筛查</div>
+
+    <div class="layout-split-body">
+      <!-- 左侧：当前疫苗信息卡 + 操作按钮 -->
+      <aside class="layout-left vaccine-summary">
+        <div id="step2-summary"></div>
+        <div class="btn-row btn-row-vertical">
+          <button class="btn btn-primary" onclick="checkEligibility()">✓ 查看筛查结果</button>
+          <button class="btn btn-outline" onclick="goToStep(1)">← 返回选择疫苗</button>
+        </div>
+      </aside>
+
+      <!-- 右侧：问卷 -->
+      <section class="layout-right">
+        <div id="questions-container"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Step 3: Result -->
+  <div id="step3" class="card layout-split hidden">
+    <div class="step-indicator">
+      <div class="step-item done">
+        <div class="step-circle">✓</div>
+        <div class="step-label">选择疫苗</div>
+      </div>
+      <div class="step-line done"></div>
+      <div class="step-item done">
+        <div class="step-circle">✓</div>
+        <div class="step-label">信息筛查</div>
+      </div>
+      <div class="step-line done"></div>
+      <div class="step-item active">
+        <div class="step-circle">3</div>
+        <div class="step-label">查看结论</div>
+      </div>
+    </div>
+    <div class="card-title"><span class="icon">📊</span> 筛查结论</div>
+
+    <div class="layout-split-body">
+      <!-- 左侧：筛查摘要 + 操作按钮 -->
+      <aside class="layout-left vaccine-summary">
+        <div id="step3-summary"></div>
+        <div class="btn-row btn-row-vertical">
+          <button class="btn btn-outline" onclick="goToStep(2)">← 修改信息</button>
+          <button class="btn btn-secondary" onclick="resetAll()">🔄 重新查询</button>
+        </div>
+      </aside>
+
+      <!-- 右侧：结论 -->
+      <section class="layout-right">
+        <div id="result-container"></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    ⚠️ 本工具为预约端快速筛查参考，不构成最终医学判断。最终接种决定需由执业医师在面诊后作出。如有疑问请引导客户使用卓正诊所小程序在线问诊。<br>
+    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-06-30 17:18</span> · 推荐计划：卓正2023年12月31日更新版 · 版本 v2026.07.01（支持自动刷新库存）</span>
+  </div>
+
+</div>
+
+<script>
+// State
+let selectedVaccine = null;
+let userAnswers = {};
+let activeCategory = 'all';
+let searchQuery = '';
+let currentMode = 'screen'; // 'screen' | 'schedule'
+
+// ========== 卓正推荐疫苗计划数据（2023年12月31日更新版）==========
+// schedule: 月龄→疫苗推荐列表
+// 每条: { id (对应 vaccineCatalog), label (显示名), note (备注), type ('self'|'free'|'hk') }
+const vaccineSchedule = [
+  { age: '1月',   ageMonths: 1,   vaccines: [
+    { id: 'hepb',         label: '乙肝疫苗', note: '第2针', type: 'self' }
+  ]},
+  { age: '42天', ageMonths: 1.4, vaccines: [
+    { id: 'rotavirus',    label: '轮状病毒疫苗', note: '第1剂', type: 'self' }
+  ]},
+  { age: '2月',   ageMonths: 2,   vaccines: [
+    { id: 'pentavalent',  label: '五联疫苗', note: '第1针', type: 'self' },
+    { id: 'pcv13',        label: '13价肺炎疫苗', note: '第1针', type: 'self' }
+  ]},
+  { age: '3月',   ageMonths: 3,   vaccines: [
+    { id: 'pentavalent',  label: '五联疫苗', note: '第2针', type: 'self' },
+    { id: 'meningococcal',label: 'ACYW135结合疫苗', note: '结合疫苗第1针', type: 'self' },
+    { id: 'rotavirus',    label: '轮状病毒疫苗', note: '第2剂', type: 'self' }
+  ]},
+  { age: '4月',   ageMonths: 4,   vaccines: [
+    { id: 'pentavalent',  label: '五联疫苗', note: '第3针', type: 'self' },
+    { id: 'meningococcal',label: 'ACYW135结合疫苗', note: '结合疫苗第2针', type: 'self' },
+    { id: 'pcv13',        label: '13价肺炎疫苗', note: '第2针', type: 'self' },
+    { id: 'rotavirus',    label: '轮状病毒疫苗', note: '最后一剂', type: 'self' }
+  ]},
+  { age: '5月',   ageMonths: 5,   vaccines: [
+    { id: 'meningococcal',label: 'ACYW135结合疫苗', note: '结合疫苗第3针', type: 'self' }
+  ]},
+  { age: '6月',   ageMonths: 6,   vaccines: [
+    { id: 'hepb',         label: '乙肝疫苗', note: '第3针', type: 'self' },
+    { id: 'pcv13',        label: '13价肺炎疫苗', note: '第3针', type: 'self' },
+    { id: 'hfmd',         label: '手足口疫苗', note: '第1针', type: 'self' },
+    { id: 'flu',          label: '流感疫苗', note: '每年推荐，≥6月龄即可', type: 'self', annual: true }
+  ]},
+  { age: '7月',   ageMonths: 7,   vaccines: [
+    { id: 'hfmd',         label: '手足口疫苗', note: '第2针', type: 'self' }
+  ]},
+  { age: '8月',   ageMonths: 8,   vaccines: [
+    { id: 'mmr',            label: '麻腮风疫苗', note: '国家免疫规划 · 第1针', type: 'free' },
+    { id: 'je',             label: '乙脑疫苗', note: '国家免疫规划 · 首针', type: 'free' }
+  ]},
+  { age: '9月',   ageMonths: 9,   vaccines: [
+    { id: null,           label: '*ACYW135结合疫苗', note: '仅香港诊所接种', type: 'hk' },
+    { id: 'ac_conjugate', label: 'AC结合A+C疫苗', note: '可替代A群流脑 · 133元', type: 'self' }
+  ]},
+  { age: '12月',  ageMonths: 12,  vaccines: [
+    { id: 'meningococcal',label: 'ACYW135结合疫苗', note: '第4针加强', type: 'self' },
+    { id: 'hepa',         label: '甲肝疫苗', note: '第1剂', type: 'self' },
+    { id: 'varicella_free',label: '水痘疫苗', note: '第1针 · 2014.12.1后出生免费', type: 'free' },
+    { id: 'pcv13',        label: '13价肺炎疫苗', note: '加强针', type: 'self' }
+  ]},
+  { age: '15月',  ageMonths: 15,  vaccines: [
+    { id: null,           label: '*ACYW135结合疫苗', note: '仅香港诊所接种', type: 'hk' }
+  ]},
+  { age: '18月',  ageMonths: 18,  vaccines: [
+    { id: 'pentavalent',  label: '五联疫苗', note: '第4针加强', type: 'self' },
+    { id: 'mmr',          label: '麻腮风疫苗', note: '第2针', type: 'free' },
+    { id: 'hepa',         label: '甲肝疫苗', note: '第2剂', type: 'self' }
+  ]},
+  { age: '24月',  ageMonths: 24,  vaccines: [
+    { id: 'je',           label: '乙脑疫苗', note: '加强针', type: 'free' }
+  ]},
+  { age: '3岁',   ageMonths: 36,  vaccines: [
+    { id: 'meningococcal_ps', label: 'ACYW135多糖疫苗', note: '第1针', type: 'self' }
+  ]},
+  { age: '4岁',   ageMonths: 48,  vaccines: [
+    { id: 'varicella_free',label: '水痘疫苗', note: '第2针', type: 'free' }
+  ]},
+  { age: '6岁',   ageMonths: 72,  vaccines: [
+    { id: 'dtap_dt',     label: '百白破疫苗', note: '⚠️ 不能与流脑多糖同日接种', type: 'free' },
+    { id: 'meningococcal_ps', label: 'ACYW135多糖疫苗', note: '第2针 ⚠️ 不能与百白破同日接种', type: 'self' }
+  ]},
+  // ─── 6岁以上青少年 & 成人推荐 ───
+  { age: '7岁',  ageMonths: 84,  vaccines: [
+    { id: 'dtap_dt',       label: '白破疫苗', note: '7岁白破加强针', type: 'free' },
+    { id: 'hepb',          label: '乙肝疫苗', note: '如抗体阴性需补种加强', type: 'self' }
+  ]},
+  { age: '9岁',  ageMonths: 108,  isRange: true, rangeMax: 216, vaccines: [
+    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀9-45岁 / ♂16-26岁 · 1310元/针', type: 'self' },
+    { id: 'hepb',          label: '乙肝疫苗', note: '青少年补种或加强', type: 'self' },
+    { id: 'flu',           label: '流感疫苗', note: '每年推荐接种', type: 'self', annual: true }
+  ]},
+  { age: '成人',  ageMonths: 216,  isRange: true, rangeMax: 600, vaccines: [
+    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀9-45岁 / ♂16-26岁 · 1310元/针', type: 'self' },
+    { id: 'hepb',          label: '乙肝疫苗', note: '成人补种或加强，全年龄段', type: 'self' },
+    { id: 'flu',           label: '流感疫苗', note: '每年推荐接种', type: 'self', annual: true },
+    { id: 'ppv23',         label: '23价肺炎疫苗', note: '≥2岁高危人群推荐；成人普遍推荐 · 260元', type: 'self' }
+  ]},
+  { age: '≥50岁',  ageMonths: 600,  isRange: true, rangeMax: 1200, vaccines: [
+    { id: 'shingles',      label: '带状疱疹疫苗', note: '≥50岁推荐 · 共2剂间隔2-6月 · 1608元/剂', type: 'self' },
+    { id: 'ppv23',         label: '23价肺炎疫苗', note: '≥50岁普遍推荐 · 260元/针', type: 'self' },
+    { id: 'flu',           label: '流感疫苗', note: '每年推荐，老年人群尤其重要', type: 'self', annual: true },
+    { id: 'hepb',          label: '乙肝疫苗', note: '抗体阴性需补种', type: 'self' }
+  ]}
+];
+
+// 疫苗清单 + 分类元数据（categories 可重复，让一个疫苗同时出现在多个标签下）
+// stock 字段：剩余库存（来自 2026-06-24 18:38 钉钉「蛇口疫苗库存+问题转交登记」同步快照）
+// ⚠️ 重要：钉钉表「剩余库存」列是公式列，xlsx 导出时缓存值不准，
+//          下面 stock 全部按公式 (库存数量 - 远程 - 会员 - 商保 - 现场) 重算的真值。
+// 显示规则：≥10 🟢 充足 / 1-9 🟡 紧张 / 0 或 null 🔴 无货
+const vaccineCatalog = [
+  { id: 'rotavirus',        name: '口服五价轮状疫苗（默沙东 RotaTeq®）',                 desc: '6周-32周龄婴儿 · 293元 · 共3剂',                       ageTag: '6周-32周龄', cats: ['infant'],                                  stock: 65,  stockNote: '默沙东 65 支' },
+  { id: 'pentavalent',      name: '五联疫苗（巴斯德）',                                   desc: '2、3、4月龄 + 18-24月加强 · 638元 · 共4剂',           ageTag: '2月-3岁',    cats: ['infant'],                                  stock: 60,  stockNote: '巴斯德 60 支' },
+  { id: 'pcv13',            name: '13价肺炎球菌疫苗（PCV13）',                            desc: '6周-5岁11月 · 辉瑞698元 / 国产沃森613元',              ageTag: '6周-5岁',    cats: ['infant', 'child'],                         stock: 75,  stockNote: '辉瑞 74 / 沃森 1' },
+  { id: 'meningococcal',    name: 'ACYW135流脑<strong style="color:#5A9B5F">结合</strong>疫苗（康希诺）', desc: '3月龄-6周岁 · 430元 · 按首针月龄定剂次（4/2/1/1针）', ageTag: '3月-6岁',    cats: ['infant', 'child'],                         stock: 63,  stockNote: '康希诺 63 支' },
+  { id: 'hfmd',             name: '手足口疫苗（医科院 EV71 二倍体）',                     desc: '6月龄起，超5岁不能接种 · 188元 · 共2针',                ageTag: '6月-5岁',    cats: ['infant', 'child'],                         stock: 44,  stockNote: '医科院 44 支' },
+  { id: 'hepa',             name: '甲肝灭活疫苗（国产）',                                 desc: '18月-15岁 · 138-213元 · 共2剂间隔6月',                ageTag: '18月-15岁',  cats: ['infant', 'child', 'teen'],                 stock: 89,  stockNote: '北京科兴 46 / 艾美行动 43' },
+  { id: 'meningococcal_ps', name: 'ACYW135流脑<strong style="color:#5A9B5F">多糖</strong>疫苗（绿竹）', desc: '3岁/6岁各一针 · 148元 · 无年龄上限',                   ageTag: '≥3岁',        cats: ['child'],                                   stock: 8,   stockNote: '绿竹 8 支' },
+  { id: 'dtap_dt',          name: '白破 / 百白破疫苗（武汉生物）',                        desc: '白破:7-11岁11月 / 百白破:6-6岁11月 · ⚠️不能与流脑多糖同接', ageTag: '6-11岁',     cats: ['child'],                                   stock: 3,   stockNote: '白破 1 / 百白破 2' },
+  { id: 'hpv',              name: 'HPV 九价疫苗（默沙东）',                               desc: '9-45岁女性 / 16-26岁男性 · 1310元/针 · 单针售卖',     ageTag: '9-45岁',     cats: ['teen', 'adult'],                           stock: 7,   stockNote: '默沙东 7 支' },
+  { id: 'hepb',             name: '乙肝疫苗',                                             desc: '预防乙型肝炎病毒感染 · 全年龄段 · 共3剂',                ageTag: '全年龄',      cats: ['infant', 'child', 'teen', 'adult'],        stock: 86,  stockNote: '儿童 43 / 成人 43' },
+  { id: 'flu',              name: '流感疫苗（4 种可选）',                                 desc: '鼻喷/巴斯德三价/巴斯德四价/华兰四价 · ≥6月龄 · 每年接种', ageTag: '≥6月龄',    cats: ['infant', 'child', 'teen', 'adult', 'senior'], stock: 0,   stockNote: '当前缺货，下批到苗约 9 月' },
+  { id: 'ppv23',            name: '23价肺炎多糖疫苗（默沙东）',                           desc: '≥2岁，成人也可接种 · 260元 · 单针',                    ageTag: '≥2岁',        cats: ['adult', 'senior'],                         stock: 1,   stockNote: '默沙东 1 支' },
+  { id: 'shingles',         name: '带状疱疹疫苗（Shingrix®）',                            desc: '预防带状疱疹及后遗神经痛 · ≥50岁成人 · 共2剂',          ageTag: '≥50岁',       cats: ['senior'],                                  stock: 22,  stockNote: 'GSK 22 支' },
+  // ─── 免费疫苗（国家免疫规划，不显示筛查卡片，但推荐计划里带库存徽标）───
+  { id: 'mmr',              name: '麻腮风疫苗（MMR）',                                    desc: '国家免疫规划 · 8月+18月各一针',                         ageTag: '8月-18月',    cats: ['infant', 'child'],                         stock: 47,  stockNote: '上海生物 47 支', vaccineType: 'free' },
+  { id: 'je',               name: '乙型脑炎疫苗',                                         desc: '国家免疫规划 · 8月首针 + 24月加强',                     ageTag: '8月-24月',    cats: ['infant', 'child'],                         stock: 33,  stockNote: '武汉生物 33 支', vaccineType: 'free' },
+  { id: 'varicella_free',   name: '水痘疫苗（免费）',                                      desc: '国家免疫规划 · 2014.12.1后出生 · 12月+4岁各一针',      ageTag: '12月-4岁',    cats: ['infant', 'child'],                         stock: 42,  stockNote: '北京民海 42 支', vaccineType: 'free' },
+  // ─── 补充自费疫苗 ───
+  { id: 'ac_conjugate',     name: 'AC群流脑<strong style="color:#5A9B5F">结合</strong>疫苗（绿竹A+C）', desc: '替代A群流脑 · 133元 · 结合工艺免疫效果更好',           ageTag: '6月-3岁',     cats: ['infant', 'child'],                         stock: 0,   stockNote: '绿竹暂时缺货', vaccineType: 'self' },
+  { id: 'varicella_paid',   name: '水痘疫苗（自费）',                                      desc: '非2014.12.1后出生需自费接种 · 缺货',                   ageTag: '≥12月',       cats: ['infant', 'child', 'teen'],                 stock: 0,   stockNote: '暂时缺货', vaccineType: 'self' },
+  { id: 'general',          name: '🔍 通用筛查（不确定要打哪种疫苗）',                    desc: '先做基础健康筛查，了解一般接种禁忌',                    ageTag: '',           cats: ['general'] },
+];
+
+// 库存徽标 helper
+function stockBadge(v) {
+  if (v.stock == null) return '';
+  let cls, label;
+  if (v.stock === 0)       { cls = 'stock-out';   label = '🔴 暂时缺货'; }
+  else if (v.stock < 10)   { cls = 'stock-low';   label = `🟡 紧张 · ${v.stock}支`; }
+  else                     { cls = 'stock-ok';    label = `🟢 充足 · ${v.stock}支`; }
+  const tip = v.stockNote ? ` title="${v.stockNote}"` : '';
+  return `<span class="stock-badge ${cls}"${tip}>${label}</span>`;
+}
+
+const categoryDefs = [
+  { id: 'all',     label: '全部',     icon: '📋', desc: '按生命阶段分组显示' },
+  { id: 'infant',  label: '婴幼儿',   icon: '👶', desc: '0–3 岁 · 婴幼儿计划免疫和自费疫苗' },
+  { id: 'child',   label: '儿童',     icon: '🧒', desc: '3–12 岁 · 学龄前后儿童常用疫苗' },
+  { id: 'teen',    label: '青少年',   icon: '👦', desc: '12–18 岁 · HPV、甲肝、流感等' },
+  { id: 'adult',   label: '成人',     icon: '🧑', desc: '18–50 岁 · HPV、流感、肺炎等' },
+  { id: 'senior',  label: '老人',     icon: '👵', desc: '≥50 岁 · 带状疱疹、肺炎、流感' },
+  { id: 'general', label: '通用筛查', icon: '🔍', desc: '不确定打哪种疫苗时使用' },
+];
+
+// ─── 自动从 stock-data.json 刷新库存（无 CORS 限制，同源加载）───
+(function autoRefreshStock() {
+  fetch('stock-data.json?t=' + Date.now())
+    .then(r => r.json())
+    .then(data => {
+      if (!data || !data.vaccines) return;
+      let updated = 0;
+      for (const [vid, info] of Object.entries(data.vaccines)) {
+        const item = vaccineCatalog.find(c => c.id === vid);
+        if (item && info.stock !== undefined) {
+          item.stock = info.stock;
+          if (info.stockNote) item.stockNote = info.stockNote;
+          updated++;
+        }
+      }
+      if (updated > 0) {
+        // 更新页面底部的快照时间
+        const snapEl = document.getElementById('stock-snapshot-time');
+        if (snapEl && data.updated) {
+          const dt = data.updated.replace('T', ' ').substring(0, 16);
+          snapEl.textContent = '库存快照：' + dt + '（自动刷新）';
+        }
+      }
+      console.log('[stock-refresh] 已更新 ' + updated + ' 种疫苗库存');
+    })
+    .catch(() => {
+      console.log('[stock-refresh] 加载远程库存失败，使用内置数据');
+    });
+})();
+
+function renderCategoryTabs() {
+  const tabsEl = document.getElementById('category-tabs');
+  tabsEl.innerHTML = categoryDefs.map(c => {
+    const count = c.id === 'all' ? vaccineCatalog.filter(v => v.id !== 'general' && v.vaccineType !== 'free').length
+                                 : vaccineCatalog.filter(v => v.cats.includes(c.id) && v.vaccineType !== 'free').length;
+    return `<div class="category-tab ${c.id === activeCategory ? 'active' : ''}"
+                 onclick="switchCategory('${c.id}')">
+              ${c.icon} ${c.label}<span class="count">${count}</span>
+            </div>`;
+  }).join('');
+}
+
+function switchCategory(catId) {
+  activeCategory = catId;
+  renderCategoryTabs();
+  renderVaccineList();
+}
+
+function filterVaccines() {
+  searchQuery = (document.getElementById('vaccine-search').value || '').trim().toLowerCase();
+  renderVaccineList();
+}
+
+function renderVaccineList() {
+  const listEl = document.getElementById('vaccine-list');
+
+  // 免费/隐藏疫苗不在筛查卡片中显示
+  const visibleCatalog = vaccineCatalog.filter(v => v.id !== 'general' && v.vaccineType !== 'free');
+
+  // 搜索过滤（在原始 name + desc 上做匹配，去掉 HTML 标签）
+  const stripHtml = s => s.replace(/<[^>]+>/g, '');
+  const matchesQuery = v => {
+    if (!searchQuery) return true;
+    const text = stripHtml(v.name + ' ' + v.desc).toLowerCase();
+    return text.includes(searchQuery);
+  };
+
+  const cardHtml = v => `
+    <div class="vaccine-card" data-vaccine="${v.id}" onclick="selectVaccine('${v.id}', this)">
+      <div class="name">${v.name}${v.ageTag ? `<span class="age-tag">${v.ageTag}</span>` : ''}${stockBadge(v)}</div>
+      <div class="desc">${v.desc}</div>
+    </div>`;
+
+  // "全部" 视图：按分组展示
+  if (activeCategory === 'all') {
+    const groups = categoryDefs.filter(c => c.id !== 'all').map(cat => {
+      const items = visibleCatalog.filter(v => v.cats.includes(cat.id) && matchesQuery(v));
+      if (items.length === 0) return '';
+      return `
+        <div class="category-section">
+          <div class="category-header">
+            <span class="cat-icon">${cat.icon}</span>
+            <span>${cat.label}</span>
+            <span class="cat-desc">${cat.desc}</span>
+          </div>
+          ${items.map(cardHtml).join('')}
+        </div>`;
+    }).join('');
+    listEl.innerHTML = groups || '<div class="empty-hint">没有找到匹配的疫苗，换个关键词试试 🌱</div>';
+    return;
+  }
+
+  // 单分类视图
+  const items = visibleCatalog.filter(v => v.cats.includes(activeCategory) && matchesQuery(v));
+  if (items.length === 0) {
+    listEl.innerHTML = '<div class="empty-hint">该分类下暂无匹配的疫苗 🌱</div>';
+    return;
+  }
+  const cat = categoryDefs.find(c => c.id === activeCategory);
+  listEl.innerHTML = `
+    <div class="category-section">
+      <div class="category-header">
+        <span class="cat-icon">${cat.icon}</span>
+        <span>${cat.label}</span>
+        <span class="cat-desc">${cat.desc}</span>
+      </div>
+      ${items.map(cardHtml).join('')}
+    </div>`;
+}
+
+// 页面加载后初始化
+document.addEventListener('DOMContentLoaded', () => {
+  // 启用宽容器
+  document.getElementById('page-container')?.classList.add('split-active');
+  renderCategoryTabs();
+  renderVaccineList();
+  renderTimelineContent(); // 预渲染时间轴
+});
+
+// ========== 模式切换逻辑 ==========
+
+function switchMode(mode) {
+  currentMode = mode;
+  document.getElementById('mode-screen').classList.toggle('active', mode === 'screen');
+  document.getElementById('mode-schedule').classList.toggle('active', mode === 'schedule');
+
+  // 显示/隐藏对应视图
+  document.getElementById('schedule-view').classList.toggle('hidden', mode !== 'schedule');
+  document.getElementById('step1').classList.toggle('hidden', mode !== 'screen');
+  // 如果正在 step2/step3 且切换到 schedule，也隐藏
+  if (mode === 'schedule') {
+    document.getElementById('step2').classList.add('hidden');
+    document.getElementById('step3').classList.add('hidden');
+  }
+
+  const pc = document.getElementById('page-container');
+  if (pc) pc.classList.add('split-active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ========== 按月龄推荐逻辑 ==========
+
+function getScheduleAgeMonths() {
+  const val = parseFloat(document.getElementById('schedule-age').value || '0');
+  const unit = document.getElementById('schedule-age-unit').value;
+  return unit === 'years' ? val * 12 : val;
+}
+
+function renderScheduleResult() {
+  const months = getScheduleAgeMonths();
+  const el = document.getElementById('schedule-result');
+
+  if (months <= 0 || isNaN(months)) {
+    el.innerHTML = '<div class="schedule-empty">请输入月龄或年龄，查看该阶段推荐接种的疫苗 🌱</div>';
+    return;
+  }
+
+  let ageLabel = months < 12 ? `${months}月龄` : (months < 84 ? `${(months/12).toFixed(1)}岁` : `${Math.round(months/12)}岁`);
+
+  // 精确月龄匹配
+  let currentStage = vaccineSchedule.find(s => s.ageMonths === months);
+
+  if (currentStage) {
+    let rangeTag = currentStage.isRange ? '（该年龄段推荐）' : '';
+    let html = `<div style="margin-bottom:8px;font-size:14px;color:var(--primary);font-weight:600;">
+      📍 ${ageLabel} ${rangeTag}的推荐接种</div>`;
+    html += currentStage.vaccines.map(v => renderScheduleCard(v)).join('');
+    el.innerHTML = html;
+    return;
+  }
+
+  // 没有精确匹配 → 找匹配的年龄段（isRange）或最近的节点
+  let matchedRange = vaccineSchedule.find(s =>
+    s.isRange && months >= s.ageMonths && months <= (s.rangeMax || 9999)
+  );
+
+  let nearest = vaccineSchedule.filter(s => !s.isRange && s.ageMonths <= months).pop();
+  let next = vaccineSchedule.find(s => !s.isRange && s.ageMonths > months);
+  // 如果没有找到非 isRange 的下一个节点，查找后续 isRange 节点（如 7-9 岁之间的空档）
+  if (!next) {
+    next = vaccineSchedule.find(s => s.isRange && s.ageMonths > months);
+  }
+
+  let html = '';
+
+  if (matchedRange) {
+    // 成人年龄段匹配
+    html += `<div style="margin-bottom:8px;font-size:14px;color:var(--primary);font-weight:600;">
+      📍 ${ageLabel} 的推荐接种（${matchedRange.age}）</div>`;
+    html += matchedRange.vaccines.map(v => renderScheduleCard(v)).join('');
+
+    // 如果之前还有最近的儿童节点，也显示提醒
+    if (nearest && nearest.ageMonths < matchedRange.ageMonths) {
+      html += `<div style="margin:16px 0 6px;font-size:14px;color:var(--text-secondary);">
+        💡 过去接种节点（${nearest.age}）——请确认是否已完成：</div>`;
+      html += nearest.vaccines.map(v => renderScheduleCard(v, true)).join('');
+    }
+    el.innerHTML = html;
+    return;
+  }
+
+  // 纯儿童阶段：显示最近 + 下一个
+  if (nearest) {
+    html += `<div style="margin-bottom:6px;font-size:14px;color:var(--text-secondary);">
+      上一个接种节点（${nearest.age}）：</div>`;
+    html += nearest.vaccines.map(v => renderScheduleCard(v, true)).join('');
+  }
+  if (next) {
+    html += `<div style="margin:16px 0 6px;font-size:14px;color:var(--primary);font-weight:600;">
+      🔜 下一个接种节点（${next.age}）：</div>`;
+    html += next.vaccines.map(v => renderScheduleCard(v)).join('');
+  }
+  if (!nearest && !next) {
+    // 可能落入了成人年龄段但没有 isRange 匹配，兜底
+    let adultRanges = vaccineSchedule.filter(s => s.isRange);
+    if (adultRanges.length && months >= adultRanges[0].ageMonths) {
+      let best = adultRanges.find(s => months >= s.ageMonths) || adultRanges[adultRanges.length - 1];
+      html += `<div style="margin-bottom:8px;font-size:14px;color:var(--primary);font-weight:600;">
+        📍 ${ageLabel} 的推荐接种（${best.age}）</div>`;
+      html += best.vaccines.map(v => renderScheduleCard(v)).join('');
+    } else {
+      html = '<div class="schedule-empty">该年龄段暂无推荐接种计划 🌱</div>';
+    }
+  }
+  el.innerHTML = html;
+}
+
+function renderScheduleCard(v, isPast) {
+  const catalog = v.id ? vaccineCatalog.find(c => c.id === v.id) : null;
+  const iconMap = {
+    hepb: '💉', rotavirus: '💧', pentavalent: '🧬', pcv13: '🫁',
+    meningococcal: '🧠', hfmd: '🦠', flu: '🤧', hepa: '🦻',
+    meningococcal_ps: '🧠', dtap_dt: '💪', ppv23: '🫁', shingles: '🔥', hpv: '🌸',
+    mmr: '🦲', je: '🧛', varicella_free: '🔴', ac_conjugate: '🧠', varicella_paid: '🔴'
+  };
+  const icon = catalog ? (iconMap[v.id] || '💉') : (v.type === 'free' ? '🆓' : v.type === 'hk' ? '🇭🇰' : '💉');
+
+  let badgeHtml = '';
+  if (v.type === 'free' && catalog) {
+    // 免费疫苗同时有库存数据：显示免费 badge + 库存徽标
+    badgeHtml = '<span class="badge free-badge">免费</span> ' + stockBadge(catalog);
+  } else if (v.type === 'free') {
+    badgeHtml = '<span class="badge free-badge">免费</span>';
+  } else if (v.type === 'hk') {
+    badgeHtml = '<span class="badge hk-badge">仅HK</span>';
+  } else if (catalog) {
+    badgeHtml = stockBadge(catalog);
+  }
+
+  // 筛查链接：免费/HK/缺货的没有筛查入口，自费有库存的可以跳转
+  let linkHtml = '';
+  if (v.id && catalog && catalog.id !== 'general' && catalog.vaccineType !== 'free' && (catalog.stock > 0 || v.type === 'self')) {
+    linkHtml = `<div class="v-link" onclick="startScreening('${v.id}')">筛查 →</div>`;
+  } else if (v.type === 'free' || (catalog && catalog.vaccineType === 'free')) {
+    linkHtml = `<div class="v-link disabled">国家免疫规划</div>`;
+  } else if (v.type === 'hk') {
+    linkHtml = `<div class="v-link disabled">仅香港诊所</div>`;
+  } else if (catalog && catalog.stock === 0) {
+    linkHtml = `<div class="v-link disabled" style="color:var(--danger);">暂时缺货</div>`;
+  }
+
+  let pastTag = isPast ? '<span style="font-size:11px;color:var(--text-secondary);">（已过节点，请确认是否已接种）</span>' : '';
+  let annualTag = v.annual ? '<span style="font-size:11px;color:var(--warning);">每年接种</span>' : '';
+
+  return `
+    <div class="schedule-result-card">
+      <div class="v-icon">${icon}</div>
+      <div class="v-info">
+        <div class="v-name">${v.label} ${badgeHtml}</div>
+        <div class="v-note">${v.note} ${pastTag} ${annualTag}</div>
+      </div>
+      ${linkHtml}
+    </div>`;
+}
+
+// 点击"筛查 →"跳转
+function startScreening(vaccineId) {
+  switchMode('screen');
+  selectedVaccine = vaccineId;
+  userAnswers = {};
+  renderQuestions();
+  goToStep(2);
+}
+
+// ========== 完整时间轴 ==========
+
+function toggleTimeline() {
+  const toggle = document.getElementById('timeline-toggle');
+  const panel = document.getElementById('timeline-panel');
+  const isExpanded = panel.classList.contains('show');
+  panel.classList.toggle('show');
+  toggle.classList.toggle('expanded');
+}
+
+function renderTimelineContent() {
+  const el = document.getElementById('timeline-content');
+  if (!el) return;
+
+  const shortName = {
+    hepb: '乙肝疫苗', rotavirus: '轮状病毒疫苗', pentavalent: '五联疫苗', pcv13: '13价肺炎疫苗',
+    meningococcal: 'ACYW135结合疫苗', hfmd: '手足口疫苗', flu: '流感疫苗', hepa: '甲肝疫苗',
+    meningococcal_ps: 'ACYW135多糖疫苗', dtap_dt: '百白破/白破疫苗', ppv23: '23价肺炎疫苗', shingles: '带状疱疹疫苗', hpv: 'HPV九价疫苗',
+    mmr: '麻腮风疫苗', je: '乙脑疫苗', varicella_free: '水痘疫苗', ac_conjugate: 'AC结合A+C疫苗', varicella_paid: '水痘疫苗'
+  };
+
+  function buildChip(v) {
+    const catalog = v.id ? vaccineCatalog.find(c => c.id === v.id) : null;
+    const name = v.id ? (shortName[v.id] || v.label) : v.label;
+    let cls = '';
+    let badges = '';
+    if (v.type === 'free') {
+      cls = 'free';
+      badges = '<span class="badge free-badge">免</span>';
+      if (catalog) badges += ' ' + stockBadge(catalog);
+    } else if (v.type === 'hk') {
+      cls = 'hk';
+      badges = '<span class="badge hk-badge">HK</span>';
+    } else if (catalog) {
+      badges = stockBadge(catalog);
+    }
+    const annual = v.annual ? ' <span style="font-size:10px;color:var(--warning);">🔁</span>' : '';
+    return `<span class="tl-chip ${cls}">${name} <span class="tl-chip-note">${v.note}</span>${annual} ${badges}</span>`;
+  }
+
+  function buildRow(stage, isAdult) {
+    const chips = stage.vaccines.map(buildChip).join('');
+    return `
+      <div class="tl-row${isAdult ? ' adult' : ''}">
+        <div class="tl-age">${stage.age}</div>
+        <div class="tl-vaxes">${chips}</div>
+      </div>`;
+  }
+
+  // 两段式：儿童 + 成人
+  const childStages = vaccineSchedule.filter(s => !s.isRange && s.ageMonths <= 72);
+  const adultStages = vaccineSchedule.filter(s => s.isRange || s.ageMonths > 72);
+
+  let html = '<div class="tl-table">';
+  html += '<div class="tl-section-label">👶 儿童（1月 → 6岁）</div>';
+  html += childStages.map(s => buildRow(s, false)).join('');
+  html += '<div class="tl-section-label adult">🧑 青少年 & 成人</div>';
+  html += adultStages.map(s => buildRow(s, true)).join('');
+  html += '</div>';
+
+  el.innerHTML = html;
+}
+
+// Vaccine configurations
+const vaccineConfigs = {
+  hpv: {
+    name: 'HPV 疫苗',
+    fullName: 'HPV九价疫苗（默沙东，1310元/针，单针售卖）',
+    questions: [
+      { id: 'gender', type: 'radio', label: '接种者性别', options: ['女', '男'], hint: '九价HPV：9-45岁女性 / 16-26岁男性（2025.4.18起开放男性接种）' },
+      { id: 'age', type: 'age', label: '接种者年龄', hint: '女性9-45岁；男性16-26岁' },
+      { id: 'pregnant', type: 'radio', label: '是否已怀孕或计划近期怀孕？', options: ['否', '是', '不适用（男性）'], hint: '孕妇不建议接种HPV疫苗' },
+      { id: 'breastfeeding', type: 'radio', label: '是否处于哺乳期？', options: ['否', '是', '不适用'], hint: '哺乳期可接种，无不良影响' },
+      { id: 'allergy', type: 'radio', label: '是否对HPV疫苗成分有过敏史？', options: ['否', '是', '不确定'], hint: '对活性成分或辅料过敏者禁用' },
+      { id: 'fever', type: 'radio', label: '目前是否有发热（≥38.5℃）或重大疾病急性期？', options: ['否', '是'], hint: '急性期应推迟接种' },
+      { id: 'autoimmune', type: 'radio', label: '是否有自身免疫疾病（如红斑狼疮、抗心磷脂症等）？', options: ['否', '是'], hint: '免疫系统受损者可能降低免疫应答' },
+      { id: 'coagulation', type: 'radio', label: '是否有血小板减少症或凝血功能障碍？', options: ['否', '是'], hint: '此类患者接种需谨慎评估' },
+      { id: 'cervical_cancer', type: 'radio', label: '（女性）是否正在接受宫颈癌或癌前病变治疗？', options: ['否', '是', '不适用（男性）'], hint: '正在治疗者不宜接种' },
+      { id: 'city', type: 'radio', label: '接种城市', options: ['深圳', '广州', '成都', '长沙', '其他'], hint: '不同城市疾控规定可能有差异' },
+      { id: 'previous_hpv', type: 'radio', label: '之前是否接种过HPV疫苗（2价/4价）？', options: ['否', '是，已完成3针', '是，未完成3针'], hint: '如已接种2价/4价满1年，可转9价' }
+    ]
+  },
+  shingles: {
+    name: '带状疱疹疫苗',
+    fullName: '重组带状疱疹疫苗（Shingrix®）',
+    questions: [
+      { id: 'age', type: 'age', label: '接种者年龄', hint: '推荐≥50岁成人接种' },
+      { id: 'allergy', type: 'radio', label: '是否对Shingrix®成分有过敏史？', options: ['否', '是'], hint: '过敏者禁用' },
+      { id: 'severe_allergy_dose1', type: 'radio', label: '如为第2剂：接种第1剂后是否出现严重过敏反应（过敏性休克、喉头水肿）？', options: ['不适用（第1剂）', '否', '是'], hint: '出现严重过敏反应则不应继续接种第2剂' },
+      { id: 'acute_illness', type: 'radio', label: '目前是否处于严重急性疾病发作期？', options: ['否', '是'], hint: '急性期应推迟接种' },
+      { id: 'had_shingles', type: 'radio', label: '是否曾患带状疱疹？', options: ['否', '是，已康复', '是，正在患病中'], hint: '康复后仍建议接种；正在患病需等待康复' },
+      { id: 'had_chickenpox', type: 'radio', label: '是否曾确诊水痘？', options: ['是', '否/不确定'], hint: '即使未确诊水痘，>99%的50岁以上人群均感染过VZV，仍推荐接种' },
+      { id: 'previous_zostavax', type: 'radio', label: '是否在境外接种过默沙东Zostavax®？', options: ['否', '是'], hint: '需间隔至少8周后接种Shingrix®' },
+      { id: 'dose_number', type: 'radio', label: '本次接种剂次', options: ['第1剂', '第2剂'], hint: '共需接种2剂，间隔2-6个月' }
+    ]
+  },
+  pcv13: {
+    name: '13价肺炎球菌疫苗',
+    fullName: '13价肺炎球菌结合疫苗（PCV13）',
+    questions: [
+      { id: 'age', type: 'age_detail', label: '接种者年龄', hint: '不同起始月龄接种程序不同' },
+      { id: 'fever', type: 'radio', label: '目前是否有中度以上急性疾病或发热？', options: ['否', '是'], hint: '应推迟至疾病好转' },
+      { id: 'allergy', type: 'radio', label: '是否对疫苗成分有严重过敏史？', options: ['否', '是'], hint: '过敏者禁用' },
+      { id: 'previous_pcv', type: 'radio', label: '之前是否接种过肺炎疫苗？', options: ['否，首次接种', '是，进口沛儿13', '是，国产玉溪沃森', '是，其他品牌'], hint: '同品牌优先，不同品牌可替代' },
+      { id: 'had_pneumonia', type: 'radio', label: '是否曾患肺炎？', options: ['否', '是'], hint: '仍建议按规定程序完成接种' }
+    ]
+  },
+  rotavirus: {
+    name: '口服五价轮状疫苗',
+    fullName: '口服五价轮状病毒减毒活疫苗（RotaTeq®）',
+    questions: [
+      { id: 'age_weeks', type: 'number', label: '接种者当前周龄（周）', hint: '第1剂需在6周-12周+6天；最后一剂不超过32周+6天', min: 0, max: 52 },
+      { id: 'dose_number', type: 'radio', label: '本次接种剂次', options: ['第1剂', '第2剂', '第3剂'] },
+      { id: 'city', type: 'radio', label: '接种城市', options: ['深圳', '广州', '成都', '其他'], hint: '不同城市CDC规定年龄上限不同' },
+      { id: 'fever', type: 'radio', label: '目前是否有中度以上急性疾病或发热？', options: ['否', '是'], hint: '应推迟至疾病好转' },
+      { id: 'allergy', type: 'radio', label: '是否对疫苗成分有严重过敏史？', options: ['否', '是'], hint: '过敏者禁用' },
+      { id: 'previous_brand', type: 'radio', label: '之前是否接种过其他品牌轮状疫苗？', options: ['否', '是，同品牌RotaTeq', '是，不同品牌'], hint: '不同品牌不可交叉接种' },
+      { id: 'immune_disorder', type: 'radio', label: '是否有严重免疫缺陷疾病？', options: ['否', '是'], hint: '减毒活疫苗需谨慎评估' }
+    ]
+  },
+  meningococcal: {
+    name: 'ACYW135流脑结合疫苗（康希诺）',
+    fullName: 'ACYW135群脑膜炎球菌多糖结合疫苗（康希诺生物）430元',
+    questions: [
+      { id: 'age_months', type: 'number', label: '接种者当前月龄（月）', hint: '适用年龄：3月龄–6周岁（83月龄）', min: 0, max: 120 },
+      { id: 'first_dose_age_group', type: 'radio', label: '首针接种时的年龄段', options: ['首次接种（请按当前月龄计算）', '已在3-5月龄接种过首针', '已在6-23月龄接种过首针', '已在2-3岁（24-47月龄）接种过首针', '已在4-6岁（48-83月龄）接种过首针'], hint: '首针年龄决定后续剂次数量' },
+      { id: 'previous_doses', type: 'radio', label: '已完成的康希诺ACYW135结合疫苗剂次', options: ['0剂（首次）', '1剂', '2剂', '3剂', '已完成全程'], hint: '用于判断是否还需要接种' },
+      { id: 'previous_ac_polysaccharide', type: 'radio', label: '是否接种过3岁AC群多糖疫苗（免费疫苗）？', options: ['否', '是'], hint: '若已接种3岁AC多糖，4-6岁首针需间隔至少3年' },
+      { id: 'fever', type: 'radio', label: '目前是否有中度以上急性疾病或发热？', options: ['否', '是'], hint: '应推迟至疾病好转' },
+      { id: 'allergy', type: 'radio', label: '是否对疫苗成分有严重过敏史？', options: ['否', '是'], hint: '过敏者禁用' },
+      { id: 'co_vaccine', type: 'radio', label: '本次是否计划与白破/百白破疫苗同时接种？', options: ['否', '是', '不确定'], hint: '康希诺为结合疫苗，可与白破/百白破同时接种（与多糖型不同）' }
+    ]
+  },
+  meningococcal_ps: {
+    name: 'ACYW135流脑多糖疫苗（绿竹）',
+    fullName: 'ACYW135群脑膜炎球菌多糖疫苗（绿竹）148元',
+    questions: [
+      { id: 'age', type: 'age', label: '接种者年龄', hint: '3岁起可接种，无年龄上限' },
+      { id: 'previous_acyw_ps_doses', type: 'radio', label: '之前是否接种过ACYW135多糖疫苗？', options: ['否，首次接种', '是，已接种1剂（3岁针）', '是，已完成2剂（3岁+6岁）'], hint: '常规程序：3岁、6岁各一针，两针间隔至少3年' },
+      { id: 'last_ac_dose', type: 'radio', label: '是否接种过A群或A+C群流脑疫苗？', options: ['否', '是，最后一针距今≥1年', '是，最后一针距今<1年'], hint: '若接种过AC，需与最后一针AC间隔至少1年方可接种ACYW多糖' },
+      { id: 'fever', type: 'radio', label: '目前是否有中度以上急性疾病或发热？', options: ['否', '是'], hint: '应推迟至疾病好转' },
+      { id: 'allergy', type: 'radio', label: '是否对疫苗成分有严重过敏史？', options: ['否', '是'], hint: '过敏者禁用' },
+      { id: 'co_vaccine_dtap', type: 'radio', label: '本次是否计划与白破/百白破疫苗同时接种？', options: ['否', '是', '不确定'], hint: '⚠️ ACYW多糖疫苗与白破/百白破不能同时接种（仅蛇口疫苗中心规定）' }
+    ]
+  },
+  hepb: {
+    name: '乙肝疫苗',
+    fullName: '重组乙型肝炎疫苗',
+    questions: [
+      { id: 'age', type: 'age', label: '接种者年龄' },
+      { id: 'fever', type: 'radio', label: '目前是否有中度以上急性疾病或发热？', options: ['否', '是'], hint: '应推迟至疾病好转' },
+      { id: 'allergy', type: 'radio', label: '是否对酵母或疫苗成分有过敏史？', options: ['否', '是'], hint: '对酵母过敏者禁用' },
+      { id: 'jaundice', type: 'radio', label: '（婴幼儿）是否有黄疸？', options: ['否', '是，母乳性黄疸', '是，病理性黄疸', '不适用（成人）'], hint: '母乳性黄疸不影响接种' },
+      { id: 'mother_hepb', type: 'radio', label: '（婴幼儿）母亲是否为乙肝携带者？', options: ['否', '是', '不适用（成人）'], hint: '如母亲为携带者且出生注射过乙肝免疫球蛋白，建议九月龄后再查抗体' }
+    ]
+  },
+  flu: {
+    name: '流感疫苗',
+    fullName: '季节性流行性感冒疫苗（多个品牌可选）',
+    questions: [
+      { id: 'age', type: 'age', label: '接种者年龄', hint: '≥6月龄即可接种；不同品牌适用年龄不同' },
+      { id: 'fever', type: 'radio', label: '目前是否有中度以上急性疾病或发热？', options: ['否', '是'], hint: '应推迟至疾病好转' },
+      { id: 'allergy', type: 'radio', label: '是否对鸡蛋或疫苗成分有严重过敏史？', options: ['否', '是'], hint: '严重过敏者禁用（鼻喷为减毒活疫苗，过敏者尤其慎用）' },
+      { id: 'pregnant', type: 'radio', label: '是否怀孕？', options: ['否', '是', '不适用'], hint: '孕妇为流感高风险人群，推荐灭活流感疫苗；鼻喷活疫苗禁用' },
+      { id: 'guillain_barre', type: 'radio', label: '是否有格林-巴利综合征病史？', options: ['否', '是'], hint: '需医生评估' },
+      { id: 'immune_disorder', type: 'radio', label: '是否有严重免疫缺陷或正在使用免疫抑制剂？', options: ['否', '是'], hint: '鼻喷活疫苗禁用；灭活可接种' },
+      { id: 'brand_preference', type: 'radio', label: '品牌偏好', options: ['不限，按年龄推荐合适的', '指定鼻喷', '指定巴斯德', '指定华兰生物'], hint: '鼻喷适用 3-17岁；巴斯德三价 6m-2y / 三价≥3y / 四价≥6m；华兰四价分儿童(6m-3y)和成人(≥3y)' }
+    ]
+  },
+  pentavalent: {
+    name: '五联疫苗（巴斯德）',
+    fullName: '吸附无细胞百白破灭活脊灰和b型流感嗜血杆菌联合疫苗（巴斯德）638元',
+    questions: [
+      { id: 'age_months', type: 'number', label: '接种者当前月龄（月）', hint: '深圳：超过 3 岁不能接种', min: 0, max: 60 },
+      { id: 'dose_number', type: 'radio', label: '本次接种剂次', options: ['第1剂', '第2剂', '第3剂', '第4剂（加强）'], hint: '常规：2/3/4月各一针 + 18-24月加强；基础针间隔≥1月，加强针距上一针半年' },
+      { id: 'fever', type: 'radio', label: '目前是否有中度以上急性疾病或发热？', options: ['否', '是'], hint: '应推迟至疾病好转' },
+      { id: 'allergy', type: 'radio', label: '是否对疫苗成分有严重过敏史？', options: ['否', '是'], hint: '过敏者禁用' }
+    ]
+  },
+  hfmd: {
+    name: '手足口疫苗（EV71）',
+    fullName: 'EV71肠道病毒灭活疫苗（医科院 二倍体）188元',
+    questions: [
+      { id: 'age_months', type: 'number', label: '接种者当前月龄（月）', hint: '6月龄起，超过 5 岁不能接种', min: 0, max: 84 },
+      { id: 'dose_number', type: 'radio', label: '本次接种剂次', options: ['第1剂', '第2剂'], hint: '6、7月各一针，两针间隔至少1个月' },
+      { id: 'previous_brand', type: 'radio', label: '之前接种过手足口疫苗的品牌', options: ['否，首次接种', '是，同为医科院二倍体', '是，不同品牌'], hint: '⚠️ 不同牌子不能混打' },
+      { id: 'fever', type: 'radio', label: '目前是否有中度以上急性疾病或发热？', options: ['否', '是'], hint: '应推迟至疾病好转' },
+      { id: 'allergy', type: 'radio', label: '是否对疫苗成分有严重过敏史？', options: ['否', '是'], hint: '过敏者禁用' }
+    ]
+  },
+  ppv23: {
+    name: '23价肺炎多糖疫苗',
+    fullName: '23价肺炎球菌多糖疫苗（默沙东）260元',
+    questions: [
+      { id: 'age', type: 'age', label: '接种者年龄', hint: '≥2岁人群均可接种（含成人/老人）' },
+      { id: 'fever', type: 'radio', label: '目前是否有中度以上急性疾病或发热？', options: ['否', '是'], hint: '应推迟至疾病好转' },
+      { id: 'allergy', type: 'radio', label: '是否对疫苗成分有严重过敏史？', options: ['否', '是'], hint: '过敏者禁用' },
+      { id: 'previous_ppv23', type: 'radio', label: '之前是否接种过23价肺炎？', options: ['否，首次接种', '是，≥5年前', '是，<5年前'], hint: '5 年内一般不重复接种' }
+    ]
+  },
+  hepa: {
+    name: '甲肝灭活疫苗',
+    fullName: '甲型肝炎灭活疫苗（北京科兴 138元 / 艾美行动 213元）',
+    questions: [
+      { id: 'age', type: 'age', label: '接种者年龄', hint: '适用 18 月龄–15 岁（不超过 16 岁）' },
+      { id: 'dose_number', type: 'radio', label: '本次接种剂次', options: ['第1剂', '第2剂'], hint: '共 2 剂，两针间隔至少 6 个月' },
+      { id: 'fever', type: 'radio', label: '目前是否有中度以上急性疾病或发热？', options: ['否', '是'], hint: '应推迟至疾病好转' },
+      { id: 'allergy', type: 'radio', label: '是否对疫苗成分有严重过敏史？', options: ['否', '是'], hint: '过敏者禁用' }
+    ]
+  },
+  dtap_dt: {
+    name: '白破 / 百白破疫苗',
+    fullName: '白喉破伤风联合疫苗 / 吸附无细胞百白破联合疫苗（武汉生物）0元',
+    questions: [
+      { id: 'age', type: 'age', label: '接种者年龄', hint: '白破：7-11岁11月 | 百白破：6-6岁11月' },
+      { id: 'vaccine_type', type: 'radio', label: '本次接种的是？', options: ['白破（DT）', '百白破（DTaP）', '不确定'], hint: '6 岁接种百白破，7 岁后接种白破' },
+      { id: 'previous_dtap_at_6', type: 'radio', label: '是否已在 6 岁接种过百白破？', options: ['否', '是', '不适用'], hint: '若已接种百白破，则无需再接种白破' },
+      { id: 'co_acyw_polysaccharide', type: 'radio', label: '本次是否计划与 ACYW135 多糖流脑疫苗同时接种？', options: ['否', '是', '不确定'], hint: '⚠️ 不能与 ACYW 多糖同时接种（仅蛇口疫苗中心规定）' },
+      { id: 'fever', type: 'radio', label: '目前是否有中度以上急性疾病或发热？', options: ['否', '是'], hint: '应推迟至疾病好转' },
+      { id: 'allergy', type: 'radio', label: '是否对疫苗成分有严重过敏史？', options: ['否', '是'], hint: '过敏者禁用' }
+    ]
+  },
+  general: {
+    name: '通用筛查',
+    fullName: '疫苗接种基础健康筛查',
+    questions: [
+      { id: 'age', type: 'age', label: '接种者年龄' },
+      { id: 'fever', type: 'radio', label: '目前是否有中度以上急性疾病或发热（≥38.5℃）？', options: ['否', '是'], hint: '中度以上急性疾病应推迟所有疫苗接种' },
+      { id: 'mild_illness', type: 'radio', label: '是否有轻微不适（轻咳、鼻塞、流涕、轻微腹泻）？', options: ['否', '是'], hint: '轻微不适通常不影响接种' },
+      { id: 'allergy_history', type: 'radio', label: '是否曾对某种疫苗出现过严重过敏反应？', options: ['否', '是'], hint: '该疫苗及含相同成分的疫苗为禁忌' },
+      { id: 'seizure_after_vaccine', type: 'radio', label: '是否曾在接种疫苗后出现热性惊厥？', options: ['否', '是'], hint: '仍可接种，利大于弊' },
+      { id: 'antibiotics', type: 'radio', label: '目前是否正在接受抗生素治疗？', options: ['否', '是'], hint: '不需要暂停疫苗接种' },
+      { id: 'jaundice', type: 'radio', label: '（婴幼儿）是否有黄疸？', options: ['否/不适用', '是，母乳性黄疸', '是，其他类型黄疸'], hint: '母乳性黄疸不影响接种；其他黄疸需观察精神状态' },
+      { id: 'pregnant', type: 'radio', label: '是否已怀孕？', options: ['否', '是'], hint: '部分疫苗孕期需谨慎' },
+      { id: 'immune_disorder', type: 'radio', label: '是否有严重免疫缺陷或正在使用免疫抑制剂？', options: ['否', '是'], hint: '减毒活疫苗可能不适用' }
+    ]
+  }
+};
+
+function selectVaccine(type, el) {
+  document.querySelectorAll('.vaccine-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedVaccine = type;
+  userAnswers = {};
+  renderQuestions();
+  goToStep(2);
+}
+
+function renderQuestions() {
+  const config = vaccineConfigs[selectedVaccine];
+  const container = document.getElementById('questions-container');
+  let html = '';
+
+  config.questions.forEach((q, idx) => {
+    html += '<div class="form-group">';
+    html += `<label class="form-label">${idx + 1}. ${q.label}</label>`;
+    if (q.hint) html += `<div class="form-hint">${q.hint}</div>`;
+
+    if (q.type === 'radio') {
+      html += '<div class="radio-group">';
+      q.options.forEach(opt => {
+        html += `
+          <div class="radio-option">
+            <input type="radio" name="${q.id}" id="${q.id}_${opt}" value="${opt}"
+                   onchange="userAnswers['${q.id}'] = '${opt}'">
+            <label for="${q.id}_${opt}">${opt}</label>
+          </div>`;
+      });
+      html += '</div>';
+    } else if (q.type === 'age') {
+      html += `
+        <div class="age-input-group">
+          <input type="number" id="${q.id}" placeholder="请输入年龄" min="0" max="120"
+                 onchange="userAnswers['${q.id}'] = this.value">
+          <select id="${q.id}_unit" onchange="userAnswers['${q.id}_unit'] = this.value">
+            <option value="years">岁</option>
+            <option value="months">月</option>
+          </select>
+        </div>`;
+    } else if (q.type === 'age_detail') {
+      html += `
+        <div class="age-input-group">
+          <select id="${q.id}_unit" onchange="userAnswers['${q.id}_unit'] = this.value; toggleAgeInput('${q.id}')">
+            <option value="months">按月龄输入</option>
+            <option value="years">按年龄输入</option>
+          </select>
+          <input type="number" id="${q.id}" placeholder="请输入" min="0" max="120"
+                 onchange="userAnswers['${q.id}'] = this.value">
+        </div>`;
+    } else if (q.type === 'number') {
+      html += `<input type="number" id="${q.id}" placeholder="请输入" min="${q.min || 0}" max="${q.max || 999}"
+                     onchange="userAnswers['${q.id}'] = this.value">`;
+    }
+
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function goToStep(n) {
+  document.getElementById('step1').classList.toggle('hidden', n !== 1);
+  document.getElementById('step2').classList.toggle('hidden', n !== 2);
+  document.getElementById('step3').classList.toggle('hidden', n !== 3);
+  // 所有步骤都用宽容器（layout-split 全局生效）
+  const pc = document.getElementById('page-container');
+  if (pc) pc.classList.add('split-active');
+
+  // step2 切入时渲染左侧摘要
+  if (n === 2) renderStep2Summary();
+  // step3 切入时渲染左侧摘要（已回答的问题清单）
+  if (n === 3) renderStep3Summary();
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderStep2Summary() {
+  const el = document.getElementById('step2-summary');
+  if (!el || !selectedVaccine) return;
+  const config = vaccineConfigs[selectedVaccine];
+  const catalogItem = (typeof vaccineCatalog !== 'undefined') && vaccineCatalog.find(v => v.id === selectedVaccine);
+  const desc = catalogItem ? catalogItem.desc : '';
+  const ageTag = catalogItem && catalogItem.ageTag ? `<span class="age-tag">${catalogItem.ageTag}</span>` : '';
+
+  el.innerHTML = `
+    <div class="summary-vaccine">
+      <div class="label">当前查询的疫苗</div>
+      <div class="name">${config.name}${ageTag}</div>
+      <div class="full-name">${config.fullName || ''}</div>
+    </div>
+    <div class="summary-block">
+      <div class="block-title">📝 填写说明</div>
+      请在右侧依次填写信息：<br>
+      • 必填项缺失会影响判断准确性<br>
+      • 全部完成后点击「✓ 查看筛查结果」
+    </div>
+    ${desc ? `<div class="summary-block">
+      <div class="block-title">💡 疫苗信息</div>
+      ${desc}
+    </div>` : ''}
+  `;
+}
+
+function renderStep3Summary() {
+  const el = document.getElementById('step3-summary');
+  if (!el || !selectedVaccine) return;
+  const config = vaccineConfigs[selectedVaccine];
+  const catalogItem = (typeof vaccineCatalog !== 'undefined') && vaccineCatalog.find(v => v.id === selectedVaccine);
+  const ageTag = catalogItem && catalogItem.ageTag ? `<span class="age-tag">${catalogItem.ageTag}</span>` : '';
+
+  // 收集已填答案
+  const items = config.questions.map(q => {
+    let val = userAnswers[q.id];
+    if (q.type === 'age' || q.type === 'age_detail') {
+      const unit = userAnswers[q.id + '_unit'] || 'years';
+      if (val) val = `${val} ${unit === 'years' ? '岁' : '月'}`;
+    }
+    if (!val) return null;
+    return `<div class="summary-item">
+              <span class="k">${q.label.replace(/（[^）]+）/g, '')}</span>
+              <span class="v">${val}</span>
+            </div>`;
+  }).filter(Boolean).join('');
+
+  el.innerHTML = `
+    <div class="summary-vaccine">
+      <div class="label">筛查的疫苗</div>
+      <div class="name">${config.name}${ageTag}</div>
+      <div class="full-name">${config.fullName || ''}</div>
+    </div>
+    <div class="summary-block">
+      <div class="block-title">📋 已填信息</div>
+      ${items || '<span style="color:var(--text-secondary)">未填写信息</span>'}
+    </div>
+  `;
+}
+
+function resetAll() {
+  selectedVaccine = null;
+  userAnswers = {};
+  document.querySelectorAll('.vaccine-card').forEach(c => c.classList.remove('selected'));
+  goToStep(1);
+}
+
+function checkEligibility() {
+  const config = vaccineConfigs[selectedVaccine];
+  // Collect all answers
+  config.questions.forEach(q => {
+    if (q.type === 'radio') {
+      const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+      if (selected) userAnswers[q.id] = selected.value;
+    } else if (q.type === 'age' || q.type === 'age_detail') {
+      const val = document.getElementById(q.id)?.value;
+      if (val) userAnswers[q.id] = val;
+      const unit = document.getElementById(q.id + '_unit')?.value;
+      if (unit) userAnswers[q.id + '_unit'] = unit;
+    } else if (q.type === 'number') {
+      const val = document.getElementById(q.id)?.value;
+      if (val) userAnswers[q.id] = val;
+    }
+  });
+
+  // Evaluate
+  let result;
+  switch (selectedVaccine) {
+    case 'hpv': result = evaluateHPV(); break;
+    case 'shingles': result = evaluateShingles(); break;
+    case 'pcv13': result = evaluatePCV13(); break;
+    case 'rotavirus': result = evaluateRotavirus(); break;
+    case 'meningococcal': result = evaluateMeningococcal(); break;
+    case 'meningococcal_ps': result = evaluateMeningococcalPS(); break;
+    case 'hepb': result = evaluateHepB(); break;
+    case 'flu': result = evaluateFlu(); break;
+    case 'pentavalent': result = evaluatePentavalent(); break;
+    case 'hfmd': result = evaluateHFMD(); break;
+    case 'ppv23': result = evaluatePPV23(); break;
+    case 'hepa': result = evaluateHepA(); break;
+    case 'dtap_dt': result = evaluateDtapDt(); break;
+    case 'general': result = evaluateGeneral(); break;
+    default: result = { status: 'info', title: '请先选择疫苗', detail: '' };
+  }
+
+  renderResult(result);
+  goToStep(3);
+}
+
+function getAgeInYears() {
+  const age = parseFloat(userAnswers['age'] || userAnswers['age_months'] || '0');
+  const unit = userAnswers['age_unit'] || 'years';
+  if (unit === 'months') return age / 12;
+  return age;
+}
+
+function getAgeInMonths() {
+  const age = parseFloat(userAnswers['age'] || userAnswers['age_months'] || '0');
+  const unit = userAnswers['age_unit'] || 'years';
+  if (unit === 'years') return age * 12;
+  return age;
+}
+
+function evaluateHPV() {
+  const gender = userAnswers['gender'];
+  const age = getAgeInYears();
+  const pregnant = userAnswers['pregnant'];
+  const allergy = userAnswers['allergy'];
+  const fever = userAnswers['fever'];
+  const autoimmune = userAnswers['autoimmune'];
+  const coagulation = userAnswers['coagulation'];
+  const cervical = userAnswers['cervical_cancer'];
+  const city = userAnswers['city'];
+  const breastfeeding = userAnswers['breastfeeding'];
+
+  // Absolute contraindications
+  if (gender === '男') {
+    if (age < 16 || age > 26) {
+      return { status: 'ineligible', title: '❌ 年龄不符合',
+        detail: `九价HPV疫苗男性接种年龄为 <strong>16-26岁</strong>（2025.4.18起开放男性接种），当前年龄约${age.toFixed(1)}岁不在范围内。` };
+    }
+  }
+  if (allergy === '是') {
+    return { status: 'ineligible', title: '❌ 不建议接种',
+      detail: '对HPV疫苗活性成分或任何辅料有超敏反应者禁用。' };
+  }
+  if (pregnant === '是') {
+    return { status: 'ineligible', title: '❌ 不建议接种',
+      detail: '不建议孕妇在怀孕期间接种HPV疫苗。如已在不知情情况下接种，目前研究未发现胎儿致畸性，建议做好孕期检查。' };
+  }
+  if (fever === '是') {
+    return { status: 'conditional', title: '⚠️ 需推迟接种',
+      detail: '目前处于发热或重大疾病急性期，应推迟至康复后再接种。' };
+  }
+  if (cervical === '是') {
+    return { status: 'ineligible', title: '❌ 不建议接种',
+      detail: '正在接受宫颈癌或癌前病变治疗的患者不宜接种HPV疫苗。' };
+  }
+
+  // Conditional
+  let warnings = [];
+  if (autoimmune === '是') {
+    warnings.push('自身免疫疾病患者（如红斑狼疮、抗心磷脂症）免疫应答可能降低，建议先咨询医生。');
+  }
+  if (coagulation === '是') {
+    warnings.push('血小板减少症或凝血功能障碍患者接种需谨慎评估，建议先咨询医生。');
+  }
+  if (breastfeeding === '是') {
+    warnings.push('哺乳期可接种，目前研究未发现对婴儿有不良影响。');
+  }
+
+  // Age check (only for females, males already checked above)
+  let ageNote = '';
+  if (gender === '女') {
+    if (age < 9) {
+      return { status: 'ineligible', title: '❌ 年龄不符合',
+        detail: `当前年龄约${age.toFixed(1)}岁，HPV九价疫苗女性最低接种年龄为9岁。` };
+    }
+    if (age > 45) {
+      return { status: 'ineligible', title: '❌ 年龄不符合',
+        detail: `当前年龄约${age.toFixed(1)}岁，HPV九价疫苗在中国大陆获批的女性接种年龄上限为45岁。` };
+    }
+  }
+
+  // 9-14岁2针程序提示
+  let doseScheduleNote = '';
+  if (gender === '女' && age >= 9 && age <= 14) {
+    doseScheduleNote = '<br>📌 <strong>9-14岁优先推荐2针程序</strong>（0、6个月）。如第2针距首针<5个月，建议加种第3针（与第2针间隔至少3个月）。';
+  } else {
+    doseScheduleNote = '<br>📌 <strong>3针程序</strong>：0、2、6月（第1针与第2针最短间隔1个月，第2针与第3针最短间隔3个月，3针需在1年内完成）。';
+  }
+
+  // City-specific
+  if (city === '广州' || city === '成都' || city === '长沙') {
+    ageNote = `（${city}疾控中心规定HPV-9价接种年龄为9-45岁女性）`;
+  }
+
+  if (warnings.length > 0) {
+    return { status: 'conditional', title: '⚠️ 可以接种，但需注意',
+      detail: `<ul>${warnings.map(w => `<li>${w}</li>`).join('')}</ul>
+        <p style="margin-top:8px;">建议接种前咨询医生确认。${ageNote}</p>` };
+  }
+
+  return { status: 'eligible', title: '✅ 可以接种',
+    detail: `根据筛查信息，接种者符合<strong>九价HPV疫苗（默沙东，1310元/针）</strong>接种条件。${ageNote}${doseScheduleNote}<br><br>
+      <strong>温馨提示：</strong><br>
+      • 经期、轻微感冒（非高热）不影响接种<br>
+      • 接种前无需检测HPV感染状态<br>
+      • 接种后仍需定期进行宫颈癌筛查<br>
+      • 该疫苗只能单独接种，不与其他疫苗同时打<br>
+      • 如之前接种过2价/4价满1年，可转为9价继续接种` };
+}
+
+function evaluateShingles() {
+  const age = getAgeInYears();
+  const allergy = userAnswers['allergy'];
+  const severeAllergy = userAnswers['severe_allergy_dose1'];
+  const acute = userAnswers['acute_illness'];
+  const hadShingles = userAnswers['had_shingles'];
+  const previousZostavax = userAnswers['previous_zostavax'];
+
+  if (allergy === '是') {
+    return { status: 'ineligible', title: '❌ 不建议接种',
+      detail: '对Shingrix®活性成份或任何辅料成份过敏者禁用。' };
+  }
+  if (severeAllergy === '是') {
+    return { status: 'ineligible', title: '❌ 不建议接种',
+      detail: '接种第1剂后出现严重过敏反应（如过敏性休克、喉头水肿），不应继续接种第2剂。' };
+  }
+  if (acute === '是') {
+    return { status: 'conditional', title: '⚠️ 需推迟接种',
+      detail: '目前处于严重急性疾病发作期，应推迟至康复后接种。' };
+  }
+  if (age < 50) {
+    return { status: 'ineligible', title: '❌ 年龄不符合',
+      detail: `当前年龄约${age.toFixed(1)}岁，Shingrix®在中国大陆获批用于50岁及以上成人。` };
+  }
+
+  let notes = [];
+  if (hadShingles === '是，已康复') {
+    notes.push('虽然曾患带状疱疹，但仍有复发可能，康复后仍建议接种。');
+  }
+  if (hadShingles === '是，正在患病中') {
+    return { status: 'conditional', title: '⚠️ 需等待康复',
+      detail: '目前正处于带状疱疹患病期，建议康复后（约1年）再接种。' };
+  }
+  if (previousZostavax === '是') {
+    notes.push('曾接种Zostavax®，需间隔至少8周后接种Shingrix®，且仍需完成Shingrix®两剂接种。');
+  }
+
+  let detail = notes.length > 0 ? `<ul>${notes.map(n => `<li>${n}</li>`).join('')}</ul>` : '';
+  detail += '<br><strong>接种程序：</strong>共2剂，第2剂与第1剂间隔2-6个月。如第2剂超过6个月，尽快补种即可，无需重新开始。';
+
+  return { status: 'eligible', title: '✅ 可以接种', detail };
+}
+
+function evaluatePCV13() {
+  const ageMonths = getAgeInMonths();
+  const fever = userAnswers['fever'];
+  const allergy = userAnswers['allergy'];
+
+  if (allergy === '是') {
+    return { status: 'ineligible', title: '❌ 不建议接种',
+      detail: '对疫苗成分有严重过敏史者禁用。' };
+  }
+  if (fever === '是') {
+    return { status: 'conditional', title: '⚠️ 需推迟接种',
+      detail: '中度以上急性疾病或发热期间应推迟接种。' };
+  }
+
+  return { status: 'eligible', title: '✅ 可以接种',
+    detail: `根据筛查信息，接种者符合13价肺炎疫苗接种条件。<br><br>
+      <strong>温馨提示：</strong><br>
+      • 国产（玉溪沃森）与进口（沛儿13）在有效性和安全性上无明显差异<br>
+      • 如已接种进口沛儿13，建议同品牌完成剩余剂次；如缺货可换国产<br>
+      • 不同起始月龄接种剂次不同，早接种早保护<br>
+      • 得过肺炎仍需按程序完成接种<br>
+      • 可与多种疫苗同时接种（不同部位）` };
+}
+
+function evaluateRotavirus() {
+  const weeks = parseFloat(userAnswers['age_weeks']);
+  const city = userAnswers['city'];
+  const fever = userAnswers['fever'];
+  const allergy = userAnswers['allergy'];
+  const previousBrand = userAnswers['previous_brand'];
+  const immuneDisorder = userAnswers['immune_disorder'];
+  const doseNumber = userAnswers['dose_number'];
+
+  if (allergy === '是') {
+    return { status: 'ineligible', title: '❌ 不建议接种',
+      detail: '对疫苗成分有严重过敏史者禁用。' };
+  }
+  if (immuneDisorder === '是') {
+    return { status: 'conditional', title: '⚠️ 需医生评估',
+      detail: '严重免疫缺陷疾病患者接种减毒活疫苗需谨慎，建议咨询医生。' };
+  }
+  if (fever === '是') {
+    return { status: 'conditional', title: '⚠️ 需推迟接种',
+      detail: '中度以上急性疾病或发热期间应推迟接种。' };
+  }
+  if (previousBrand === '是，不同品牌') {
+    return { status: 'ineligible', title: '❌ 不建议接种',
+      detail: '不同品牌的轮状病毒疫苗接种程序不同，不可交叉接种。' };
+  }
+
+  // Age limits by city
+  const limits = {
+    '深圳': { firstMax: 12, secondMax: 22, thirdMax: 32 },
+    '广州': { firstMax: 12, secondMax: 28, thirdMax: 32 },
+    '成都': { firstMax: 12, secondMax: 22, thirdMax: 32 },
+    '其他': { firstMax: 12, secondMax: 22, thirdMax: 32 }
+  };
+  const limit = limits[city] || limits['其他'];
+
+  if (doseNumber === '第1剂') {
+    if (weeks < 6) {
+      return { status: 'ineligible', title: '❌ 年龄不符合',
+        detail: `当前${weeks}周龄，第1剂需在6周龄后接种。` };
+    }
+    if (weeks > limit.firstMax) {
+      return { status: 'ineligible', title: '❌ 年龄不符合',
+        detail: `当前${weeks}周龄，第1剂最晚在${limit.firstMax}周+6天接种（${city}CDC规定）。` };
+    }
+  } else if (doseNumber === '第2剂') {
+    if (weeks < 10) {
+      return { status: 'ineligible', title: '❌ 剂次与年龄不符',
+        detail: `当前${weeks}周龄，第2剂需在第1剂后至少间隔4周，即最早10周龄接种。请确认剂次选择是否正确。` };
+    }
+    if (weeks > limit.secondMax) {
+      return { status: 'conditional', title: '⚠️ 年龄可能超限',
+        detail: `当前${weeks}周龄，${city}CDC规定第2剂最晚${limit.secondMax}周+6天。广州在告知第3剂可能无法接种的情况下，家长自愿可接种。` };
+    }
+  } else if (doseNumber === '第3剂') {
+    if (weeks < 14) {
+      return { status: 'ineligible', title: '❌ 剂次与年龄不符',
+        detail: `当前${weeks}周龄，第3剂需在第2剂后至少间隔4周，即最早14周龄接种。请确认剂次选择是否正确。` };
+    }
+    if (weeks > limit.thirdMax) {
+      return { status: 'ineligible', title: '❌ 年龄不符合',
+        detail: `当前${weeks}周龄，第3剂最晚在${limit.thirdMax}周+6天接种。` };
+    }
+  }
+
+  return { status: 'eligible', title: '✅ 可以接种',
+    detail: `根据筛查信息，接种者符合口服五价轮状疫苗接种条件。<br><br>
+      <strong>接种程序：</strong>共3剂，分别在2月龄、4月龄、6月龄口服。<br>
+      <strong>${city}CDC规定：</strong>第1剂最晚${limit.firstMax}周+6天，第2剂最晚${limit.secondMax}周+6天，第3剂最晚${limit.thirdMax}周+6天。` };
+}
+
+function evaluateMeningococcal() {
+  const months = parseFloat(userAnswers['age_months']);
+  const firstDoseGroup = userAnswers['first_dose_age_group'];
+  const previousDoses = userAnswers['previous_doses'];
+  const previousAcPs = userAnswers['previous_ac_polysaccharide'];
+  const fever = userAnswers['fever'];
+  const allergy = userAnswers['allergy'];
+  const coVaccine = userAnswers['co_vaccine'];
+
+  if (allergy === '是') {
+    return { status: 'ineligible', title: '❌ 不建议接种',
+      detail: '对疫苗成分有严重过敏史者禁用。' };
+  }
+  if (fever === '是') {
+    return { status: 'conditional', title: '⚠️ 需推迟接种',
+      detail: '中度以上急性疾病或发热期间应推迟接种。' };
+  }
+  if (isNaN(months)) {
+    return { status: 'info', title: 'ℹ️ 信息不完整',
+      detail: '请填写接种者当前月龄。' };
+  }
+  if (months < 3) {
+    return { status: 'ineligible', title: '❌ 年龄不符合',
+      detail: `当前${months}月龄，康希诺ACYW135结合疫苗最低接种年龄为3月龄。` };
+  }
+  if (months > 83) {
+    return { status: 'ineligible', title: '❌ 年龄不符合',
+      detail: `当前${months}月龄（约${(months/12).toFixed(1)}岁），康希诺ACYW135结合疫苗接种上限为6周岁（83月龄）。<br><br>
+      <strong>建议替代方案：</strong>可选择 <strong>绿竹ACYW135多糖疫苗（148元）</strong>，3岁起即可接种，无年龄上限。` };
+  }
+
+  // 判定首针年龄段对应的完整接种程序
+  let schedule = '';
+  let scheduleNote = '';
+  if (firstDoseGroup === '首次接种（请按当前月龄计算）' || firstDoseGroup === undefined) {
+    if (months >= 3 && months <= 5) {
+      schedule = '4针程序';
+      scheduleNote = '基础免疫3剂次：自3月龄开始，每剂次间隔至少1个月；12月龄时加强1剂次。<br>（第4针如果等到2岁以后接种，可替代3岁免费AC）';
+    } else if (months >= 6 && months <= 23) {
+      schedule = '2针程序';
+      scheduleNote = '每剂次间隔1～3个月。<br>⚠️ 3岁、6岁不能再接种该厂家疫苗，需选择其他厂家完成程序。';
+    } else if (months >= 24 && months <= 47) {
+      schedule = '1针程序';
+      scheduleNote = '免疫1剂次（可替代3岁免费AC）。';
+    } else if (months >= 48 && months <= 83) {
+      schedule = '1针程序';
+      scheduleNote = '免疫1剂次。⚠️ 以往未接种过该疫苗，并需与三岁流脑A+C群/ACYW135多糖疫苗间隔3年。';
+      if (previousAcPs === '是') {
+        scheduleNote += '<br><br>📌 <strong>注意：</strong>您已接种过3岁AC群多糖疫苗，需间隔满3年才能接种本针。';
+      }
+    }
+  } else if (firstDoseGroup === '已在3-5月龄接种过首针') {
+    schedule = '后续完成4针程序';
+    scheduleNote = '本针为基础免疫第2/3针或12月龄加强针。';
+  } else if (firstDoseGroup === '已在6-23月龄接种过首针') {
+    schedule = '后续完成2针程序';
+    scheduleNote = '与首针间隔1～3个月接种第2针。<br>⚠️ 3岁、6岁不能再选择本厂家疫苗。';
+  } else if (firstDoseGroup === '已在2-3岁（24-47月龄）接种过首针' || firstDoseGroup === '已在4-6岁（48-83月龄）接种过首针') {
+    if (previousDoses === '已完成全程') {
+      return { status: 'info', title: 'ℹ️ 无需再接种',
+        detail: '根据接种史，该年龄段为1针程序，已完成全程，无需再补种。' };
+    }
+    schedule = '1针程序（已接种）';
+    scheduleNote = '该年龄段为1针程序，请确认首针是否已完成。';
+  }
+
+  let coVaccineNote = '';
+  if (coVaccine === '是') {
+    coVaccineNote = '<br><br>✅ <strong>同时接种提示：</strong>康希诺ACYW135<strong>结合</strong>疫苗可与白破/百白破同时接种（与多糖型不同）。';
+  }
+
+  return { status: 'eligible', title: '✅ 可以接种',
+    detail: `根据筛查信息，接种者符合<strong>康希诺ACYW135群脑膜炎球菌多糖结合疫苗（430元）</strong>接种条件。<br><br>
+      <strong>接种程序：${schedule}</strong><br>
+      ${scheduleNote}${coVaccineNote}<br><br>
+      <strong>温馨提示：</strong><br>
+      • 接种年龄：3月龄至6周岁（83月龄）<br>
+      • 比AC二价覆盖血清型更广（A/C/Y/W135）<br>
+      • 不同厂家ACYW135结合疫苗不能混打，请确认既往接种记录` };
+}
+
+function evaluateMeningococcalPS() {
+  const age = getAgeInYears();
+  const previousDoses = userAnswers['previous_acyw_ps_doses'];
+  const lastAc = userAnswers['last_ac_dose'];
+  const fever = userAnswers['fever'];
+  const allergy = userAnswers['allergy'];
+  const coDtap = userAnswers['co_vaccine_dtap'];
+
+  if (allergy === '是') {
+    return { status: 'ineligible', title: '❌ 不建议接种',
+      detail: '对疫苗成分有严重过敏史者禁用。' };
+  }
+  if (fever === '是') {
+    return { status: 'conditional', title: '⚠️ 需推迟接种',
+      detail: '中度以上急性疾病或发热期间应推迟接种。' };
+  }
+  if (age < 3) {
+    return { status: 'ineligible', title: '❌ 年龄不符合',
+      detail: `当前${age.toFixed(1)}岁，ACYW135多糖疫苗最低接种年龄为3岁。<br>3岁以下儿童可接种 <strong>康希诺ACYW135结合疫苗（430元）</strong>。` };
+  }
+  if (previousDoses === '是，已完成2剂（3岁+6岁）') {
+    return { status: 'info', title: 'ℹ️ 已完成全程',
+      detail: '常规程序为3岁、6岁各1针共2剂，已完成全程，一般无需再补种。如有特殊需求请咨询医生。' };
+  }
+  if (lastAc === '是，最后一针距今<1年') {
+    return { status: 'conditional', title: '⚠️ 需推迟接种',
+      detail: '如接种过A群或A+C群流脑疫苗，需与最后一针AC间隔至少1年后方可接种ACYW135多糖疫苗。' };
+  }
+
+  // 重要禁忌：与白破/百白破不能同时接种
+  if (coDtap === '是') {
+    return { status: 'conditional', title: '⚠️ 不能同时接种',
+      detail: '<strong>⚠️ 重要提示：</strong>ACYW135<strong>多糖</strong>疫苗与白破/百白破疫苗<strong>不能同时接种</strong>（仅蛇口疫苗中心规定）。<br><br>请分开预约，建议两针间隔至少2周以上，或在面诊时与医生重新协调接种顺序。<br><br>📌 此限制仅适用于"多糖"型，<strong>康希诺"结合"型</strong>可与白破/百白破同时接种。' };
+  }
+
+  let scheduleNote = '';
+  if (previousDoses === '否，首次接种' || previousDoses === undefined) {
+    if (age >= 3 && age < 6) {
+      scheduleNote = '本次为第1针（3岁针），下一针需在6岁接种（两针间隔至少3年）。';
+    } else if (age >= 6) {
+      scheduleNote = '可作为单针补种或6岁加强针，与上一针间隔至少3年。';
+    }
+  } else if (previousDoses === '是，已接种1剂（3岁针）') {
+    if (age >= 6) {
+      scheduleNote = '本次为第2针（6岁针），与3岁针应间隔至少3年。';
+    } else {
+      scheduleNote = '⚠️ 两针间隔需至少3年，请确认上一针接种时间是否满足。';
+    }
+  }
+
+  return { status: 'eligible', title: '✅ 可以接种',
+    detail: `根据筛查信息，接种者符合<strong>绿竹ACYW135群脑膜炎球菌多糖疫苗（148元）</strong>接种条件。<br><br>
+      <strong>接种程序：</strong>${scheduleNote}<br><br>
+      <strong>⚠️ 重要禁忌：</strong><br>
+      • <strong>不能与白破/百白破疫苗同时接种</strong>（仅蛇口疫苗中心规定）<br>
+      • 如接种过AC，需与最后一针AC间隔至少1年<br><br>
+      <strong>温馨提示：</strong><br>
+      • 适用年龄：3岁起，无年龄上限<br>
+      • 常规程序：3岁、6岁各一针，两针间隔至少3年<br>
+      • 3岁以下儿童请选择 <strong>康希诺ACYW135结合疫苗（430元）</strong>` };
+}
+
+function evaluateHepB() {
+  const fever = userAnswers['fever'];
+  const allergy = userAnswers['allergy'];
+  const jaundice = userAnswers['jaundice'];
+
+  if (allergy === '是') {
+    return { status: 'ineligible', title: '❌ 不建议接种',
+      detail: '对酵母或乙肝疫苗成分过敏者禁用。' };
+  }
+  if (fever === '是') {
+    return { status: 'conditional', title: '⚠️ 需推迟接种',
+      detail: '中度以上急性疾病或发热期间应推迟接种。' };
+  }
+  if (jaundice === '是，病理性黄疸') {
+    return { status: 'conditional', title: '⚠️ 需医生评估',
+      detail: '病理性黄疸需先明确病因，由医生判断是否适合接种。如精神状态好、大小便正常，一般可接种。' };
+  }
+
+  return { status: 'eligible', title: '✅ 可以接种',
+    detail: `根据筛查信息，接种者符合乙肝疫苗接种条件。<br><br>
+      <strong>温馨提示：</strong><br>
+      • 共3剂（0-1-6月程序）<br>
+      • 母乳性黄疸不影响接种<br>
+      • 不确定是否有免疫力时，再接种无不良影响<br>
+      • 如需查验抗体，建议完成3针后1个月、1岁半前检测乙肝表面抗体定量（>10 IU/L为有免疫力）` };
+}
+
+function evaluateFlu() {
+  const age = getAgeInYears();
+  const months = age * 12;
+  const fever = userAnswers['fever'];
+  const allergy = userAnswers['allergy'];
+  const pregnant = userAnswers['pregnant'];
+  const gbs = userAnswers['guillain_barre'];
+  const immune = userAnswers['immune_disorder'];
+  const brand = userAnswers['brand_preference'];
+
+  if (allergy === '是') {
+    return { status: 'ineligible', title: '❌ 不建议接种',
+      detail: '对鸡蛋或流感疫苗成分有严重过敏史者禁用。' };
+  }
+  if (fever === '是') {
+    return { status: 'conditional', title: '⚠️ 需推迟接种',
+      detail: '中度以上急性疾病或发热期间应推迟接种。' };
+  }
+  if (gbs === '是') {
+    return { status: 'conditional', title: '⚠️ 需医生评估',
+      detail: '格林-巴利综合征病史者接种需谨慎，建议咨询医生。' };
+  }
+  if (months < 6) {
+    return { status: 'ineligible', title: '❌ 年龄不符合',
+      detail: `当前约 ${months.toFixed(0)} 月龄，流感疫苗最低接种年龄为 6 月龄。` };
+  }
+
+  // 按年龄推荐合适的品牌
+  let recommendations = [];
+  if (months >= 6 && months <= 35) {
+    recommendations.push('• <strong>巴斯德三价儿童（55 元/针）</strong>：6m–2y11m30d');
+    recommendations.push('• <strong>华兰生物儿童四价（143 元/针）</strong>：6M–3Y 以下');
+    recommendations.push('• <strong>巴斯德四价（138 元/针）</strong>：≥6M 儿童及成人');
+  } else if (age >= 3 && age <= 17) {
+    recommendations.push('• <strong>鼻喷流感【减毒活】（长春百客，313 元/支）</strong>：3y–17y11m30d 儿童');
+    recommendations.push('• <strong>巴斯德三价成人（75 元/针）</strong>：≥3 岁均可');
+    recommendations.push('• <strong>华兰生物成人四价（103 元/针）</strong>：≥3 岁均可');
+    recommendations.push('• <strong>巴斯德四价（138 元/针）</strong>：≥6M 儿童及成人');
+  } else {
+    recommendations.push('• <strong>巴斯德三价成人（75 元/针）</strong>：≥3 岁均可');
+    recommendations.push('• <strong>华兰生物成人四价（103 元/针）</strong>：≥3 岁均可');
+    recommendations.push('• <strong>巴斯德四价（138 元/针）</strong>：≥6M 儿童及成人');
+  }
+
+  // 鼻喷活疫苗禁忌
+  let warnings = [];
+  if (immune === '是' || pregnant === '是') {
+    warnings.push('⚠️ 鼻喷为<strong>减毒活疫苗</strong>，免疫缺陷者/孕妇禁用，请选灭活疫苗（巴斯德或华兰）。');
+  }
+  if (brand === '指定鼻喷' && (age < 3 || age > 17)) {
+    return { status: 'ineligible', title: '❌ 鼻喷年龄不符合',
+      detail: `鼻喷流感疫苗适用 3y–17y11m30d，当前约 ${age.toFixed(1)} 岁不在范围内。建议改用灭活疫苗（巴斯德或华兰）。` };
+  }
+  if (brand === '指定鼻喷' && (immune === '是' || pregnant === '是')) {
+    return { status: 'ineligible', title: '❌ 不建议鼻喷',
+      detail: '免疫缺陷者/孕妇禁用减毒活疫苗。建议改用灭活疫苗（巴斯德或华兰）。' };
+  }
+
+  let extra = '';
+  if (pregnant === '是') {
+    extra = '<br><br>📌 孕妇是流感高风险人群，推荐接种<strong>灭活</strong>流感疫苗（巴斯德或华兰），可在孕期任何阶段接种；鼻喷活疫苗禁用。';
+  }
+
+  return { status: 'eligible', title: '✅ 可以接种',
+    detail: `根据筛查信息和年龄，推荐以下流感疫苗品牌：<br><br>
+      ${recommendations.join('<br>')}
+      ${warnings.length ? '<br><br>' + warnings.join('<br>') : ''}
+      ${extra}<br><br>
+      <strong>温馨提示：</strong><br>
+      • 每年接种 1 剂（首次接种的 6 月龄–8 岁儿童需 2 剂，间隔 ≥4 周）<br>
+      • 流感疫苗可与肺炎疫苗等同接种<br>
+      • 部分品牌临近效期，预约时请确认库存` };
+}
+
+// 通用剂次-月龄校验 helper
+// rules: [{ dose: '第1剂', minMonths: 2, label: '第1针（2月龄起）' }, ...]
+// currentMonths: 接种者当前月龄
+// 返回 ineligible result 或 null（通过）
+function checkDoseAge(selectedDose, rules, currentMonths) {
+  const rule = rules.find(r => r.dose === selectedDose);
+  if (!rule) return null;
+  if (currentMonths < rule.minMonths) {
+    const ageLabel = currentMonths < 12 ? `${currentMonths}月龄` : `${(currentMonths/12).toFixed(1)}岁`;
+    const minLabel = rule.minMonths < 12 ? `${rule.minMonths}月龄` : `${(rule.minMonths/12).toFixed(1)}岁`;
+    return {
+      status: 'ineligible',
+      title: '❌ 剂次与年龄不符',
+      detail: `当前 ${ageLabel}，选择的「${selectedDose}」需要 ≥${minLabel} 才可接种。<br><br>📋 ${rule.label}<br><br>请确认剂次选择是否正确，或核对接种者月龄。`
+    };
+  }
+  return null;
+}
+
+function evaluatePentavalent() {
+  const months = parseFloat(userAnswers['age_months']);
+  const dose = userAnswers['dose_number'];
+  const fever = userAnswers['fever'];
+  const allergy = userAnswers['allergy'];
+
+  if (allergy === '是') return { status: 'ineligible', title: '❌ 不建议接种', detail: '对疫苗成分有严重过敏史者禁用。' };
+  if (fever === '是') return { status: 'conditional', title: '⚠️ 需推迟接种', detail: '中度以上急性疾病或发热期间应推迟接种。' };
+  if (isNaN(months)) return { status: 'info', title: 'ℹ️ 信息不完整', detail: '请填写接种者当前月龄。' };
+  if (months < 2) return { status: 'ineligible', title: '❌ 年龄不符合', detail: `当前 ${months} 月龄，五联疫苗最早从 2 月龄开始接种。` };
+  if (months > 36) {
+    return { status: 'ineligible', title: '❌ 年龄不符合',
+      detail: `当前 ${months} 月龄（${(months/12).toFixed(1)} 岁），<strong>深圳超过 3 岁不能接种五联疫苗</strong>。建议按程序接种百白破/灭活脊灰/Hib 单苗。` };
+  }
+
+  // 剂次与月龄逻辑校验
+  if (dose) {
+    const doseAgeCheck = checkDoseAge(dose, [
+      { dose: '第1剂', minMonths: 2,  label: '第1针（2月龄起）' },
+      { dose: '第2剂', minMonths: 3,  label: '第2针（3月龄起，与第1针间隔≥1月）' },
+      { dose: '第3剂', minMonths: 4,  label: '第3针（4月龄起，与第2针间隔≥1月）' },
+      { dose: '第4剂（加强）', minMonths: 18, label: '第4针加强（18-24月龄，与第3针间隔≥6月）' },
+    ], months);
+    if (doseAgeCheck) return doseAgeCheck;
+  }
+
+  return { status: 'eligible', title: '✅ 可以接种',
+    detail: `根据筛查信息，接种者符合<strong>五联疫苗（巴斯德，638 元）</strong>接种条件。<br><br>
+      <strong>本次：</strong>${dose || '—'}<br>
+      <strong>程序：</strong>2、3、4 月各 1 针（基础免疫每剂间隔 ≥1 月），18–24 月加强 1 针（与第 3 针间隔半年）。<br><br>
+      <strong>温馨提示：</strong><br>
+      • 一次接种相当于打了百白破、灭活脊灰、Hib 共 5 种疫苗<br>
+      • 完成 4 针五联后，6 岁可接种 1 针百白破` };
+}
+
+function evaluateHFMD() {
+  const months = parseFloat(userAnswers['age_months']);
+  const dose = userAnswers['dose_number'];
+  const prevBrand = userAnswers['previous_brand'];
+  const fever = userAnswers['fever'];
+  const allergy = userAnswers['allergy'];
+
+  if (allergy === '是') return { status: 'ineligible', title: '❌ 不建议接种', detail: '对疫苗成分有严重过敏史者禁用。' };
+  if (fever === '是') return { status: 'conditional', title: '⚠️ 需推迟接种', detail: '中度以上急性疾病或发热期间应推迟接种。' };
+  if (isNaN(months)) return { status: 'info', title: 'ℹ️ 信息不完整', detail: '请填写接种者当前月龄。' };
+  if (months < 6) return { status: 'ineligible', title: '❌ 年龄不符合', detail: `当前 ${months} 月龄，手足口疫苗最低接种年龄为 6 月龄。` };
+  if (months > 60) {
+    return { status: 'ineligible', title: '❌ 年龄不符合',
+      detail: `当前 ${months} 月龄（${(months/12).toFixed(1)} 岁），<strong>超过 5 岁不能接种手足口疫苗</strong>。` };
+  }
+
+  // 剂次与月龄逻辑校验
+  if (dose) {
+    const doseAgeCheck = checkDoseAge(dose, [
+      { dose: '第1剂', minMonths: 6,  label: '第1针（6月龄起）' },
+      { dose: '第2剂', minMonths: 7,  label: '第2针（7月龄起，与第1针间隔≥1月）' },
+    ], months);
+    if (doseAgeCheck) return doseAgeCheck;
+  }
+
+  if (prevBrand === '是，不同品牌') {
+    return { status: 'ineligible', title: '❌ 不建议接种',
+      detail: '⚠️ <strong>不同牌子的手足口疫苗不能混打</strong>。请选择与之前相同的品牌完成程序。' };
+  }
+
+  return { status: 'eligible', title: '✅ 可以接种',
+    detail: `根据筛查信息，接种者符合<strong>EV71 手足口疫苗（医科院二倍体，188 元）</strong>接种条件。<br><br>
+      <strong>本次：</strong>${dose || '—'}<br>
+      <strong>程序：</strong>6、7 月各 1 针，两针间隔至少 1 个月。<br><br>
+      <strong>温馨提示：</strong><br>
+      • 仅预防 EV71 型手足口病重症，对其他型别无效<br>
+      • 同品牌完成全程，不可混打` };
+}
+
+function evaluatePPV23() {
+  const age = getAgeInYears();
+  const fever = userAnswers['fever'];
+  const allergy = userAnswers['allergy'];
+  const prev = userAnswers['previous_ppv23'];
+
+  if (allergy === '是') return { status: 'ineligible', title: '❌ 不建议接种', detail: '对疫苗成分有严重过敏史者禁用。' };
+  if (fever === '是') return { status: 'conditional', title: '⚠️ 需推迟接种', detail: '中度以上急性疾病或发热期间应推迟接种。' };
+  if (age < 2) return { status: 'ineligible', title: '❌ 年龄不符合', detail: `当前 ${age.toFixed(1)} 岁，23 价肺炎多糖疫苗适用 ≥2 岁人群。` };
+  if (prev === '是，<5年前') {
+    return { status: 'conditional', title: '⚠️ 不建议短期重复接种',
+      detail: '一般情况下，23 价肺炎多糖疫苗 5 年内不重复接种。如有特殊指征请咨询医生。' };
+  }
+
+  return { status: 'eligible', title: '✅ 可以接种',
+    detail: `根据筛查信息，接种者符合<strong>23 价肺炎多糖疫苗（默沙东，260 元）</strong>接种条件。<br><br>
+      <strong>程序：</strong>单针接种。<br><br>
+      <strong>温馨提示：</strong><br>
+      • ≥2 岁人群均可接种，成人和老人也可接种<br>
+      • 高危人群（慢性病/老年）一般 5 年后可考虑加强 1 针` };
+}
+
+function evaluateHepA() {
+  const age = getAgeInYears();
+  const dose = userAnswers['dose_number'];
+  const fever = userAnswers['fever'];
+  const allergy = userAnswers['allergy'];
+
+  if (allergy === '是') return { status: 'ineligible', title: '❌ 不建议接种', detail: '对疫苗成分有严重过敏史者禁用。' };
+  if (fever === '是') return { status: 'conditional', title: '⚠️ 需推迟接种', detail: '中度以上急性疾病或发热期间应推迟接种。' };
+  if (age < 1.5) {
+    return { status: 'ineligible', title: '❌ 年龄不符合', detail: `当前 ${age.toFixed(1)} 岁，国产甲肝灭活疫苗最低接种年龄为 18 月龄。` };
+  }
+  if (age > 16) {
+    return { status: 'ineligible', title: '❌ 年龄不符合',
+      detail: `当前 ${age.toFixed(1)} 岁，国产甲肝灭活疫苗接种年龄上限为 15 岁（不超过 16 岁）。成人如需接种甲肝可咨询医生考虑进口默沙东（库存有限）。` };
+  }
+
+  // 剂次与月龄逻辑校验（第1针18月起，两针间隔≥6月，所以第2针至少24月=2岁）
+  if (dose) {
+    const ageMonths = age * 12;
+    const doseAgeCheck = checkDoseAge(dose, [
+      { dose: '第1剂', minMonths: 18, label: '第1剂（18月龄起）' },
+      { dose: '第2剂', minMonths: 24, label: '第2剂（与第1剂间隔≥6个月，即至少24月龄）' },
+    ], ageMonths);
+    if (doseAgeCheck) return doseAgeCheck;
+  }
+
+  return { status: 'eligible', title: '✅ 可以接种',
+    detail: `根据筛查信息，接种者符合<strong>国产甲肝灭活疫苗（北京科兴 138 元 / 艾美行动 213 元）</strong>接种条件。<br><br>
+      <strong>本次：</strong>${dose || '—'}<br>
+      <strong>程序：</strong>共 2 剂，两针间隔至少 6 个月，18 月龄接种第 1 针。<br><br>
+      <strong>温馨提示：</strong><br>
+      • 适用 18 月龄–15 岁<br>
+      • 不同厂家原则上不建议混打，请尽量同品牌完成` };
+}
+
+function evaluateDtapDt() {
+  const age = getAgeInYears();
+  const vaccineType = userAnswers['vaccine_type'];
+  const prevDtap6 = userAnswers['previous_dtap_at_6'];
+  const coAcyw = userAnswers['co_acyw_polysaccharide'];
+  const fever = userAnswers['fever'];
+  const allergy = userAnswers['allergy'];
+
+  if (allergy === '是') return { status: 'ineligible', title: '❌ 不建议接种', detail: '对疫苗成分有严重过敏史者禁用。' };
+  if (fever === '是') return { status: 'conditional', title: '⚠️ 需推迟接种', detail: '中度以上急性疾病或发热期间应推迟接种。' };
+
+  // 关键禁忌：与 ACYW 多糖同接
+  if (coAcyw === '是') {
+    return { status: 'conditional', title: '⚠️ 不能同时接种',
+      detail: '<strong>⚠️ 重要提示：</strong>白破/百白破疫苗与 <strong>ACYW135 多糖</strong>流脑疫苗<strong>不能同时接种</strong>（仅蛇口疫苗中心规定）。<br><br>请分开预约，建议两针间隔至少 2 周以上，或在面诊时与医生重新协调接种顺序。<br><br>📌 与白破/百白破不冲突的是 <strong>"康希诺 ACYW135 结合疫苗"</strong>。' };
+  }
+
+  // 百白破：6 岁
+  if (vaccineType === '百白破（DTaP）') {
+    if (age < 6 || age >= 7) {
+      return { status: 'ineligible', title: '❌ 年龄不符合',
+        detail: `百白破接种年龄为 <strong>6 岁–6 岁 11 月 30 天</strong>，当前 ${age.toFixed(1)} 岁不在范围内。` };
+    }
+    return { status: 'eligible', title: '✅ 可以接种',
+      detail: `根据筛查信息，接种者符合<strong>百白破疫苗（武汉生物，免费）</strong>接种条件。<br><br>
+        <strong>程序：</strong>单针接种（3 岁前建议先完成 4 针五联，6 岁再接种 1 针百白破）。<br><br>
+        <strong>⚠️ 重要禁忌：</strong>不能与 ACYW135 多糖流脑疫苗同时接种（仅蛇口疫苗中心规定）。` };
+  }
+
+  // 白破：7-11 岁 11 月
+  if (vaccineType === '白破（DT）') {
+    if (age < 7 || age >= 12) {
+      return { status: 'ineligible', title: '❌ 年龄不符合',
+        detail: `白破接种年龄为 <strong>7 岁–11 岁 11 月</strong>，当前 ${age.toFixed(1)} 岁不在范围内。` };
+    }
+    if (prevDtap6 === '是') {
+      return { status: 'info', title: 'ℹ️ 无需再接种',
+        detail: '已在 6 岁接种过百白破，<strong>无需再接种白破</strong>。' };
+    }
+    return { status: 'eligible', title: '✅ 可以接种',
+      detail: `根据筛查信息，接种者符合<strong>白破疫苗（武汉生物，免费）</strong>接种条件。<br><br>
+        <strong>程序：</strong>7–11 岁 11 月单针接种。<br><br>
+        <strong>⚠️ 重要禁忌：</strong>不能与 ACYW135 多糖流脑疫苗同时接种（仅蛇口疫苗中心规定）。` };
+  }
+
+  // 不确定的情况：按年龄推荐
+  let recommend = '';
+  if (age >= 6 && age < 7) recommend = '建议接种 <strong>百白破（DTaP）</strong>。';
+  else if (age >= 7 && age < 12) recommend = prevDtap6 === '是' ? '已在 6 岁接种过百白破，无需再接种白破。' : '建议接种 <strong>白破（DT）</strong>。';
+  else recommend = `当前 ${age.toFixed(1)} 岁不在白破/百白破接种范围（白破 7–11 岁 11 月，百白破 6–6 岁 11 月 30 天）。`;
+
+  return { status: 'info', title: 'ℹ️ 请根据年龄选择',
+    detail: `${recommend}<br><br><strong>⚠️ 重要禁忌：</strong>不能与 ACYW135 多糖流脑疫苗同时接种（仅蛇口疫苗中心规定）。` };
+}
+
+function evaluateGeneral() {
+  const fever = userAnswers['fever'];
+  const mildIllness = userAnswers['mild_illness'];
+  const allergyHistory = userAnswers['allergy_history'];
+  const pregnant = userAnswers['pregnant'];
+  const immuneDisorder = userAnswers['immune_disorder'];
+  const antibiotics = userAnswers['antibiotics'];
+  const jaundice = userAnswers['jaundice'];
+  const seizure = userAnswers['seizure_after_vaccine'];
+
+  let issues = [];
+  let warnings = [];
+  let ok = [];
+
+  if (fever === '是') {
+    issues.push({ level: 'warn', text: '中度以上急性疾病或发热（≥38.5℃）：应推迟所有疫苗接种，待康复后再接种。' });
+  }
+  if (mildIllness === '是') {
+    ok.push('轻微不适（轻咳、鼻塞、流涕、轻微腹泻）：不影响疫苗接种。');
+  }
+  if (allergyHistory === '是') {
+    issues.push({ level: 'block', text: '曾对某种疫苗出现严重过敏反应：该疫苗及含相同成分的疫苗为接种禁忌。' });
+  }
+  if (seizure === '是') {
+    warnings.push('曾接种疫苗后出现热性惊厥：仍可接种疫苗（利大于弊），但发热风险可能略高。如有疑虑请咨询医生。');
+  }
+  if (antibiotics === '是') {
+    ok.push('正在接受抗生素治疗：不需要暂停疫苗接种。');
+  }
+  if (jaundice === '是，母乳性黄疸') {
+    ok.push('母乳性黄疸：不影响疫苗接种，观察精神状态和大小便正常即可。');
+  }
+  if (jaundice === '是，其他类型黄疸') {
+    warnings.push('其他类型黄疸：需先明确排除其他问题，如精神状态好、大小便正常，一般可接种。如有疑虑请在线问诊。');
+  }
+  if (pregnant === '是') {
+    warnings.push('怀孕期间：部分疫苗（如HPV、麻腮风等减毒活疫苗）不建议接种；灭活疫苗（如流感、百白破）可在医生指导下接种。');
+  }
+  if (immuneDisorder === '是') {
+    issues.push({ level: 'warn', text: '严重免疫缺陷或使用免疫抑制剂：减毒活疫苗可能不适用，需医生评估后决定。' });
+  }
+
+  // Determine overall status
+  const hasBlock = issues.some(i => i.level === 'block');
+  const hasWarn = issues.some(i => i.level === 'warn') || warnings.length > 0;
+
+  let status, title;
+  if (hasBlock) {
+    status = 'ineligible'; title = '❌ 存在接种禁忌';
+  } else if (hasWarn) {
+    status = 'conditional'; title = '⚠️ 需进一步评估';
+  } else {
+    status = 'eligible'; title = '✅ 基础筛查通过';
+  }
+
+  let detail = '';
+  if (issues.length > 0) {
+    detail += '<strong>需关注的问题：</strong><ul>';
+    issues.forEach(i => {
+      detail += `<li>${i.level === 'block' ? '🔴 ' : '🟡 '}${i.text}</li>`;
+    });
+    detail += '</ul>';
+  }
+  if (warnings.length > 0) {
+    detail += '<strong>注意事项：</strong><ul>';
+    warnings.forEach(w => { detail += `<li>${w}</li>`; });
+    detail += '</ul>';
+  }
+  if (ok.length > 0) {
+    detail += '<strong>✅ 以下情况不影响接种：</strong><ul>';
+    ok.forEach(o => { detail += `<li>${o}</li>`; });
+    detail += '</ul>';
+  }
+
+  if (!hasBlock && !hasWarn) {
+    detail += '<p>根据筛查，接种者无明确的疫苗接种禁忌征。具体能否接种某种疫苗，还需结合该疫苗的年龄、过敏史等特定条件判断。</p>';
+  }
+
+  detail += '<p style="margin-top:12px;"><strong>通用原则：</strong><br>• 延迟接种不影响效果，只需从延误剂次开始补种<br>• 轻微疾病（低热、上感、中耳炎、轻微腹泻）非禁忌<br>• 不同厂家同种疫苗多数可互换（HPV和轮状病毒建议同品牌；EV71不可互换）</p>';
+
+  return { status, title, detail };
+}
+
+function renderResult(result) {
+  const container = document.getElementById('result-container');
+  const statusClass = result.status === 'eligible' ? 'eligible' :
+                      result.status === 'conditional' ? 'conditional' :
+                      result.status === 'ineligible' ? 'ineligible' : 'info';
+  const icon = result.status === 'eligible' ? '✅' :
+               result.status === 'conditional' ? '⚠️' :
+               result.status === 'ineligible' ? '❌' : 'ℹ️';
+
+  // 移动端用：把摘要也内联到结论下方（桌面端左侧已展示，故仅在小屏渲染）
+  const mobileSummary = `
+    <div class="mobile-summary" style="margin-top:16px; padding:12px; background:var(--primary-soft); border-radius:8px; font-size:13px; color:var(--text-secondary); border:1px solid var(--primary-light);">
+      <strong style="color:var(--primary);">📋 筛查摘要</strong><br>
+      疫苗：${vaccineConfigs[selectedVaccine].fullName}<br>
+      ${Object.entries(userAnswers).filter(([k]) => !k.endsWith('_unit')).map(([k, v]) => {
+        const q = vaccineConfigs[selectedVaccine].questions.find(q => q.id === k);
+        return q ? `${q.label}：${v}` : '';
+      }).filter(Boolean).join('<br>')}
+    </div>`;
+
+  container.innerHTML = `
+    <div class="result-box ${statusClass}">
+      <div class="result-icon">${icon}</div>
+      <div class="result-title">${result.title}</div>
+      <div class="result-detail">${result.detail}</div>
+    </div>
+    ${mobileSummary}`;
+}
+</script>
+
+</body>
+</html>
