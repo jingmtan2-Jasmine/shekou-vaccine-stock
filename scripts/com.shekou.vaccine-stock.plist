@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.shekou.vaccine-stock</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>-c</string>
+        <string>cd /Users/jasminetan/WorkBuddy/2026-06-16-17-32-41/shekou-vaccine-stock && /usr/bin/python3 scripts/refresh_stock.py --commit &gt;&gt; /tmp/vaccine-stock-refresh.log 2&gt;&amp;1</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>8</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/tmp/vaccine-stock-refresh.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/vaccine-stock-refresh.log</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/Users/jasminetan/.local/bin</string>
+        <key>HOME</key>
+        <string>/Users/jasminetan</string>
+    </dict>
+</dict>
+</plist>
