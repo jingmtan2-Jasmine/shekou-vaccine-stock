@@ -240,6 +240,7 @@ def git_commit():
     subprocess.run(["git", "add", "stock-data.json"], check=True)
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     subprocess.run(["git", "commit", "-m", f"🔄 库存刷新 {now}"], check=True)
+    subprocess.run(["git", "pull", "--rebase", "origin", "main"], check=True)
     subprocess.run(["git", "push", "origin", "main"], check=True)
     print(f"  ✅ 已提交并推送 ({now})")
 
