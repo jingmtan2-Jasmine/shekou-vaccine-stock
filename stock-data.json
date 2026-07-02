@@ -1,9 +1,45 @@
 {
-  "updated": "2026-07-02T10:23:41.551536+08:00",
+  "updated": "2026-07-02T10:24:49.483458+08:00",
   "source": "钉钉蛇口疫苗库存表",
   "vaccines": {
+    "pentavalent": {
+      "stock": 58
+    },
+    "rotavirus": {
+      "stock": 64
+    },
+    "hfmd": {
+      "stock": 41
+    },
+    "shingles": {
+      "stock": 22
+    },
+    "hpv": {
+      "stock": 7
+    },
+    "ppv23": {
+      "stock": 0
+    },
+    "mmr": {
+      "stock": 47
+    },
+    "je": {
+      "stock": 33
+    },
+    "varicella_free": {
+      "stock": 42
+    },
+    "ac_conjugate": {
+      "stock": 0
+    },
     "varicella_paid": {
       "stock": 0
+    },
+    "meningococcal_ps": {
+      "stock": 7
+    },
+    "meningococcal": {
+      "stock": 61
     },
     "hepb": {
       "stock": 85,
@@ -24,10 +60,6 @@
     "flu": {
       "stock": 0,
       "stockNote": "当前缺货，下批到苗约 9 月"
-    },
-    "ac_conjugate": {
-      "stock": 0,
-      "stockNote": "绿竹暂时缺货"
     }
   }
 }
