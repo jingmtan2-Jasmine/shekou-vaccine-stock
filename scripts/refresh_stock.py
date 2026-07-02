@@ -32,7 +32,7 @@ ROW_TO_ID = {
     "五联": "pentavalent",
     "轮状": "rotavirus",
     "手足口": "hfmd",
-    "带状疱疹": "shingles",
+    "（带状疱疹": "shingles",
     "HPV9": "hpv",
     "23价肺炎": "ppv23",
     "麻腮风": "mmr",
@@ -146,14 +146,16 @@ def map_to_vaccines(stock_map):
     print("[4/5] 映射到疫苗 ID...")
     vaccines = {}
 
-    # 1. 精确匹配
-    for row_name, vid in ROW_TO_ID.items():
-        if row_name in stock_map:
-            s = stock_map[row_name]
+    # 1. 前缀匹配（表行名包含厂家/价格后缀，用前缀匹配）
+    for row_prefix, vid in ROW_TO_ID.items():
+        matched = [k for k in stock_map if k.startswith(row_prefix)]
+        if matched:
+            # 取第一个匹配（通常只有一个）
+            s = stock_map[matched[0]]
             vaccines[vid] = {"stock": s["remaining"]}
-            print(f"  {vid:25s} ← {row_name}: {s['remaining']}")
+            print(f"  {vid:25s} ← '{matched[0][:40]}': {s['remaining']}")
         else:
-            print(f"  ⚠️ {vid:25s} ← 未找到行 '{row_name}'")
+            print(f"  ⚠️ {vid:25s} ← 未找到以 '{row_prefix}' 开头的行")
 
     # 2. 多行汇总
     for vid, prefixes in MULTI_ROW.items():
@@ -238,7 +240,7 @@ def git_commit():
     subprocess.run(["git", "add", "stock-data.json"], check=True)
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     subprocess.run(["git", "commit", "-m", f"🔄 库存刷新 {now}"], check=True)
-    subprocess.run(["git", "push"], check=True)
+    subprocess.run(["git", "push", "origin", "main"], check=True)
     print(f"  ✅ 已提交并推送 ({now})")
 
 
