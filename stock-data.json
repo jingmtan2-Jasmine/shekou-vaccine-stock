@@ -1,24 +1,33 @@
 {
-  "updated": "2026-07-01T17:35:00+08:00",
+  "updated": "2026-07-02T10:23:41.551536+08:00",
   "source": "钉钉蛇口疫苗库存表",
   "vaccines": {
-    "rotavirus": { "stock": 65, "stockNote": "默沙东 65 支" },
-    "pentavalent": { "stock": 60, "stockNote": "巴斯德 60 支" },
-    "pcv13": { "stock": 75, "stockNote": "辉瑞 74 / 沃森 1" },
-    "meningococcal": { "stock": 63, "stockNote": "康希诺 63 支" },
-    "hfmd": { "stock": 44, "stockNote": "医科院 44 支" },
-    "hepa": { "stock": 89, "stockNote": "北京科兴 46 / 艾美行动 43" },
-    "meningococcal_ps": { "stock": 8, "stockNote": "绿竹 8 支" },
-    "dtap_dt": { "stock": 3, "stockNote": "白破 1 / 百白破 2" },
-    "hpv": { "stock": 7, "stockNote": "默沙东 7 支" },
-    "hepb": { "stock": 86, "stockNote": "儿童 43 / 成人 43" },
-    "flu": { "stock": 0, "stockNote": "当前缺货，下批到苗约 9 月" },
-    "ppv23": { "stock": 1, "stockNote": "默沙东 1 支" },
-    "shingles": { "stock": 22, "stockNote": "GSK 22 支" },
-    "mmr": { "stock": 47, "stockNote": "上海生物 47 支" },
-    "je": { "stock": 33, "stockNote": "武汉生物 33 支" },
-    "varicella_free": { "stock": 42, "stockNote": "北京民海 42 支" },
-    "ac_conjugate": { "stock": 0, "stockNote": "绿竹暂时缺货" },
-    "varicella_paid": { "stock": 0, "stockNote": "暂时缺货" }
+    "varicella_paid": {
+      "stock": 0
+    },
+    "hepb": {
+      "stock": 85,
+      "stockNote": "儿童 43 / 成人 42"
+    },
+    "pcv13": {
+      "stock": 74,
+      "stockNote": "辉瑞 73 / 沃森 1"
+    },
+    "hepa": {
+      "stock": 87,
+      "stockNote": "北京科兴 46 / 艾美行动 84"
+    },
+    "dtap_dt": {
+      "stock": 2,
+      "stockNote": "白破 2 / 百白破 1"
+    },
+    "flu": {
+      "stock": 0,
+      "stockNote": "当前缺货，下批到苗约 9 月"
+    },
+    "ac_conjugate": {
+      "stock": 0,
+      "stockNote": "绿竹暂时缺货"
+    }
   }
 }
