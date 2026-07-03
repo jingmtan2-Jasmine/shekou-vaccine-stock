@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>卓正医疗 · 疫苗接种查询 v2026.06.29</title>
+<title>卓正医疗 · 疫苗接种查询 v2026.07.03</title>
 <style>
   :root {
     --primary: #5A9B5F;
@@ -726,10 +726,6 @@
     background: #eef3fe;
     border-color: #c9d8f5;
   }
-  .tl-chip.hk {
-    background: #fff8e8;
-    border-color: #f0d78c;
-  }
   .tl-chip .tl-chip-note {
     font-size: 12px;
     color: var(--text-secondary);
@@ -980,7 +976,7 @@
 
   <div class="disclaimer">
     ⚠️ 本工具为预约端快速筛查参考，不构成最终医学判断。最终接种决定需由执业医师在面诊后作出。如有疑问请引导客户使用卓正诊所小程序在线问诊。<br>
-    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-06-30 17:18</span> · 推荐计划：卓正2023年12月31日更新版 · 版本 v2026.07.01（支持自动刷新库存）</span>
+    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-06-30 17:18</span> · 推荐计划：卓正2023年12月31日更新版 · 版本 v2026.07.03（移除香港诊所标注，ACYW135结合疫苗改为内地康希诺）</span>
   </div>
 
 </div>
@@ -995,7 +991,7 @@ let currentMode = 'screen'; // 'screen' | 'schedule'
 
 // ========== 卓正推荐疫苗计划数据（2023年12月31日更新版）==========
 // schedule: 月龄→疫苗推荐列表
-// 每条: { id (对应 vaccineCatalog), label (显示名), note (备注), type ('self'|'free'|'hk') }
+// 每条: { id (对应 vaccineCatalog), label (显示名), note (备注), type ('self'|'free') }
 const vaccineSchedule = [
   { age: '1月',   ageMonths: 1,   vaccines: [
     { id: 'hepb',         label: '乙肝疫苗', note: '第2针', type: 'self' }
@@ -1035,7 +1031,7 @@ const vaccineSchedule = [
     { id: 'je',             label: '乙脑疫苗', note: '国家免疫规划 · 首针', type: 'free' }
   ]},
   { age: '9月',   ageMonths: 9,   vaccines: [
-    { id: null,           label: '*ACYW135结合疫苗', note: '仅香港诊所接种', type: 'hk' },
+    { id: 'meningococcal', label: 'ACYW135结合疫苗', note: '首针6月龄以上·第2针', type: 'self' },
     { id: 'ac_conjugate', label: 'AC结合A+C疫苗', note: '可替代A群流脑 · 133元', type: 'self' }
   ]},
   { age: '12月',  ageMonths: 12,  vaccines: [
@@ -1045,7 +1041,7 @@ const vaccineSchedule = [
     { id: 'pcv13',        label: '13价肺炎疫苗', note: '加强针', type: 'self' }
   ]},
   { age: '15月',  ageMonths: 15,  vaccines: [
-    { id: null,           label: '*ACYW135结合疫苗', note: '仅香港诊所接种', type: 'hk' }
+    { id: 'meningococcal', label: 'ACYW135结合疫苗', note: '首针12月龄以上·第2针', type: 'self' }
   ]},
   { age: '18月',  ageMonths: 18,  vaccines: [
     { id: 'pentavalent',  label: '五联疫苗', note: '第4针加强', type: 'self' },
@@ -1374,7 +1370,7 @@ function renderScheduleCard(v, isPast) {
     meningococcal_ps: '🧠', dtap_dt: '💪', ppv23: '🫁', shingles: '🔥', hpv: '🌸',
     mmr: '🦲', je: '🧛', varicella_free: '🔴', ac_conjugate: '🧠', varicella_paid: '🔴'
   };
-  const icon = catalog ? (iconMap[v.id] || '💉') : (v.type === 'free' ? '🆓' : v.type === 'hk' ? '🇭🇰' : '💉');
+  const icon = catalog ? (iconMap[v.id] || '💉') : (v.type === 'free' ? '🆓' : '💉');
 
   let badgeHtml = '';
   if (v.type === 'free' && catalog) {
@@ -1382,8 +1378,6 @@ function renderScheduleCard(v, isPast) {
     badgeHtml = '<span class="badge free-badge">免费</span> ' + stockBadge(catalog);
   } else if (v.type === 'free') {
     badgeHtml = '<span class="badge free-badge">免费</span>';
-  } else if (v.type === 'hk') {
-    badgeHtml = '<span class="badge hk-badge">仅HK</span>';
   } else if (catalog) {
     badgeHtml = stockBadge(catalog);
   }
@@ -1394,8 +1388,6 @@ function renderScheduleCard(v, isPast) {
     linkHtml = `<div class="v-link" onclick="startScreening('${v.id}')">筛查 →</div>`;
   } else if (v.type === 'free' || (catalog && catalog.vaccineType === 'free')) {
     linkHtml = `<div class="v-link disabled">国家免疫规划</div>`;
-  } else if (v.type === 'hk') {
-    linkHtml = `<div class="v-link disabled">仅香港诊所</div>`;
   } else if (catalog && catalog.stock === 0) {
     linkHtml = `<div class="v-link disabled" style="color:var(--danger);">暂时缺货</div>`;
   }
@@ -1453,9 +1445,6 @@ function renderTimelineContent() {
       cls = 'free';
       badges = '<span class="badge free-badge">免</span>';
       if (catalog) badges += ' ' + stockBadge(catalog);
-    } else if (v.type === 'hk') {
-      cls = 'hk';
-      badges = '<span class="badge hk-badge">HK</span>';
     } else if (catalog) {
       badges = stockBadge(catalog);
     }
