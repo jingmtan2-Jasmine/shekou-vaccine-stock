@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>卓正医疗 · 疫苗接种查询 v2026.07.03c</title>
+<title>卓正医疗 · 疫苗接种查询 v2026.07.04</title>
 <style>
   :root {
     --primary: #5A9B5F;
@@ -685,7 +685,14 @@
     min-width: min-content;
   }
   .tt-row:last-child { border-bottom: none; }
-  .tt-row.tt-header { border-bottom: 1.5px solid var(--border); background: #f0f7ee; }
+  .tt-row.tt-header {
+    border-bottom: 1.5px solid var(--border);
+    background: #f0f7ee;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
 
   .tt-age {
     flex-shrink: 0;
@@ -709,6 +716,7 @@
     font-weight: 600;
     color: var(--text-secondary);
     background: #f0f7ee;
+    z-index: 12;
   }
   .tt-row.adult .tt-age { color: #4a6fa5; background: #f6f8fc; }
   .tt-header.adult .tt-age { background: #f0f4ff; }
@@ -1007,7 +1015,7 @@
 
   <div class="disclaimer">
     ⚠️ 本工具为预约端快速筛查参考，不构成最终医学判断。最终接种决定需由执业医师在面诊后作出。如有疑问请引导客户使用卓正诊所小程序在线问诊。<br>
-    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-06-30 17:18</span> · 推荐计划：卓正2023年12月31日更新版 · 版本 v2026.07.03c（接种计划纵表 + 表头简化为类型名）</span>
+    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-06-30 17:18</span> · 推荐计划：卓正2023年12月31日更新版 · 版本 v2026.07.04（接种计划纵表 + 表头冻结）</span>
   </div>
 
 </div>
