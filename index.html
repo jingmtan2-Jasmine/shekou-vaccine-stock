@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>卓正医疗 · 疫苗接种查询 v2026.07.03</title>
+<title>卓正医疗 · 疫苗接种查询 v2026.07.03c</title>
 <style>
   :root {
     --primary: #5A9B5F;
@@ -652,93 +652,125 @@
   .timeline-panel { display: none; }
   .timeline-panel.show { display: block; }
 
-  .tl-table {
-    margin-top: 10px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .tl-section-label {
+  /* --- 接种计划矩阵表 --- */
+  .tt-section-label {
     padding: 8px 16px;
     font-size: 14px;
     font-weight: 700;
     color: var(--primary);
     background: var(--primary-soft);
-    border-bottom: 1.5px solid var(--border);
+    border: 1.5px solid var(--border);
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
     letter-spacing: 0.5px;
   }
-  .tl-section-label.adult {
+  .tt-section-label.adult {
     color: #4a6fa5;
     background: #f0f4ff;
+    margin-top: 20px;
   }
 
-  .tl-row {
+  .tt-table {
+    border: 1.5px solid var(--border);
+    border-radius: 0 0 10px 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background: #fff;
+  }
+  .tt-section-label + .tt-table { border-top: none; }
+
+  .tt-row {
     display: flex;
-    align-items: stretch;
     border-bottom: 1px solid #eef0f0;
+    min-width: min-content;
   }
-  .tl-row:last-child { border-bottom: none; }
-  .tl-row:hover { background: #fafdf9; }
+  .tt-row:last-child { border-bottom: none; }
+  .tt-row.tt-header { border-bottom: 1.5px solid var(--border); background: #f0f7ee; }
 
-  .tl-age {
+  .tt-age {
     flex-shrink: 0;
-    width: 68px;
+    width: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--primary);
     background: #f5f9f3;
     border-right: 1px solid #eef0f0;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    padding: 6px 2px;
     text-align: center;
-    padding: 0 4px;
   }
-  .tl-row.adult .tl-age {
-    color: #4a6fa5;
-    background: #f6f8fc;
-  }
-
-  .tl-vaxes {
-    flex: 1;
-    padding: 8px 12px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 8px;
-    align-items: center;
-    min-height: 42px;
-  }
-
-  .tl-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 5px 10px;
-    border-radius: 7px;
-    font-size: 14px;
-    line-height: 1.3;
-    background: #f0f7ee;
-    border: 1px solid #d8e8d4;
-    color: var(--text);
-    white-space: nowrap;
-  }
-  .tl-chip.free {
-    background: #eef3fe;
-    border-color: #c9d8f5;
-  }
-  .tl-chip .tl-chip-note {
-    font-size: 12px;
-    color: var(--text-secondary);
-    font-weight: 400;
-  }
-  .tl-chip .badge,
-  .tl-chip .stock-badge {
+  .tt-header .tt-age {
     font-size: 11px;
-    padding: 1px 5px;
-    border-radius: 4px;
     font-weight: 600;
-    line-height: 1.4;
+    color: var(--text-secondary);
+    background: #f0f7ee;
   }
+  .tt-row.adult .tt-age { color: #4a6fa5; background: #f6f8fc; }
+  .tt-header.adult .tt-age { background: #f0f4ff; }
+
+  .tt-hdr {
+    flex: 1 0 68px;
+    min-width: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 4px;
+    background: #f0f7ee;
+    border-right: 1px solid #eef0f0;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    text-align: center;
+    line-height: 1.35;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+  .tt-hdr:last-child { border-right: none; }
+  .tt-header.adult .tt-hdr { background: #f0f4ff; color: #4a6fa5; }
+
+  .tt-cell {
+    flex: 1 0 68px;
+    min-width: 68px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 6px 3px;
+    border-right: 1px solid #eef0f0;
+    min-height: 46px;
+    box-sizing: border-box;
+  }
+  .tt-cell:last-child { border-right: none; }
+  .tt-cell.empty { background: #fafafa; }
+  .tt-cell.free-bg { background: #f6f8fc; }
+
+  .tt-note {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.35;
+    text-align: center;
+  }
+
+  .sd {
+    display: inline-block;
+    font-size: 10px;
+    min-width: 14px;
+    padding: 0 4px;
+    border-radius: 8px;
+    font-weight: 700;
+    line-height: 1.7;
+    text-align: center;
+  }
+  .sd.s0 { background: #fbe5e5; color: #c0392b; }
+  .sd.s1 { background: #fff4d6; color: #b07600; }
+  .sd.s2 { background: #e6f4e6; color: #2d7a36; }
   .timeline-note {
     padding: 12px 18px;
     background: #fff8e6;
@@ -975,7 +1007,7 @@
 
   <div class="disclaimer">
     ⚠️ 本工具为预约端快速筛查参考，不构成最终医学判断。最终接种决定需由执业医师在面诊后作出。如有疑问请引导客户使用卓正诊所小程序在线问诊。<br>
-    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-06-30 17:18</span> · 推荐计划：卓正2023年12月31日更新版 · 版本 v2026.07.03（移除香港诊所标注，ACYW135结合疫苗改为内地康希诺）</span>
+    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-06-30 17:18</span> · 推荐计划：卓正2023年12月31日更新版 · 版本 v2026.07.03c（接种计划纵表 + 表头简化为类型名）</span>
   </div>
 
 </div>
@@ -1156,6 +1188,8 @@ const categoryDefs = [
           const dt = data.updated.replace('T', ' ').substring(0, 16);
           snapEl.textContent = '库存快照：' + dt + '（自动刷新）';
         }
+        // 刷新时间轴中的库存数字
+        renderTimelineContent();
       }
       console.log('[stock-refresh] 已更新 ' + updated + ' 种疫苗库存');
     })
@@ -1435,41 +1469,79 @@ function renderTimelineContent() {
     mmr: '麻腮风疫苗', je: '乙脑疫苗', varicella_free: '水痘疫苗', ac_conjugate: 'AC结合A+C疫苗', varicella_paid: '水痘疫苗'
   };
 
-  function buildChip(v) {
-    const catalog = v.id ? vaccineCatalog.find(c => c.id === v.id) : null;
-    const name = v.id ? (shortName[v.id] || v.label) : v.label;
-    let cls = '';
-    let badges = '';
-    if (v.type === 'free') {
-      cls = 'free';
-      badges = '<span class="badge free-badge">免</span>';
-      if (catalog) badges += ' ' + stockBadge(catalog);
-    } else if (catalog) {
-      badges = stockBadge(catalog);
-    }
-    const annual = v.annual ? ' <span style="font-size:10px;color:var(--warning);">🔁</span>' : '';
-    return `<span class="tl-chip ${cls}">${name} <span class="tl-chip-note">${v.note}</span>${annual} ${badges}</span>`;
+  // 表头专用更短名称（去掉“疫苗”二字，允许换行）
+  const shortHeader = {
+    hepb: '乙肝', rotavirus: '轮状\n病毒', pentavalent: '五联', pcv13: '13价\n肺炎',
+    meningococcal: 'ACYW135\n结合', hfmd: '手足\n口', flu: '流感', hepa: '甲肝',
+    meningococcal_ps: 'ACYW135\n多糖', dtap_dt: '百白破/\n白破', ppv23: '23价\n肺炎', shingles: '带状\n疱疹', hpv: 'HPV',
+    mmr: '麻腮风', je: '乙脑', varicella_free: '水痘', ac_conjugate: 'AC结合\nA+C', varicella_paid: '水痘'
+  };
+
+  function stockDot(v) {
+    if (v.stock == null) return '';
+    if (v.stock === 0) return '<span class="sd s0">缺</span>';
+    if (v.stock < 10) return `<span class="sd s1">${v.stock}</span>`;
+    return `<span class="sd s2">${v.stock}</span>`;
   }
 
-  function buildRow(stage, isAdult) {
-    const chips = stage.vaccines.map(buildChip).join('');
-    return `
-      <div class="tl-row${isAdult ? ' adult' : ''}">
-        <div class="tl-age">${stage.age}</div>
-        <div class="tl-vaxes">${chips}</div>
-      </div>`;
+  function buildCell(v) {
+    const catalog = v.id ? vaccineCatalog.find(c => c.id === v.id) : null;
+    const isFree = v.type === 'free';
+    let cls = isFree ? ' free-bg' : '';
+    let tag = '';
+    if (isFree) tag = ' <span style="font-size:10px;color:#4a6fa5;">免</span>';
+    const dot = catalog ? stockDot(catalog) : '';
+    const annual = v.annual ? ' <span style="font-size:10px;color:var(--warning);">🔁</span>' : '';
+    return `<div class="tt-cell${cls}"><span class="tt-note">${v.note}${tag}</span>${annual}${dot}</div>`;
+  }
+
+  function buildTable(stages, label, isAdult) {
+    const colIds = [];
+    const seen = new Set();
+    for (const s of stages) {
+      for (const v of s.vaccines) {
+        if (!seen.has(v.id)) {
+          seen.add(v.id);
+          colIds.push(v.id);
+        }
+      }
+    }
+
+    let h = `<div class="tt-section-label${isAdult ? ' adult' : ''}">${label}</div>`;
+    h += '<div class="tt-table">';
+
+    h += `<div class="tt-row tt-header${isAdult ? ' adult' : ''}">`;
+    h += '<div class="tt-age">月龄</div>';
+    for (const vid of colIds) {
+      const name = (shortHeader[vid] || shortName[vid] || vid).replace(/\n/g, '<br>');
+      h += `<div class="tt-hdr">${name}</div>`;
+    }
+    h += '</div>';
+
+    for (const s of stages) {
+      h += `<div class="tt-row${isAdult ? ' adult' : ''}">`;
+      h += `<div class="tt-age">${s.age}</div>`;
+      for (const vid of colIds) {
+        const v = s.vaccines.find(x => x.id === vid);
+        if (v) {
+          h += buildCell(v);
+        } else {
+          h += '<div class="tt-cell empty"></div>';
+        }
+      }
+      h += '</div>';
+    }
+
+    h += '</div>';
+    return h;
   }
 
   // 两段式：儿童 + 成人
   const childStages = vaccineSchedule.filter(s => !s.isRange && s.ageMonths <= 72);
   const adultStages = vaccineSchedule.filter(s => s.isRange || s.ageMonths > 72);
 
-  let html = '<div class="tl-table">';
-  html += '<div class="tl-section-label">👶 儿童（1月 → 6岁）</div>';
-  html += childStages.map(s => buildRow(s, false)).join('');
-  html += '<div class="tl-section-label adult">🧑 青少年 & 成人</div>';
-  html += adultStages.map(s => buildRow(s, true)).join('');
-  html += '</div>';
+  let html = buildTable(childStages, '👶 儿童（1月 → 6岁）', false);
+  html += buildTable(adultStages, '🧑 青少年 & 成人', true);
 
   el.innerHTML = html;
 }
