@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>卓正医疗 · 疫苗接种查询 v2026.07.04</title>
+<title>卓正医疗 · 疫苗接种查询 v2026.07.05</title>
 <style>
   :root {
     --primary: #5A9B5F;
@@ -670,14 +670,38 @@
     margin-top: 20px;
   }
 
-  .tt-table {
-    border: 1.5px solid var(--border);
-    border-radius: 0 0 10px 10px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  .tt-section {
+    margin-bottom: 0;
+  }
+  .tt-section-label {
+    position: sticky;
+    top: 0;
+    z-index: 11;
+  }
+  .tt-section-label.adult {
+    z-index: 13;
+  }
+  .tt-header-sticky {
+    position: sticky;
+    top: 37px;
+    z-index: 10;
+    min-width: min-content;
     background: #fff;
   }
-  .tt-section-label + .tt-table { border-top: none; }
+  .tt-header-sticky.adult { z-index: 12; }
+  .tt-header-inner {
+    display: flex;
+    min-width: min-content;
+    will-change: transform;
+  }
+
+  .tt-body-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1.5px solid var(--border);
+    border-radius: 0 0 10px 10px;
+    background: #fff;
+  }
 
   .tt-row {
     display: flex;
@@ -688,10 +712,7 @@
   .tt-row.tt-header {
     border-bottom: 1.5px solid var(--border);
     background: #f0f7ee;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    min-width: min-content;
   }
 
   .tt-age {
@@ -1015,7 +1036,7 @@
 
   <div class="disclaimer">
     ⚠️ 本工具为预约端快速筛查参考，不构成最终医学判断。最终接种决定需由执业医师在面诊后作出。如有疑问请引导客户使用卓正诊所小程序在线问诊。<br>
-    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-06-30 17:18</span> · 推荐计划：卓正2023年12月31日更新版 · 版本 v2026.07.04（接种计划纵表 + 表头冻结）</span>
+    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-06-30 17:18</span> · 推荐计划：卓正2023年12月31日更新版 · 版本 v2026.07.05（接种计划纵表 + 表头冻结 + 横向滚动同步）</span>
   </div>
 
 </div>
@@ -1515,19 +1536,21 @@ function renderTimelineContent() {
       }
     }
 
-    let h = `<div class="tt-section-label${isAdult ? ' adult' : ''}">${label}</div>`;
-    h += '<div class="tt-table">';
-
-    h += `<div class="tt-row tt-header${isAdult ? ' adult' : ''}">`;
+    const sectionClass = isAdult ? ' adult' : '';
+    let h = `<div class="tt-section">`;
+    h += `<div class="tt-section-label${sectionClass}">${label}</div>`;
+    h += `<div class="tt-header-sticky${sectionClass}"><div class="tt-header-inner">`;
+    h += `<div class="tt-row tt-header${sectionClass}">`;
     h += '<div class="tt-age">月龄</div>';
     for (const vid of colIds) {
       const name = (shortHeader[vid] || shortName[vid] || vid).replace(/\n/g, '<br>');
       h += `<div class="tt-hdr">${name}</div>`;
     }
-    h += '</div>';
+    h += '</div></div></div>';
 
+    h += '<div class="tt-body-scroll">';
     for (const s of stages) {
-      h += `<div class="tt-row${isAdult ? ' adult' : ''}">`;
+      h += `<div class="tt-row${sectionClass}">`;
       h += `<div class="tt-age">${s.age}</div>`;
       for (const vid of colIds) {
         const v = s.vaccines.find(x => x.id === vid);
@@ -1539,9 +1562,19 @@ function renderTimelineContent() {
       }
       h += '</div>';
     }
-
-    h += '</div>';
+    h += '</div></div>';
     return h;
+  }
+
+  function syncTTHeaders() {
+    document.querySelectorAll('.tt-section').forEach(section => {
+      const body = section.querySelector('.tt-body-scroll');
+      const inner = section.querySelector('.tt-header-inner');
+      if (!body || !inner) return;
+      body.addEventListener('scroll', () => {
+        inner.style.transform = `translateX(-${body.scrollLeft}px)`;
+      });
+    });
   }
 
   // 两段式：儿童 + 成人
@@ -1552,6 +1585,7 @@ function renderTimelineContent() {
   html += buildTable(adultStages, '🧑 青少年 & 成人', true);
 
   el.innerHTML = html;
+  syncTTHeaders();
 }
 
 // Vaccine configurations
