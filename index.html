@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>卓正医疗 · 疫苗接种查询 v2026.07.05</title>
+<title>卓正医疗 · 疫苗接种查询 v2026.07.07</title>
 <style>
   :root {
     --primary: #5A9B5F;
@@ -681,26 +681,32 @@
   .tt-section-label.adult {
     z-index: 13;
   }
+  .tt-table-wrapper {
+    border: 1.5px solid var(--border);
+    border-radius: 0 0 10px 10px;
+    background: #fff;
+  }
+  .tt-table-wrapper.adult {
+    border-color: #d4e0f2;
+  }
   .tt-header-sticky {
     position: sticky;
     top: 37px;
     z-index: 10;
-    min-width: min-content;
-    background: #fff;
   }
   .tt-header-sticky.adult { z-index: 12; }
-  .tt-header-inner {
-    display: flex;
-    min-width: min-content;
-    will-change: transform;
+  .tt-header-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
   }
+  .tt-header-scroll::-webkit-scrollbar { display: none; }
 
   .tt-body-scroll {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    border: 1.5px solid var(--border);
-    border-radius: 0 0 10px 10px;
-    background: #fff;
   }
 
   .tt-row {
@@ -1036,7 +1042,7 @@
 
   <div class="disclaimer">
     ⚠️ 本工具为预约端快速筛查参考，不构成最终医学判断。最终接种决定需由执业医师在面诊后作出。如有疑问请引导客户使用卓正诊所小程序在线问诊。<br>
-    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-06-30 17:18</span> · 推荐计划：卓正2023年12月31日更新版 · 版本 v2026.07.05（接种计划纵表 + 表头冻结 + 横向滚动同步）</span>
+    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-06-30 17:18</span> · 推荐计划：卓正2023年12月31日更新版 · 版本 v2026.07.07（接种计划纵表 + 表头冻结 + 横向滚动同步修复）</span>
   </div>
 
 </div>
@@ -1539,7 +1545,8 @@ function renderTimelineContent() {
     const sectionClass = isAdult ? ' adult' : '';
     let h = `<div class="tt-section">`;
     h += `<div class="tt-section-label${sectionClass}">${label}</div>`;
-    h += `<div class="tt-header-sticky${sectionClass}"><div class="tt-header-inner">`;
+    h += `<div class="tt-table-wrapper${sectionClass}">`;
+    h += `<div class="tt-header-sticky${sectionClass}"><div class="tt-header-scroll">`;
     h += `<div class="tt-row tt-header${sectionClass}">`;
     h += '<div class="tt-age">月龄</div>';
     for (const vid of colIds) {
@@ -1562,18 +1569,22 @@ function renderTimelineContent() {
       }
       h += '</div>';
     }
-    h += '</div></div>';
+    h += '</div></div></div>';
     return h;
   }
 
   function syncTTHeaders() {
     document.querySelectorAll('.tt-section').forEach(section => {
-      const body = section.querySelector('.tt-body-scroll');
-      const inner = section.querySelector('.tt-header-inner');
-      if (!body || !inner) return;
-      body.addEventListener('scroll', () => {
-        inner.style.transform = `translateX(-${body.scrollLeft}px)`;
-      });
+      const headerScroll = section.querySelector('.tt-header-scroll');
+      const bodyScroll = section.querySelector('.tt-body-scroll');
+      if (!headerScroll || !bodyScroll) return;
+
+      const sync = () => { headerScroll.scrollLeft = bodyScroll.scrollLeft; };
+      // 初始同步 + 滚动/尺寸变化同步
+      sync();
+      bodyScroll.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      window.addEventListener('orientationchange', sync);
     });
   }
 
