@@ -1098,9 +1098,6 @@ const vaccineSchedule = [
     { id: 'mmr',            label: '麻腮风疫苗', note: '国家免疫规划 · 第1针', type: 'free' },
     { id: 'je',             label: '乙脑疫苗', note: '国家免疫规划 · 首针', type: 'free' }
   ]},
-  { age: '9月',   ageMonths: 9,   vaccines: [
-    { id: 'ac_conjugate', label: 'AC结合A+C疫苗', note: '可替代A群流脑 · 133元', type: 'self' }
-  ]},
   { age: '12月',  ageMonths: 12,  vaccines: [
     { id: 'varicella_free',label: '水痘疫苗', note: '第1针 · 2014.12.1后出生免费', type: 'free' },
     { id: 'pcv13',        label: '13价肺炎疫苗', note: '加强针', type: 'self' }
@@ -1164,7 +1161,7 @@ const vaccineCatalog = [
   { id: 'meningococcal_ps', name: 'ACYW135流脑<strong style="color:#5A9B5F">多糖</strong>疫苗（绿竹）', desc: '148元 · 加强/补种用：3岁（6-23月开针者）+ 6岁多糖 · 与上一剂间隔≥3年 · 无年龄上限', ageTag: '≥3岁',        cats: ['child'],                                   stock: 8,   stockNote: '绿竹 8 支' },
   { id: 'dtap_dt',          name: '白破 / 百白破疫苗（武汉生物）',                        desc: '白破:7-11岁11月 / 百白破:6-6岁11月 · ⚠️不能与流脑多糖同接', ageTag: '6-11岁',     cats: ['child'],                                   stock: 3,   stockNote: '白破 1 / 百白破 2' },
   { id: 'hpv',              name: 'HPV 九价疫苗（默沙东）',                               desc: '9-45岁女性 / 16-26岁男性 · 1310元/针 · 单针售卖',     ageTag: '9-45岁',     cats: ['teen', 'adult'],                           stock: 7,   stockNote: '默沙东 7 支' },
-  { id: 'hepb',             name: '乙肝疫苗',                                             desc: '预防乙型肝炎病毒感染 · 全年龄段 · 共3剂',                ageTag: '全年龄',      cats: ['infant', 'child', 'teen', 'adult'],        stock: 86,  stockNote: '儿童 43 / 成人 43' },
+  { id: 'hepb',             name: '乙肝疫苗',                                             desc: '<strong>儿童</strong>（深圳康泰）· 预防乙型肝炎 · 0-1-6月程序 · 共3剂<br><strong>成人</strong>（艾美）· 预防乙型肝炎 · 全年龄段 · 共3剂',                ageTag: '全年龄',      cats: ['infant', 'child', 'teen', 'adult'],        stock: 86,  stockNote: '儿童(康泰) 43 / 成人(艾美) 43' },
   { id: 'flu',              name: '流感疫苗（4 种可选）',                                 desc: '鼻喷/巴斯德三价/巴斯德四价/华兰四价 · ≥6月龄 · 每年接种', ageTag: '≥6月龄',    cats: ['infant', 'child', 'teen', 'adult', 'senior'], stock: 0,   stockNote: '当前缺货，下批到苗约 9 月' },
   { id: 'ppv23',            name: '23价肺炎多糖疫苗（默沙东）',                           desc: '≥2岁，成人也可接种 · 260元 · 单针',                    ageTag: '≥2岁',        cats: ['adult', 'senior'],                         stock: 1,   stockNote: '默沙东 1 支' },
   { id: 'shingles',         name: '带状疱疹疫苗（Shingrix®）',                            desc: '预防带状疱疹及后遗神经痛 · ≥50岁成人 · 共2剂',          ageTag: '≥50岁',       cats: ['senior'],                                  stock: 22,  stockNote: 'GSK 22 支' },
@@ -1173,9 +1170,7 @@ const vaccineCatalog = [
   { id: 'je',               name: '乙型脑炎疫苗',                                         desc: '国家免疫规划 · 8月首针 + 24月加强',                     ageTag: '8月-24月',    cats: ['infant', 'child'],                         stock: 33,  stockNote: '武汉生物 33 支', vaccineType: 'free' },
   { id: 'varicella_free',   name: '水痘疫苗（免费）',                                      desc: '国家免疫规划 · 2014.12.1后出生 · 12月+4岁各一针',      ageTag: '12月-4岁',    cats: ['infant', 'child'],                         stock: 42,  stockNote: '北京民海 42 支', vaccineType: 'free' },
   // ─── 补充自费疫苗 ───
-  { id: 'ac_conjugate',     name: 'AC群流脑<strong style="color:#5A9B5F">结合</strong>疫苗（绿竹A+C）', desc: '替代A群流脑 · 133元 · 结合工艺免疫效果更好',           ageTag: '6月-3岁',     cats: ['infant', 'child'],                         stock: 0,   stockNote: '绿竹暂时缺货', vaccineType: 'self' },
-  { id: 'varicella_paid',   name: '水痘疫苗（自费）',                                      desc: '非2014.12.1后出生需自费接种 · 缺货',                   ageTag: '≥12月',       cats: ['infant', 'child', 'teen'],                 stock: 0,   stockNote: '暂时缺货', vaccineType: 'self' },
-  { id: 'general',          name: '🔍 通用筛查（不确定要打哪种疫苗）',                    desc: '先做基础健康筛查，了解一般接种禁忌',                    ageTag: '',           cats: ['general'] },
+  { id: 'general',
 ];
 
 // 库存徽标 helper
@@ -1440,14 +1435,14 @@ function renderScheduleCard(v, isPast) {
     badgeHtml = stockBadge(catalog);
   }
 
-  // 筛查链接：免费/HK/缺货的没有筛查入口，自费有库存的可以跳转
+  // 筛查链接：统一按钮样式
   let linkHtml = '';
   if (v.id && catalog && catalog.id !== 'general' && catalog.vaccineType !== 'free' && (catalog.stock > 0 || v.type === 'self')) {
     linkHtml = `<div class="v-link" onclick="startScreening('${v.id}')">筛查 →</div>`;
   } else if (v.type === 'free' || (catalog && catalog.vaccineType === 'free')) {
-    linkHtml = `<div class="v-link disabled">国家免疫规划</div>`;
+    linkHtml = `<div class="v-link" onclick="showVaccineInfo('${v.id}')">免费 · 查看详情</div>`;
   } else if (catalog && catalog.stock === 0) {
-    linkHtml = `<div class="v-link disabled" style="color:var(--danger);">暂时缺货</div>`;
+    linkHtml = `<div class="v-link" style="color:var(--danger);">暂时缺货</div>`;
   }
 
   let pastTag = isPast ? '<span style="font-size:11px;color:var(--text-secondary);">（已过节点，请确认是否已接种）</span>' : '';
@@ -1472,6 +1467,51 @@ function startScreening(vaccineId) {
   goToStep(2);
 }
 
+// 免费疫苗"查看详情"——直接跳到步骤3显示疫苗信息卡片
+function showVaccineInfo(vaccineId) {
+  switchMode('screen');
+  selectedVaccine = vaccineId;
+  userAnswers = {};
+
+  const catalog = vaccineCatalog.find(v => v.id === vaccineId);
+  const name = catalog ? catalog.name : vaccineId;
+  const desc = catalog ? catalog.desc : '';
+
+  // 步骤2侧栏：疫苗信息
+  const summaryEl = document.getElementById('step2-summary');
+  summaryEl.innerHTML = `
+    <div class="summary-vaccine">
+      <div class="label">查看的疫苗</div>
+      <div class="name">${name}</div>
+      <div class="full-name">国家免疫规划 · 免费接种</div>
+    </div>
+    <div class="summary-block">
+      <div class="block-title">💡 疫苗说明</div>
+      ${desc || '该疫苗属于国家免疫规划范围，符合条件者免费接种。'}
+    </div>
+  `;
+
+  // 结果区域：直接展示信息
+  document.getElementById('result-container').innerHTML = `
+    <div class="result-card result-eligible">
+      <div class="result-title">📋 ${name}</div>
+      <div class="result-detail">
+        <p>该疫苗属于<strong>国家免疫规划（免费）</strong>，符合年龄条件的儿童可在卓正诊所免费接种。</p>
+        ${desc ? `<p style="margin-top:8px;">${desc}</p>` : ''}
+        <br>
+        <strong>温馨提示：</strong><br>
+        • 接种时请携带预防接种证<br>
+        • 如有发热、急性疾病请推迟接种<br>
+        • 具体接种安排请咨询前台或医生
+      </div>
+    </div>
+  `;
+  // 步骤3摘要也填上
+  document.getElementById('step3-summary').innerHTML = summaryEl.innerHTML;
+
+  goToStep(3);
+}
+
 // ========== 完整时间轴 ==========
 
 function toggleTimeline() {
@@ -1490,7 +1530,7 @@ function renderTimelineContent() {
     hepb: '乙肝疫苗', rotavirus: '轮状病毒疫苗', pentavalent: '五联疫苗', pcv13: '13价肺炎疫苗',
     meningococcal: 'ACYW135结合疫苗', hfmd: '手足口疫苗', flu: '流感疫苗', hepa: '甲肝疫苗',
     meningococcal_ps: 'ACYW135多糖疫苗', dtap_dt: '百白破/白破疫苗', ppv23: '23价肺炎疫苗', shingles: '带状疱疹疫苗', hpv: 'HPV九价疫苗',
-    mmr: '麻腮风疫苗', je: '乙脑疫苗', varicella_free: '水痘疫苗', ac_conjugate: 'AC结合A+C疫苗', varicella_paid: '水痘疫苗'
+    mmr: '麻腮风疫苗', je: '乙脑疫苗', varicella_free: '水痘疫苗'
   };
 
   // 表头专用更短名称（去掉“疫苗”二字，允许换行）
@@ -1498,7 +1538,7 @@ function renderTimelineContent() {
     hepb: '乙肝', rotavirus: '轮状\n病毒', pentavalent: '五联', pcv13: '13价\n肺炎',
     meningococcal: 'ACYW135\n结合', hfmd: '手足\n口', flu: '流感', hepa: '甲肝',
     meningococcal_ps: 'ACYW135\n多糖', dtap_dt: '百白破/\n白破', ppv23: '23价\n肺炎', shingles: '带状\n疱疹', hpv: 'HPV',
-    mmr: '麻腮风', je: '乙脑', varicella_free: '水痘', ac_conjugate: 'AC结合\nA+C', varicella_paid: '水痘'
+    mmr: '麻腮风', je: '乙脑', varicella_free: '水痘'
   };
 
   function stockDot(v) {
