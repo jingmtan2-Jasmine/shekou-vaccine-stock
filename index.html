@@ -784,6 +784,7 @@
   .tt-cell:last-child { border-right: none; }
   .tt-cell.empty { background: #fafafa; }
   .tt-cell.free-bg { background: #f6f8fc; }
+  .tt-cell.hk-bg { background: #fff4e6; }
 
   .tt-note {
     font-size: 11px;
@@ -1057,34 +1058,31 @@ let currentMode = 'screen'; // 'screen' | 'schedule'
 
 // ========== 卓正推荐疫苗计划数据（2023年12月31日更新版）==========
 // schedule: 月龄→疫苗推荐列表
-// 每条: { id (对应 vaccineCatalog), label (显示名), note (备注), type ('self'|'free') }
+// 每条: { id (对应 vaccineCatalog), label (显示名), note (备注), type ('self'|'free'), hk (true=香港疫苗) }
 const vaccineSchedule = [
   { age: '1月',   ageMonths: 1,   vaccines: [
-    { id: 'hepb',         label: '乙肝疫苗', note: '第2针', type: 'self' }
-  ]},
-  { age: '42天', ageMonths: 1.4, vaccines: [
-    { id: 'rotavirus',    label: '轮状病毒疫苗', note: '第1剂', type: 'self' }
+    { id: 'hepb',         label: '乙肝疫苗（进口）', note: '第2针', type: 'self' },
+    { id: 'pcv13',        label: '13价肺炎疫苗', note: '第1针', type: 'self' },
+    { id: 'rotavirus',    label: '五价轮状病毒疫苗', note: '第1剂', type: 'self' }
   ]},
   { age: '2月',   ageMonths: 2,   vaccines: [
-    { id: 'pentavalent',  label: '五联疫苗', note: '第1针', type: 'self' },
-    { id: 'pcv13',        label: '13价肺炎疫苗', note: '第1针', type: 'self' }
+    { id: 'pentavalent',  label: '五联疫苗（进口）', note: '第1针', type: 'self' }
   ]},
   { age: '3月',   ageMonths: 3,   vaccines: [
-    { id: 'pentavalent',  label: '五联疫苗', note: '第2针', type: 'self' },
+    { id: 'pentavalent',  label: '五联疫苗（进口）', note: '第2针', type: 'self' },
     { id: 'meningococcal',label: 'ACYW135结合疫苗', note: '结合第1针（3-5月开针）', type: 'self' },
-    { id: 'rotavirus',    label: '轮状病毒疫苗', note: '第2剂', type: 'self' }
+    { id: 'rotavirus',    label: '五价轮状病毒疫苗', note: '第2剂', type: 'self' }
   ]},
   { age: '4月',   ageMonths: 4,   vaccines: [
-    { id: 'pentavalent',  label: '五联疫苗', note: '第3针', type: 'self' },
     { id: 'meningococcal',label: 'ACYW135结合疫苗', note: '结合疫苗第2针', type: 'self' },
     { id: 'pcv13',        label: '13价肺炎疫苗', note: '第2针', type: 'self' },
-    { id: 'rotavirus',    label: '轮状病毒疫苗', note: '最后一剂', type: 'self' }
+    { id: 'rotavirus',    label: '五价轮状病毒疫苗', note: '最后一剂', type: 'self' }
   ]},
   { age: '5月',   ageMonths: 5,   vaccines: [
-    { id: 'meningococcal',label: 'ACYW135结合疫苗', note: '结合疫苗第3针', type: 'self' }
+    { id: 'meningococcal',label: 'ACYW135结合疫苗', note: '结合疫苗第3针', type: 'self' },
+    { id: 'hepb',         label: '乙肝疫苗（进口）', note: '第3针', type: 'self' }
   ]},
   { age: '6月',   ageMonths: 6,   vaccines: [
-    { id: 'hepb',         label: '乙肝疫苗', note: '第3针', type: 'self' },
     { id: 'pcv13',        label: '13价肺炎疫苗', note: '第3针', type: 'self' },
     { id: 'hfmd',         label: '手足口疫苗', note: '第1针', type: 'self' },
     { id: 'meningococcal',label: 'ACYW135结合疫苗', note: '结合第1针（6-23月开针）', type: 'self' },
@@ -1098,18 +1096,25 @@ const vaccineSchedule = [
     { id: 'mmr',            label: '麻腮风疫苗', note: '国家免疫规划 · 第1针', type: 'free' },
     { id: 'je',             label: '乙脑疫苗', note: '国家免疫规划 · 首针', type: 'free' }
   ]},
+  { age: '9月',  ageMonths: 9,   vaccines: [
+    { id: 'menactra_hk',  label: 'Menactra 脑膜炎双球菌疫苗', note: '🇭🇰 香港疫苗 · 替代AC群结合', type: 'self', hk: true }
+  ]},
   { age: '12月',  ageMonths: 12,  vaccines: [
     { id: 'varicella_free',label: '水痘疫苗', note: '第1针 · 2014.12.1后出生免费', type: 'free' },
-    { id: 'pcv13',        label: '13价肺炎疫苗', note: '加强针', type: 'self' }
+    { id: 'pcv13',        label: '13价肺炎疫苗', note: '加强针', type: 'self' },
+    { id: 'menactra_hk',  label: 'Menactra 脑膜炎双球菌疫苗', note: '🇭🇰 香港疫苗 · 第2针', type: 'self', hk: true }
+  ]},
+  { age: '15月',  ageMonths: 15,  vaccines: [
+    { id: 'pentavalent',  label: '五联疫苗（进口）', note: '第4针加强', type: 'self' },
+    { id: 'menactra_hk',  label: 'Menactra 脑膜炎双球菌疫苗', note: '🇭🇰 香港疫苗 · 补种', type: 'self', hk: true }
   ]},
   { age: '18月',  ageMonths: 18,  vaccines: [
-    { id: 'pentavalent',  label: '五联疫苗', note: '第4针加强', type: 'self' },
     { id: 'mmr',          label: '麻腮风疫苗', note: '第2针', type: 'free' },
-    { id: 'hepa',         label: '甲肝疫苗', note: '第1剂', type: 'self' }
+    { id: 'hepa',         label: '甲肝疫苗（进口）', note: '第1剂', type: 'self' }
   ]},
   { age: '24月',  ageMonths: 24,  vaccines: [
     { id: 'je',           label: '乙脑疫苗', note: '加强针', type: 'free' },
-    { id: 'hepa',         label: '甲肝疫苗', note: '第2剂', type: 'self' }
+    { id: 'hepa',         label: '甲肝疫苗（进口）', note: '第2剂', type: 'self' }
   ]},
   { age: '3岁',   ageMonths: 36,  vaccines: [
     { id: 'meningococcal',    label: 'ACYW135结合疫苗', note: '结合加强针（3-5月开针）', type: 'self' },
@@ -1127,13 +1132,19 @@ const vaccineSchedule = [
     { id: 'dtap_dt',       label: '白破疫苗', note: '7岁白破加强针', type: 'free' },
     { id: 'hepb',          label: '乙肝疫苗', note: '⚠️ 抗体阴性需补种（接种前建议查乙肝五项）', type: 'self' }
   ]},
-  { age: '9岁',  ageMonths: 108,  isRange: true, rangeMax: 216, vaccines: [
-    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀9-45岁 / ♂16-26岁 · 1310元/针', type: 'self' },
+  { age: '9岁女',  ageMonths: 108,  isRange: true, rangeMax: 109, vaccines: [
+    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀9-9y5m · 1310元/针 · 第1针', type: 'self' }
+  ]},
+  { age: '9岁6月女',  ageMonths: 114,  isRange: true, rangeMax: 114, vaccines: [
+    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀9y6m · 1310元/针 · 第2针（与第1针间隔≥6月）', type: 'self' }
+  ]},
+  { age: '9岁后',  ageMonths: 115,  isRange: true, rangeMax: 216, vaccines: [
+    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀15-45岁 / ♂16-26岁 · 1310元/针 · 单针售卖', type: 'self' },
     { id: 'hepb',          label: '乙肝疫苗', note: '⚠️ 抗体阴性需补种（青少年抗体衰减常见）', type: 'self' },
     { id: 'flu',           label: '流感疫苗', note: '每年推荐接种', type: 'self', annual: true }
   ]},
   { age: '成人',  ageMonths: 216,  isRange: true, rangeMax: 600, vaccines: [
-    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀9-45岁 / ♂16-26岁 · 1310元/针', type: 'self' },
+    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀15-45岁 / ♂16-26岁 · 1310元/针 · 单针售卖', type: 'self' },
     { id: 'hepb',          label: '乙肝疫苗', note: '⚠️ 成人抗体易衰减，建议先查乙肝五项', type: 'self' },
     { id: 'flu',           label: '流感疫苗', note: '每年推荐接种', type: 'self', annual: true },
     { id: 'ppv23',         label: '23价肺炎疫苗', note: '≥2岁高危人群推荐；成人普遍推荐 · 260元', type: 'self' }
@@ -1156,6 +1167,7 @@ const vaccineCatalog = [
   { id: 'pentavalent',      name: '五联疫苗（巴斯德）',                                   desc: '2、3、4月龄 + 18-24月加强 · 638元 · 共4剂',           ageTag: '2月-3岁',    cats: ['infant'],                                  stock: 60,  stockNote: '巴斯德 60 支' },
   { id: 'pcv13',            name: '13价肺炎球菌疫苗（PCV13）',                            desc: '6周-5岁11月 · 辉瑞698元 / 国产沃森613元',              ageTag: '6周-5岁',    cats: ['infant', 'child'],                         stock: 75,  stockNote: '辉瑞 74 / 沃森 1' },
   { id: 'meningococcal',    name: 'ACYW135流脑<strong style="color:#5A9B5F">结合</strong>疫苗（康希诺）', desc: '3月龄起 · 430元 · 基础针：3-5月打3针 / 6-23月打2针 · 加强：3岁（3-5月开针者）', ageTag: '3月-6岁',    cats: ['infant', 'child'],                         stock: 63,  stockNote: '康希诺 63 支' },
+  { id: 'menactra_hk',      name: 'Menactra 脑膜炎双球菌疫苗 🇭🇰',                            desc: '<strong style="color:#d35400">香港疫苗</strong> · 9月首针 / 12月第2针（或15月补种）· 价格以香港诊所为准', ageTag: '9月-15月',   cats: ['infant', 'child'],                         stock: 0,   stockNote: '🇭🇰 香港诊所购买', vaccineType: 'self', hk: true },
   { id: 'hfmd',             name: '手足口疫苗（医科院 EV71 二倍体）',                     desc: '6月龄起，超5岁不能接种 · 188元 · 共2针',                ageTag: '6月-5岁',    cats: ['infant', 'child'],                         stock: 44,  stockNote: '医科院 44 支' },
   { id: 'hepa',             name: '甲肝灭活疫苗（国产）',                                 desc: '18月-15岁 · 138-213元 · 共2剂间隔6月',                ageTag: '18月-15岁',  cats: ['infant', 'child', 'teen'],                 stock: 89,  stockNote: '北京科兴 46 / 艾美行动 43' },
   { id: 'meningococcal_ps', name: 'ACYW135流脑<strong style="color:#5A9B5F">多糖</strong>疫苗（绿竹）', desc: '148元 · 加强/补种用：3岁（6-23月开针者）+ 6岁多糖 · 与上一剂间隔≥3年 · 无年龄上限', ageTag: '≥3岁',        cats: ['child'],                                   stock: 8,   stockNote: '绿竹 8 支' },
@@ -1528,15 +1540,15 @@ function renderTimelineContent() {
 
   const shortName = {
     hepb: '乙肝疫苗', rotavirus: '轮状病毒疫苗', pentavalent: '五联疫苗', pcv13: '13价肺炎疫苗',
-    meningococcal: 'ACYW135结合疫苗', hfmd: '手足口疫苗', flu: '流感疫苗', hepa: '甲肝疫苗',
+    meningococcal: 'ACYW135结合疫苗', menactra_hk: 'Menactra 🇭🇰', hfmd: '手足口疫苗', flu: '流感疫苗', hepa: '甲肝疫苗',
     meningococcal_ps: 'ACYW135多糖疫苗', dtap_dt: '百白破/白破疫苗', ppv23: '23价肺炎疫苗', shingles: '带状疱疹疫苗', hpv: 'HPV九价疫苗',
     mmr: '麻腮风疫苗', je: '乙脑疫苗', varicella_free: '水痘疫苗'
   };
 
-  // 表头专用更短名称（去掉“疫苗”二字，允许换行）
+  // 表头专用更短名称（去掉"疫苗"二字，允许换行）
   const shortHeader = {
     hepb: '乙肝', rotavirus: '轮状\n病毒', pentavalent: '五联', pcv13: '13价\n肺炎',
-    meningococcal: 'ACYW135\n结合', hfmd: '手足\n口', flu: '流感', hepa: '甲肝',
+    meningococcal: 'ACYW135\n结合', menactra_hk: 'Menactra\n🇭🇰', hfmd: '手足\n口', flu: '流感', hepa: '甲肝',
     meningococcal_ps: 'ACYW135\n多糖', dtap_dt: '百白破/\n白破', ppv23: '23价\n肺炎', shingles: '带状\n疱疹', hpv: 'HPV',
     mmr: '麻腮风', je: '乙脑', varicella_free: '水痘'
   };
@@ -1551,9 +1563,11 @@ function renderTimelineContent() {
   function buildCell(v) {
     const catalog = v.id ? vaccineCatalog.find(c => c.id === v.id) : null;
     const isFree = v.type === 'free';
-    let cls = isFree ? ' free-bg' : '';
+    const isHK = v.hk === true;
+    let cls = isFree ? ' free-bg' : (isHK ? ' hk-bg' : '');
     let tag = '';
     if (isFree) tag = ' <span style="font-size:10px;color:#4a6fa5;">免</span>';
+    if (isHK)  tag = ' <span style="font-size:10px;color:#d35400;font-weight:600;">🇭🇰香港</span>';
     const dot = catalog ? stockDot(catalog) : '';
     const annual = v.annual ? ' <span style="font-size:10px;color:var(--warning);">🔁</span>' : '';
     return `<div class="tt-cell${cls}"><span class="tt-note">${v.note}${tag}</span>${annual}${dot}</div>`;
@@ -1634,6 +1648,17 @@ function renderTimelineContent() {
     '② <strong style="color:var(--text-primary);">6–23 月龄开针</strong>：结合 2 针基础（6/7月）+ 3 岁多糖加强 + 6 岁多糖。<br>' +
     '两种方案 6 岁多糖均需与上一剂间隔 ≥3 年；结合疫苗可与白破/百白破同天接种，多糖疫苗不可。';
   el.appendChild(note);
+
+  // 卓正 PDF 附注（5 条）
+  const pdfNote = document.createElement('div');
+  pdfNote.style.cssText = 'margin:8px 2px 4px;padding:12px 14px;border:0.5px solid var(--border);border-radius:10px;background:#fff8ec;font-size:12px;line-height:1.7;color:var(--text-secondary);';
+  pdfNote.innerHTML = '<strong style="color:#d35400;">📋 卓正推荐计划附注（2026-07-07 更新版）：</strong><br>' +
+    '1. <strong style="color:#d35400;">带 🇭🇰 标记为香港疫苗</strong>（如 Menactra），需前往香港诊所购买及注射，价格或有浮动，以香港诊所为准。<br>' +
+    '2. 香港疫苗虽内地暂无库存，<strong>有条件的家庭仍推荐赴港接种</strong>，免疫效果更佳。<br>' +
+    '3. <strong>五联疫苗、九价 HPV 疫苗</strong>只能<strong>单独接种</strong>，其他疫苗可以 2 针同时接种。<br>' +
+    '4. <strong>百白破与 ACYW135 多糖</strong>不能同日接种（仅蛇口疫苗中心规定）。<br>' +
+    '5. <strong>流感疫苗</strong>：推荐每年年底接种，≥6 月龄即可；6 月-8 岁首次接种需 2 剂间隔 1 个月。';
+  el.appendChild(pdfNote);
 }
 
 // Vaccine configurations
