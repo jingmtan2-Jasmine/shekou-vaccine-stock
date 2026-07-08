@@ -1125,16 +1125,16 @@ const vaccineSchedule = [
   // ─── 6岁以上青少年 & 成人推荐 ───
   { age: '7岁',  ageMonths: 84,  vaccines: [
     { id: 'dtap_dt',       label: '白破疫苗', note: '7岁白破加强针', type: 'free' },
-    { id: 'hepb',          label: '乙肝疫苗', note: '如抗体阴性需补种加强', type: 'self' }
+    { id: 'hepb',          label: '乙肝疫苗', note: '⚠️ 抗体阴性需补种（接种前建议查乙肝五项）', type: 'self' }
   ]},
   { age: '9岁',  ageMonths: 108,  isRange: true, rangeMax: 216, vaccines: [
     { id: 'hpv',           label: 'HPV九价疫苗', note: '♀9-45岁 / ♂16-26岁 · 1310元/针', type: 'self' },
-    { id: 'hepb',          label: '乙肝疫苗', note: '青少年补种或加强', type: 'self' },
+    { id: 'hepb',          label: '乙肝疫苗', note: '⚠️ 抗体阴性需补种（青少年抗体衰减常见）', type: 'self' },
     { id: 'flu',           label: '流感疫苗', note: '每年推荐接种', type: 'self', annual: true }
   ]},
   { age: '成人',  ageMonths: 216,  isRange: true, rangeMax: 600, vaccines: [
     { id: 'hpv',           label: 'HPV九价疫苗', note: '♀9-45岁 / ♂16-26岁 · 1310元/针', type: 'self' },
-    { id: 'hepb',          label: '乙肝疫苗', note: '成人补种或加强，全年龄段', type: 'self' },
+    { id: 'hepb',          label: '乙肝疫苗', note: '⚠️ 成人抗体易衰减，建议先查乙肝五项', type: 'self' },
     { id: 'flu',           label: '流感疫苗', note: '每年推荐接种', type: 'self', annual: true },
     { id: 'ppv23',         label: '23价肺炎疫苗', note: '≥2岁高危人群推荐；成人普遍推荐 · 260元', type: 'self' }
   ]},
@@ -1142,7 +1142,7 @@ const vaccineSchedule = [
     { id: 'shingles',      label: '带状疱疹疫苗', note: '≥50岁推荐 · 共2剂间隔2-6月 · 1608元/剂', type: 'self' },
     { id: 'ppv23',         label: '23价肺炎疫苗', note: '≥50岁普遍推荐 · 260元/针', type: 'self' },
     { id: 'flu',           label: '流感疫苗', note: '每年推荐，老年人群尤其重要', type: 'self', annual: true },
-    { id: 'hepb',          label: '乙肝疫苗', note: '抗体阴性需补种', type: 'self' }
+    { id: 'hepb',          label: '乙肝疫苗', note: '⚠️ 50岁以上高危人群建议补种', type: 'self' }
   ]}
 ];
 
@@ -1161,7 +1161,7 @@ const vaccineCatalog = [
   { id: 'meningococcal_ps', name: 'ACYW135流脑<strong style="color:#5A9B5F">多糖</strong>疫苗（绿竹）', desc: '148元 · 加强/补种用：3岁（6-23月开针者）+ 6岁多糖 · 与上一剂间隔≥3年 · 无年龄上限', ageTag: '≥3岁',        cats: ['child'],                                   stock: 8,   stockNote: '绿竹 8 支' },
   { id: 'dtap_dt',          name: '白破 / 百白破疫苗（武汉生物）',                        desc: '白破:7-11岁11月 / 百白破:6-6岁11月 · ⚠️不能与流脑多糖同接', ageTag: '6-11岁',     cats: ['child'],                                   stock: 3,   stockNote: '白破 1 / 百白破 2' },
   { id: 'hpv',              name: 'HPV 九价疫苗（默沙东）',                               desc: '9-45岁女性 / 16-26岁男性 · 1310元/针 · 单针售卖',     ageTag: '9-45岁',     cats: ['teen', 'adult'],                           stock: 7,   stockNote: '默沙东 7 支' },
-  { id: 'hepb',             name: '乙肝疫苗',                                             desc: '<strong>儿童</strong>（深圳康泰）· 预防乙型肝炎 · 0-1-6月程序 · 共3剂<br><strong>成人</strong>（艾美）· 预防乙型肝炎 · 全年龄段 · 共3剂',                ageTag: '全年龄',      cats: ['infant', 'child', 'teen', 'adult'],        stock: 86,  stockNote: '儿童(康泰) 43 / 成人(艾美) 43' },
+  { id: 'hepb',             name: '乙肝疫苗',                                             desc: '<strong>儿童</strong>（深圳康泰）· 预防乙型肝炎 · 0-1-6月程序 · 共3剂<br><strong>成人</strong>（艾美）· 预防乙型肝炎 · 抗体阴性补种 · 1针/剂',                ageTag: '全年龄',      cats: ['infant', 'child', 'teen', 'adult'],        stock: 86,  stockNote: '儿童(康泰) 43 / 成人(艾美) 43' },
   { id: 'flu',              name: '流感疫苗（4 种可选）',                                 desc: '鼻喷/巴斯德三价/巴斯德四价/华兰四价 · ≥6月龄 · 每年接种', ageTag: '≥6月龄',    cats: ['infant', 'child', 'teen', 'adult', 'senior'], stock: 0,   stockNote: '当前缺货，下批到苗约 9 月' },
   { id: 'ppv23',            name: '23价肺炎多糖疫苗（默沙东）',                           desc: '≥2岁，成人也可接种 · 260元 · 单针',                    ageTag: '≥2岁',        cats: ['adult', 'senior'],                         stock: 1,   stockNote: '默沙东 1 支' },
   { id: 'shingles',         name: '带状疱疹疫苗（Shingrix®）',                            desc: '预防带状疱疹及后遗神经痛 · ≥50岁成人 · 共2剂',          ageTag: '≥50岁',       cats: ['senior'],                                  stock: 22,  stockNote: 'GSK 22 支' },
