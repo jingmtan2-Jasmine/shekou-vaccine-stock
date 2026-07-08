@@ -1277,7 +1277,7 @@ function renderVaccineList() {
 
   const cardHtml = v => `
     <div class="vaccine-card" data-vaccine="${v.id}" onclick="selectVaccine('${v.id}', this)">
-      <div class="name">${v.name}${v.ageTag ? `<span class="age-tag">${v.ageTag}</span>` : ''}${stockBadge(v)}</div>
+      <div class="name">${v.name}${v.ageTag ? `<span class="age-tag">${v.ageTag}</span>` : ''}${v.hk ? '' : stockBadge(v)}</div>
       <div class="desc">${v.desc}</div>
     </div>`;
 
@@ -1568,7 +1568,7 @@ function renderTimelineContent() {
     let tag = '';
     if (isFree) tag = ' <span style="font-size:10px;color:#4a6fa5;">免</span>';
     if (isHK)  tag = ' <span style="font-size:10px;color:#d35400;font-weight:600;">🇭🇰香港</span>';
-    const dot = catalog ? stockDot(catalog) : '';
+    const dot = (catalog && !isHK) ? stockDot(catalog) : '';
     const annual = v.annual ? ' <span style="font-size:10px;color:var(--warning);">🔁</span>' : '';
     return `<div class="tt-cell${cls}"><span class="tt-note">${v.note}${tag}</span>${annual}${dot}</div>`;
   }
