@@ -1438,12 +1438,16 @@ function renderScheduleResult() {
 
 function renderScheduleCard(v, isPast) {
   const catalog = v.id ? vaccineCatalog.find(c => c.id === v.id) : null;
+  const isHK = v.hk === true || (catalog && catalog.hk === true);
   let badgeHtml = '';
   if (v.type === 'free' && catalog) {
     // 免费疫苗同时有库存数据：显示免费 badge + 库存徽标
     badgeHtml = '<span class="badge free-badge">免费</span> ' + stockBadge(catalog);
   } else if (v.type === 'free') {
     badgeHtml = '<span class="badge free-badge">免费</span>';
+  } else if (isHK) {
+    // 香港疫苗不显示库存徽标（蛇口暂无库存，由 schedule note "🇭🇰 香港疫苗" 提示）
+    badgeHtml = '';
   } else if (catalog) {
     badgeHtml = stockBadge(catalog);
   }
@@ -1568,7 +1572,7 @@ function renderTimelineContent() {
     let cls = isFree ? ' free-bg' : (isHK ? ' hk-bg' : '');
     let tag = '';
     if (isFree) tag = ' <span style="font-size:10px;color:#4a6fa5;">免</span>';
-    if (isHK)  tag = ' <span style="font-size:10px;color:#d35400;font-weight:600;">🇭🇰香港</span>';
+    // 注：isHK 时不再加「🇭🇰香港」tag，避免和 schedule note 里的「🇭🇰 香港疫苗」重复
     const dot = (catalog && !isHK) ? stockDot(catalog) : '';
     const annual = v.annual ? ' <span style="font-size:10px;color:var(--warning);">🔁</span>' : '';
     return `<div class="tt-cell${cls}"><span class="tt-note">${v.note}${tag}</span>${annual}${dot}</div>`;
