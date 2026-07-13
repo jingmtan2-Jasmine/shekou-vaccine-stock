@@ -1098,11 +1098,13 @@ const vaccineSchedule = [
     { id: 'je',             label: '乙脑疫苗', note: '国家免疫规划 · 首针', type: 'free' }
   ]},
   { age: '9月',  ageMonths: 9,   vaccines: [
-    { id: 'menactra_hk',  label: 'Menactra 脑膜炎双球菌疫苗', note: '🇭🇰 香港疫苗 · 替代AC群结合', type: 'self', hk: true }
+    { id: 'menactra_hk',  label: 'Menactra 脑膜炎双球菌疫苗', note: '🇭🇰 香港疫苗 · 第1针', type: 'self', hk: true }
   ]},
   { age: '12月',  ageMonths: 12,  vaccines: [
     { id: 'varicella_free',label: '水痘疫苗', note: '第1针 · 2014.12.1后出生免费', type: 'free' },
-    { id: 'pcv13',        label: '13价肺炎疫苗', note: '加强针', type: 'self' },
+    { id: 'pcv13',        label: '13价肺炎疫苗', note: '加强针', type: 'self' }
+  ]},
+  { age: '15月',  ageMonths: 15,  vaccines: [
     { id: 'menactra_hk',  label: 'Menactra 脑膜炎双球菌疫苗', note: '🇭🇰 香港疫苗 · 第2针', type: 'self', hk: true }
   ]},
   { age: '18月',  ageMonths: 18,  vaccines: [
@@ -1165,7 +1167,7 @@ const vaccineCatalog = [
   { id: 'pentavalent',      name: '五联疫苗（巴斯德）',                                   desc: '2、3、4月龄 + 18-24月加强 · 638元 · 共4剂',           ageTag: '2月-3岁',    cats: ['infant'],                                  stock: 60,  stockNote: '巴斯德 60 支' },
   { id: 'pcv13',            name: '13价肺炎球菌疫苗（PCV13）',                            desc: '6周-5岁11月 · 辉瑞698元 / 国产沃森613元',              ageTag: '6周-5岁',    cats: ['infant', 'child'],                         stock: 75,  stockNote: '辉瑞 74 / 沃森 1' },
   { id: 'meningococcal',    name: 'ACYW135流脑<strong style="color:#5A9B5F">结合</strong>疫苗（康希诺）', desc: '3月龄起 · 430元 · 基础针：3-5月打3针 / 6-23月打2针 · 加强：3岁（3-5月开针者）', ageTag: '3月-6岁',    cats: ['infant', 'child'],                         stock: 63,  stockNote: '康希诺 63 支' },
-  { id: 'menactra_hk',      name: 'Menactra 脑膜炎双球菌疫苗 🇭🇰',                            desc: '<strong style="color:#d35400">香港疫苗</strong> · 9月首针 / 12月第2针（或15月补种）· 价格以香港诊所为准', ageTag: '9月-15月',   cats: ['infant', 'child'],                         stock: 0,   stockNote: '🇭🇰 香港诊所购买', vaccineType: 'self', hk: true },
+  { id: 'menactra_hk',      name: 'Menactra 脑膜炎双球菌疫苗 🇭🇰',                            desc: '<strong style="color:#d35400">香港疫苗</strong> · 9月首针 / 15月第2针 · 价格以香港诊所为准', ageTag: '9月-15月',   cats: ['infant', 'child'],                         stock: 0,   stockNote: '🇭🇰 香港诊所购买', vaccineType: 'self', hk: true },
   { id: 'hfmd',             name: '手足口疫苗（医科院 EV71 二倍体）',                     desc: '6月龄起，超5岁不能接种 · 188元 · 共2针',                ageTag: '6月-5岁',    cats: ['infant', 'child'],                         stock: 44,  stockNote: '医科院 44 支' },
   { id: 'hepa',             name: '甲肝灭活疫苗（国产）',                                 desc: '18月-15岁 · 138-213元 · 共2剂间隔6月',                ageTag: '18月-15岁',  cats: ['infant', 'child', 'teen'],                 stock: 89,  stockNote: '北京科兴 46 / 艾美行动 43' },
   { id: 'meningococcal_ps', name: 'ACYW135流脑<strong style="color:#5A9B5F">多糖</strong>疫苗（绿竹）', desc: '148元 · 加强/补种用：3岁（6-23月开针者）+ 6岁多糖 · 与上一剂间隔≥3年 · 无年龄上限', ageTag: '≥3岁',        cats: ['child'],                                   stock: 8,   stockNote: '绿竹 8 支' },
