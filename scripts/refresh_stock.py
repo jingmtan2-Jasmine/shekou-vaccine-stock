@@ -186,8 +186,9 @@ def map_to_vaccines(stock_map):
                     aimei = sum(stock_map[k]["remaining"] for k in stock_map if "艾美" in k)
                     vaccines[vid]["stockNote"] = f"北京科兴 {kexing} / 艾美行动 {aimei}"
                 elif vid == "dtap_dt":
-                    baipo = sum(stock_map[k]["remaining"] for k in stock_map if "白破" in k)
+                    # 注意：先匹配「百白破」再匹配「白破」，避免百白破被双重计入
                     baibai = sum(stock_map[k]["remaining"] for k in stock_map if "百白破" in k)
+                    baipo = sum(stock_map[k]["remaining"] for k in stock_map if ("白破" in k and "百白破" not in k))
                     vaccines[vid]["stockNote"] = f"白破 {baipo} / 百白破 {baibai}"
                 elif vid == "flu":
                     vaccines[vid]["stockNote"] = "当前缺货，下批到苗约 9 月"

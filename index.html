@@ -921,7 +921,7 @@
         1. 五联、HPV、带状疱疹疫苗只能单独接种，其它疫苗可以2针同时接种<br>
         2. 6岁百白破与ACYW135多糖不能同时接种（需分开预约）<br>
         3. 推荐每年年底接种流感疫苗，≥6月龄即可；6月龄-8岁首次接种需2剂间隔1月<br>
-        4. 本计划基于卓正2023年12月31日更新版本，具体以医生面诊为准
+        4. 本计划基于卓正2026年7月7日更新版本，具体以医生面诊为准
       </div>
     </div>
   </div>
@@ -1043,7 +1043,7 @@
 
   <div class="disclaimer">
     ⚠️ 本工具为预约端快速筛查参考，不构成最终医学判断。最终接种决定需由执业医师在面诊后作出。如有疑问请引导客户使用卓正诊所小程序在线问诊。<br>
-    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-06-30 17:18</span> · 推荐计划：卓正2023年12月31日更新版 · 版本 v2026.07.07（接种计划纵表 + 表头冻结 + 横向滚动同步修复）</span>
+    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-06-30 17:18</span> · 推荐计划：卓正2026年7月7日更新版 · 版本 v2026.07.13（五联schedule修复 + 全量一致性检查）</span>
   </div>
 
 </div>
@@ -1056,7 +1056,7 @@ let activeCategory = 'all';
 let searchQuery = '';
 let currentMode = 'screen'; // 'screen' | 'schedule'
 
-// ========== 卓正推荐疫苗计划数据（2023年12月31日更新版）==========
+// ========== 卓正推荐疫苗计划数据（2026年7月7日更新版）==========
 // schedule: 月龄→疫苗推荐列表
 // 每条: { id (对应 vaccineCatalog), label (显示名), note (备注), type ('self'|'free'), hk (true=香港疫苗) }
 const vaccineSchedule = [
@@ -1080,11 +1080,11 @@ const vaccineSchedule = [
     { id: 'rotavirus',    label: '五价轮状病毒疫苗', note: '最后一剂', type: 'self' }
   ]},
   { age: '5月',   ageMonths: 5,   vaccines: [
-    { id: 'meningococcal',label: 'ACYW135结合疫苗', note: '结合疫苗第3针', type: 'self' },
-    { id: 'hepb',         label: '乙肝疫苗（进口）', note: '第3针', type: 'self' }
+    { id: 'meningococcal',label: 'ACYW135结合疫苗', note: '结合疫苗第3针', type: 'self' }
   ]},
   { age: '6月',   ageMonths: 6,   vaccines: [
     { id: 'pcv13',        label: '13价肺炎疫苗', note: '第3针', type: 'self' },
+    { id: 'hepb',         label: '乙肝疫苗（进口）', note: '第3针', type: 'self' },
     { id: 'hfmd',         label: '手足口疫苗', note: '第1针', type: 'self' },
     { id: 'meningococcal',label: 'ACYW135结合疫苗', note: '结合第1针（6-23月开针）', type: 'self' },
     { id: 'flu',          label: '流感疫苗', note: '每年推荐，≥6月龄即可', type: 'self', annual: true }
@@ -2266,7 +2266,7 @@ function evaluatePCV13() {
   let programNote = '';
   if (firstDose === '6周-6月龄') {
     total = 4;
-    programNote = '基础免疫 3 剂（2、4、6月龄各 1 剂，间隔 ≥1 个月）+ 加强免疫 1 剂（12-15 月龄）。基础免疫首剂最早 6 周龄。';
+    programNote = '基础免疫 3 剂（1、4、6月龄各 1 剂，间隔 ≥1 个月）+ 加强免疫 1 剂（12 月龄）。基础免疫首剂最早 6 周龄。';
   } else if (firstDose === '7-11月龄') {
     total = 3;
     programNote = '首剂与第 2 剂间隔 ≥1 个月；建议满 12 月龄后接种第 3 剂，与第 2 剂间隔 ≥2 个月。';
@@ -2572,6 +2572,7 @@ function evaluateHepB() {
   const _intervalWarn = getIntervalWarning();
   if (_intervalWarn) return { status: _intervalWarn.status, title: _intervalWarn.title, detail: _intervalWarn.message };
 
+  const age = getAgeInYears();
   const fever = userAnswers['fever'];
   const allergy = userAnswers['allergy'];
   const jaundice = userAnswers['jaundice'];
@@ -2589,13 +2590,28 @@ function evaluateHepB() {
       detail: '病理性黄疸需先明确病因，由医生判断是否适合接种。如精神状态好、大小便正常，一般可接种。' };
   }
 
+  // 区分婴幼儿（3 剂 0-1-6 程序）与成人补种（按需单针）
+  const isAdult = (userAnswers['jaundice'] === '不适用（成人）' || userAnswers['mother_hepb'] === '不适用（成人）') || (age !== null && age >= 18);
+  if (isAdult) {
+    return { status: 'eligible', title: '✅ 可以接种',
+      detail: `根据筛查信息，接种者符合<strong>成人乙肝疫苗（艾美）</strong>接种条件。<br><br>
+        <strong>接种程序：</strong>成人按需补种，先查乙肝五项。<br>
+        • 表面抗体<strong>阴性（&lt;10 IU/L）</strong>：建议接种 3 剂（0-1-6 月程序）<br>
+        • 表面抗体<strong>弱阳性（10-100 IU/L）</strong>：建议加强 1 针<br>
+        • 表面抗体<strong>阳性（&gt;100 IU/L）</strong>：暂无需接种<br><br>
+        <strong>温馨提示：</strong><br>
+        • 成人抗体易衰减，建议接种前先查乙肝五项<br>
+        • 哺乳期、备孕期、轻微感冒均不影响接种<br>
+        • 接种后 1-2 月再复查抗体确认免疫成功` };
+  }
+
   return { status: 'eligible', title: '✅ 可以接种',
-    detail: `根据筛查信息，接种者符合乙肝疫苗接种条件。<br><br>
+    detail: `根据筛查信息，接种者符合<strong>儿童乙肝疫苗（深圳康泰）</strong>接种条件。<br><br>
+      <strong>接种程序：</strong>共 3 剂（0-1-6 月程序）。<br><br>
       <strong>温馨提示：</strong><br>
-      • 共3剂（0-1-6月程序）<br>
       • 母乳性黄疸不影响接种<br>
       • 不确定是否有免疫力时，再接种无不良影响<br>
-      • 如需查验抗体，建议完成3针后1个月、1岁半前检测乙肝表面抗体定量（>10 IU/L为有免疫力）` };
+      • 如需查验抗体，建议完成 3 针后 1 个月、1 岁半前检测乙肝表面抗体定量（&gt;10 IU/L 为有免疫力）` };
 }
 
 function evaluateFlu() {
