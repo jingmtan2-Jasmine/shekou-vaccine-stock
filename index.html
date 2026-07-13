@@ -1134,18 +1134,18 @@ const vaccineSchedule = [
     { id: 'hepb',          label: '乙肝疫苗', note: '⚠️ 抗体阴性需补种（接种前建议查乙肝五项）', type: 'self' }
   ]},
   { age: '9岁女',  ageMonths: 108,  isRange: true, rangeMax: 109, vaccines: [
-    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀9-9y5m · 1310元/针 · 第1针', type: 'self' }
+    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀9-9y5m · 1298元/针 · 第1针', type: 'self' }
   ]},
   { age: '9岁6月女',  ageMonths: 114,  isRange: true, rangeMax: 114, vaccines: [
-    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀9y6m · 1310元/针 · 第2针（与第1针间隔≥6月）', type: 'self' }
+    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀9y6m · 1298元/针 · 第2针（与第1针间隔≥6月）', type: 'self' }
   ]},
   { age: '9岁后',  ageMonths: 115,  isRange: true, rangeMax: 216, vaccines: [
-    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀15-45岁 / ♂16-26岁 · 1310元/针 · 单针售卖', type: 'self' },
+    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀15-45岁 / ♂16-26岁 · 1298元/针 · 单针售卖', type: 'self' },
     { id: 'hepb',          label: '乙肝疫苗', note: '⚠️ 抗体阴性需补种（青少年抗体衰减常见）', type: 'self' },
     { id: 'flu',           label: '流感疫苗', note: '每年推荐接种', type: 'self', annual: true }
   ]},
   { age: '成人',  ageMonths: 216,  isRange: true, rangeMax: 600, vaccines: [
-    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀15-45岁 / ♂16-26岁 · 1310元/针 · 单针售卖', type: 'self' },
+    { id: 'hpv',           label: 'HPV九价疫苗', note: '♀15-45岁 / ♂16-26岁 · 1298元/针 · 单针售卖', type: 'self' },
     { id: 'hepb',          label: '乙肝疫苗', note: '⚠️ 成人抗体易衰减，建议先查乙肝五项', type: 'self' },
     { id: 'flu',           label: '流感疫苗', note: '每年推荐接种', type: 'self', annual: true },
     { id: 'ppv23',         label: '23价肺炎疫苗', note: '≥2岁高危人群推荐；成人普遍推荐 · 260元', type: 'self' }
@@ -1173,7 +1173,7 @@ const vaccineCatalog = [
   { id: 'hepa',             name: '甲肝灭活疫苗（国产）',                                 desc: '18月-15岁 · 138-213元 · 共2剂间隔6月',                ageTag: '18月-15岁',  cats: ['infant', 'child', 'teen'],                 stock: 89,  stockNote: '北京科兴 46 / 艾美行动 43' },
   { id: 'meningococcal_ps', name: 'ACYW135流脑<strong style="color:#5A9B5F">多糖</strong>疫苗（绿竹）', desc: '148元 · 加强/补种用：3岁（6-23月开针者）+ 6岁多糖 · 与上一剂间隔≥3年 · 无年龄上限', ageTag: '≥3岁',        cats: ['child'],                                   stock: 8,   stockNote: '绿竹 8 支' },
   { id: 'dtap_dt',          name: '白破 / 百白破疫苗（武汉生物）',                        desc: '白破:7-11岁11月 / 百白破:6-6岁11月 · ⚠️不能与流脑多糖同接', ageTag: '6-11岁',     cats: ['child'],                                   stock: 3,   stockNote: '白破 1 / 百白破 2' },
-  { id: 'hpv',              name: 'HPV 九价疫苗（默沙东）',                               desc: '9-45岁女性 / 16-26岁男性 · 1310元/针 · 单针售卖',     ageTag: '9-45岁',     cats: ['teen', 'adult'],                           stock: 7,   stockNote: '默沙东 7 支' },
+  { id: 'hpv',              name: 'HPV 九价疫苗（默沙东）',                               desc: '9-45岁女性 / 16-26岁男性 · 1298元/针 · 单针售卖',     ageTag: '9-45岁',     cats: ['teen', 'adult'],                           stock: 7,   stockNote: '默沙东 7 支' },
   { id: 'hepb',             name: '乙肝疫苗',                                             desc: '<strong>儿童</strong>（深圳康泰）· 预防乙型肝炎 · 0-1-6月程序 · 共3剂<br><strong>成人</strong>（艾美）· 预防乙型肝炎 · 抗体阴性补种 · 1针/剂',                ageTag: '全年龄',      cats: ['infant', 'child', 'teen', 'adult'],        stock: 86,  stockNote: '儿童(康泰) 43 / 成人(艾美) 43' },
   { id: 'flu',              name: '流感疫苗（4 种可选）',                                 desc: '鼻喷/巴斯德三价/巴斯德四价/华兰四价 · ≥6月龄 · 每年接种', ageTag: '≥6月龄',    cats: ['infant', 'child', 'teen', 'adult', 'senior'], stock: 0,   stockNote: '当前缺货，下批到苗约 9 月' },
   { id: 'ppv23',            name: '23价肺炎多糖疫苗（默沙东）',                           desc: '≥2岁，成人也可接种 · 260元 · 单针',                    ageTag: '≥2岁',        cats: ['adult', 'senior'],                         stock: 1,   stockNote: '默沙东 1 支' },
@@ -1665,7 +1665,7 @@ function renderTimelineContent() {
 const vaccineConfigs = {
   hpv: {
     name: 'HPV 疫苗',
-    fullName: 'HPV九价疫苗（默沙东，1310元/针，单针售卖）',
+    fullName: 'HPV九价疫苗（默沙东，1298元/针，单针售卖）',
     questions: [
       { id: 'gender', type: 'radio', label: '接种者性别', options: ['女', '男'], hint: '九价HPV：9-45岁女性 / 16-26岁男性（2025.4.18起开放男性接种）' },
       { id: 'age', type: 'age', label: '接种者年龄', hint: '女性9-45岁；男性16-26岁' },
@@ -2185,7 +2185,7 @@ function evaluateHPV() {
   }
 
   return { status: 'eligible', title: '✅ 可以接种',
-    detail: `根据筛查信息，接种者符合<strong>九价HPV疫苗（默沙东，1310元/针）</strong>接种条件。${ageNote}${doseScheduleNote}<br><br>
+    detail: `根据筛查信息，接种者符合<strong>九价HPV疫苗（默沙东，1298元/针）</strong>接种条件。${ageNote}${doseScheduleNote}<br><br>
       <strong>温馨提示：</strong><br>
       • 经期、轻微感冒（非高热）不影响接种<br>
       • 接种前无需检测HPV感染状态<br>
