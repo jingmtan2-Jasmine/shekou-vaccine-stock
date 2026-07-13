@@ -2313,6 +2313,23 @@ function evaluatePCV13() {
     doseCheck = `<br>⚠️ <strong>提示：</strong>已接种 ${done} 剂，超过该首针年龄段的标准全程（${total} 剂），请确认填写是否正确。`;
   }
 
+  // 已完成全程 → 标题改为「无需再接种」
+  if (total > 0 && done >= total) {
+    return { status: 'info', title: '✅ 无需再接种',
+      detail: `根据筛查信息，接种者已完成 13 价肺炎疫苗全程（${total} 剂）。<br><br>
+      <strong>您的程序：</strong>共 ${total} 剂，已完成 ${done} 剂<br>
+      ${programNote}
+      ${ageCheck}
+      ${doseCheck}
+      <br><br>
+      <strong>温馨提示：</strong><br>
+      • 国产（玉溪沃森）与进口（沛儿13）在有效性和安全性上无明显差异<br>
+      • 全程完成后无需常规加强接种<br>
+      • 不同起始月龄接种剂次不同，早接种早保护<br>
+      • 得过肺炎仍需按程序完成接种<br>
+      • 可与多种疫苗同时接种（不同部位）` };
+  }
+
   return { status: 'eligible', title: '✅ 可以接种',
     detail: `根据筛查信息，接种者符合 13 价肺炎疫苗接种条件。<br><br>
       <strong>您的程序：</strong>${total > 0 ? `共 ${total} 剂` : '请补充首针年龄'}<br>
