@@ -1700,6 +1700,7 @@ const vaccineConfigs = {
     questions: [
       { id: 'age', type: 'age_detail', label: '接种者当前年龄', hint: '不同起始月龄接种程序不同' },
       { id: 'first_dose_age', type: 'radio', label: '首针接种时的年龄段', options: ['6周-6月龄', '7-11月龄', '12-23月龄', '2-5岁（6周岁前）'], hint: '首针年龄决定全程剂次（4/3/2/1针）' },
+      { id: 'completed_doses', type: 'radio', label: '已完成的剂次', options: ['0剂（尚未接种）', '1剂', '2剂', '3剂', '已完成全程'], hint: '已接种剂次决定还需补种几针' },
       { id: 'fever', type: 'radio', label: '目前是否有中度以上急性疾病或发热？', options: ['否', '是'], hint: '应推迟至疾病好转' },
       { id: 'allergy', type: 'radio', label: '是否对疫苗成分有严重过敏史？', options: ['否', '是'], hint: '过敏者禁用' },
       { id: 'previous_pcv', type: 'radio', label: '之前是否接种过肺炎疫苗？', options: ['否，首次接种', '是，进口沛儿13', '是，国产玉溪沃森', '是，其他品牌'], hint: '同品牌优先，不同品牌可替代' },
@@ -2175,6 +2176,7 @@ function evaluateShingles() {
 function evaluatePCV13() {
   const ageMonths = getAgeInMonths();
   const firstDose = userAnswers['first_dose_age'];
+  const completed = userAnswers['completed_doses'];
   const fever = userAnswers['fever'];
   const allergy = userAnswers['allergy'];
   const previousPcv = userAnswers['previous_pcv'];
@@ -2189,27 +2191,43 @@ function evaluatePCV13() {
       detail: '中度以上急性疾病或发热期间应推迟接种。' };
   }
 
-  // 按首针年龄段决定剂次
-  let program = '';
+  // 按首针年龄段决定全程剂次
+  let total = 0;
   let programNote = '';
   if (firstDose === '6周-6月龄') {
-    program = '共 4 剂';
+    total = 4;
     programNote = '基础免疫 3 剂（2、4、6月龄各 1 剂，间隔 ≥1 个月）+ 加强免疫 1 剂（12-15 月龄）。基础免疫首剂最早 6 周龄。';
   } else if (firstDose === '7-11月龄') {
-    program = '共 3 剂';
+    total = 3;
     programNote = '首剂与第 2 剂间隔 ≥1 个月；建议满 12 月龄后接种第 3 剂，与第 2 剂间隔 ≥2 个月。';
   } else if (firstDose === '12-23月龄') {
-    program = '共 2 剂';
+    total = 2;
     programNote = '两剂间隔 ≥2 个月。';
   } else if (firstDose === '2-5岁（6周岁前）') {
-    program = '共 1 剂';
+    total = 1;
     programNote = '2-5 岁儿童（6 周岁生日前）仅需接种 1 剂。';
   } else {
-    program = '请补充首针年龄';
+    total = 0;
     programNote = '需明确首针接种时的年龄段以判断全程剂次。';
   }
 
-  // 首针年龄与当前年龄的合理性检查
+  // 已完成剂次 → 剩余
+  const doneMap = { '0剂（尚未接种）': 0, '1剂': 1, '2剂': 2, '3剂': 3, '已完成全程': total };
+  const done = doneMap[completed] ?? 0;
+  const remaining = Math.max(0, total - done);
+
+  let progressHtml = '';
+  if (total > 0) {
+    if (done >= total) {
+      progressHtml = `<br>✅ 您已完成全程 ${total} 剂，无需再接种。`;
+    } else if (done === 0) {
+      progressHtml = `<br>📋 全程需 <strong>${total}</strong> 剂，本次为第 1 剂。`;
+    } else {
+      progressHtml = `<br>📋 全程需 <strong>${total}</strong> 剂，已完成 <strong>${done}</strong> 剂，<strong>还需 ${remaining} 剂</strong>。`;
+    }
+  }
+
+  // 首针年龄 vs 当前年龄的合理性检查
   let ageCheck = '';
   if (firstDose === '6周-6月龄' && ageMonths > 12) {
     ageCheck = '<br>⚠️ <strong>提示：</strong>若已超 12 月龄，按 7-11 月龄程序更合适。';
@@ -2219,11 +2237,19 @@ function evaluatePCV13() {
     ageCheck = '<br>⚠️ <strong>提示：</strong>若已满 6 周岁，不再适用本程序，建议改为 23 价肺炎多糖疫苗。';
   }
 
+  // 完成数与全程剂次的合理性检查
+  let doseCheck = '';
+  if (total > 0 && done > total) {
+    doseCheck = `<br>⚠️ <strong>提示：</strong>已接种 ${done} 剂，超过该首针年龄段的标准全程（${total} 剂），请确认填写是否正确。`;
+  }
+
   return { status: 'eligible', title: '✅ 可以接种',
     detail: `根据筛查信息，接种者符合 13 价肺炎疫苗接种条件。<br><br>
-      <strong>您的程序：</strong>${program}<br>
+      <strong>您的程序：</strong>${total > 0 ? `共 ${total} 剂` : '请补充首针年龄'}<br>
       ${programNote}
+      ${progressHtml}
       ${ageCheck}
+      ${doseCheck}
       <br><br>
       <strong>温馨提示：</strong><br>
       • 国产（玉溪沃森）与进口（沛儿13）在有效性和安全性上无明显差异<br>
