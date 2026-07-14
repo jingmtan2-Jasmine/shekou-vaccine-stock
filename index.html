@@ -1241,8 +1241,8 @@ const categoryDefs = [
 function renderCategoryTabs() {
   const tabsEl = document.getElementById('category-tabs');
   tabsEl.innerHTML = categoryDefs.map(c => {
-    const count = c.id === 'all' ? vaccineCatalog.filter(v => v.id !== 'general' && v.vaccineType !== 'free').length
-                                 : vaccineCatalog.filter(v => v.cats.includes(c.id) && v.vaccineType !== 'free').length;
+    const count = c.id === 'all' ? vaccineCatalog.filter(v => v.id !== 'general').length
+                                 : vaccineCatalog.filter(v => v.cats.includes(c.id)).length;
     return `<div class="category-tab ${c.id === activeCategory ? 'active' : ''}"
                  onclick="switchCategory('${c.id}')">
               ${c.icon} ${c.label}<span class="count">${count}</span>
@@ -1264,8 +1264,8 @@ function filterVaccines() {
 function renderVaccineList() {
   const listEl = document.getElementById('vaccine-list');
 
-  // 免费/隐藏疫苗不在筛查卡片中显示
-  const visibleCatalog = vaccineCatalog.filter(v => v.id !== 'general' && v.vaccineType !== 'free');
+  // 显示所有疫苗（含国家免疫规划免费疫苗），用户可点击查看详情
+  const visibleCatalog = vaccineCatalog.filter(v => v.id !== 'general');
 
   // 搜索过滤（在原始 name + desc 上做匹配，去掉 HTML 标签）
   const stripHtml = s => s.replace(/<[^>]+>/g, '');
@@ -1873,6 +1873,12 @@ const vaccineConfigs = {
 function selectVaccine(type, el) {
   document.querySelectorAll('.vaccine-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
+  // 免费疫苗（国家免疫规划）没有筛查问答配置，直接显示详情卡
+  const catalog = vaccineCatalog.find(c => c.id === type);
+  if (catalog && catalog.vaccineType === 'free') {
+    showVaccineInfo(type);
+    return;
+  }
   selectedVaccine = type;
   userAnswers = {};
   renderQuestions();
