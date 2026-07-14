@@ -154,19 +154,24 @@
     .vaccine-summary .summary-item {
       display: flex;
       gap: 8px;
-      padding: 4px 0;
+      padding: 6px 0;
       border-bottom: 1px dashed #eee;
+      align-items: flex-start;
     }
     .vaccine-summary .summary-item:last-child { border-bottom: none; }
     .vaccine-summary .summary-item .k {
       color: var(--text-secondary);
-      flex-shrink: 0;
-      min-width: 96px;
+      flex-shrink: 1;
+      min-width: 0;
+      max-width: 55%;
     }
     .vaccine-summary .summary-item .v {
       color: var(--text-primary);
-      flex: 1;
-      word-break: break-all;
+      flex: 0 0 auto;
+      text-align: right;
+      max-width: 45%;
+      word-break: keep-all;
+      white-space: normal;
     }
     .btn-row-vertical {
       flex-direction: column;
@@ -1876,7 +1881,7 @@ const vaccineConfigs = {
   },
   varicella_free: {
     name: '水痘疫苗（免费）',
-    fullName: '水痘减毒活疫苗（北京民海，国家免疫规划，2014.12.1后出生免费）',
+    fullName: '水痘减毒活疫苗（北京民海，国家免疫规划，2014.12.1后出生免费）<br><span style="color:#d35400;font-weight:600;">⚠️ 12 周岁以上需前往社康自费接种</span>',
     questions: [
       { id: 'age', type: 'age', label: '接种者当前年龄', hint: '<strong>适用 1-12 岁儿童</strong>：2014.12.1 后出生、12月龄起首针，4岁起第2针；<strong>12 岁以上需前往社康自费接种</strong>', source: '国家免疫规划疫苗儿童免疫程序说明（2016 版）' },
       { id: 'dose_number', type: 'radio', label: '本次接种剂次', options: ['第1针（12月龄）', '第2针（4岁加强）'], hint: '国家免疫规划：12月龄首针 + 4岁第2针；两针间隔≥3个月', source: '国家免疫规划疫苗儿童免疫程序' },
