@@ -931,13 +931,7 @@
       <div id="timeline-content">
         <!-- JS 渲染 -->
       </div>
-      <div class="timeline-note">
-        <strong>附注：</strong><br>
-        1. 五联、HPV、带状疱疹疫苗只能单独接种，其它疫苗可以2针同时接种<br>
-        2. 6岁百白破与ACYW135多糖不能同时接种（需分开预约）<br>
-        3. 推荐每年年底接种流感疫苗，≥6月龄即可；6月龄-8岁首次接种需2剂间隔1月<br>
-        4. 本计划基于卓正2026年7月7日更新版本，具体以医生面诊为准
-      </div>
+      <!-- 卓正 PDF 附注由 JS 动态渲染（避免与下方静态附注重复） -->
     </div>
   </div>
 
@@ -1671,7 +1665,8 @@ function renderTimelineContent() {
     '1. <strong style="color:#d35400;">带 🇭🇰 标记为香港疫苗</strong>（如 Menactra），蛇口暂无库存，有条件的家庭<strong>可自行前往香港诊所接种</strong>，免疫效果更佳。<br>' +
     '2. <strong>五联、HPV、带状疱疹疫苗</strong>只能<strong>单独接种</strong>，其他疫苗可以 2 针同时接种。<br>' +
     '3. <strong>百白破与 ACYW135 多糖</strong>不能同日接种（仅蛇口疫苗中心规定）。<br>' +
-    '4. <strong>流感疫苗</strong>：推荐每年年底接种，≥6 月龄即可；6 月-8 岁首次接种需 2 剂间隔 1 个月。';
+    '4. <strong>流感疫苗</strong>：推荐每年年底接种，≥6 月龄即可；6 月-8 岁首次接种需 2 剂间隔 1 个月。<br>' +
+    '5. 本计划基于<strong>卓正 2026-07-07 更新版</strong>，<strong>具体以医生面诊为准</strong>。';
   el.appendChild(pdfNote);
 }
 
