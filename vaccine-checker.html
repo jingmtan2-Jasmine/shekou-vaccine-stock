@@ -1110,7 +1110,7 @@ const vaccineSchedule = [
     { id: 'menactra_hk',  label: 'Menactra 脑膜炎双球菌疫苗', note: '🇭🇰 香港疫苗 · 第1针', type: 'self', hk: true }
   ]},
   { age: '12月',  ageMonths: 12,  vaccines: [
-    { id: 'varicella_free',label: '水痘疫苗', note: '第1针 · 2014.12.1后出生免费', type: 'free' },
+    { id: 'varicella_free',label: '水痘疫苗', note: '第1针 · 2014.12.1后出生免费 · 限1-12岁', type: 'free' },
     { id: 'pcv13',        label: '13价肺炎疫苗', note: '加强针', type: 'self' }
   ]},
   { age: '15月',  ageMonths: 15,  vaccines: [
@@ -1130,7 +1130,7 @@ const vaccineSchedule = [
     { id: 'meningococcal_ps', label: 'ACYW135多糖疫苗', note: '多糖加强针（6-23月开针）', type: 'self' }
   ]},
   { age: '4岁',   ageMonths: 48,  vaccines: [
-    { id: 'varicella_free',label: '水痘疫苗', note: '第2针', type: 'free' }
+    { id: 'varicella_free',label: '水痘疫苗', note: '第2针 · 限1-12岁', type: 'free' }
   ]},
   { age: '6岁',   ageMonths: 72,  vaccines: [
     { id: 'dtap_dt',     label: '百白破疫苗', note: '⚠️ 不能与流脑多糖同日接种 · 卓正推荐百白破(含百日咳)，国家免费为白破', type: 'free' },
@@ -1185,7 +1185,7 @@ const vaccineCatalog = [
   // ─── 免费疫苗（国家免疫规划，不显示筛查卡片，但推荐计划里带库存徽标）───
   { id: 'mmr',              name: '麻腮风疫苗（MMR）',                                    desc: '国家免疫规划 · 8月+18月各一针',                         ageTag: '8月-18月',    cats: ['infant', 'child'],                         stock: 47,  stockNote: '上海生物 47 支', vaccineType: 'free' },
   { id: 'je',               name: '乙型脑炎疫苗',                                         desc: '国家免疫规划 · 8月首针 + 24月加强',                     ageTag: '8月-24月',    cats: ['infant', 'child'],                         stock: 33,  stockNote: '武汉生物 33 支', vaccineType: 'free' },
-  { id: 'varicella_free',   name: '水痘疫苗（免费）',                                      desc: '国家免疫规划 · 2014.12.1后出生 · 12月+4岁各一针',      ageTag: '12月-4岁',    cats: ['infant', 'child'],                         stock: 42,  stockNote: '北京民海 42 支', vaccineType: 'free' },
+  { id: 'varicella_free',   name: '水痘疫苗（免费）',                                      desc: '国家免疫规划 · 2014.12.1后出生 · 1-12岁 · 12月+4岁各一针 · 12岁以上需社康自费',      ageTag: '1-12岁',    cats: ['infant', 'child'],                         stock: 42,  stockNote: '北京民海 42 支', vaccineType: 'free' },
   // ─── 补充自费疫苗 ───
   { id: 'general',          name: '🔍 通用筛查（不确定要打哪种疫苗）',                    desc: '先做基础健康筛查，了解一般接种禁忌',                    ageTag: '',           cats: ['general'] },
 ];
@@ -1878,7 +1878,7 @@ const vaccineConfigs = {
     name: '水痘疫苗（免费）',
     fullName: '水痘减毒活疫苗（北京民海，国家免疫规划，2014.12.1后出生免费）',
     questions: [
-      { id: 'age', type: 'age', label: '接种者当前年龄', hint: '2014.12.1 后出生可免费接种；12月龄起首针，4岁起第2针', source: '国家免疫规划疫苗儿童免疫程序说明（2016 版）' },
+      { id: 'age', type: 'age', label: '接种者当前年龄', hint: '<strong>适用 1-12 岁儿童</strong>：2014.12.1 后出生、12月龄起首针，4岁起第2针；<strong>12 岁以上需前往社康自费接种</strong>', source: '国家免疫规划疫苗儿童免疫程序说明（2016 版）' },
       { id: 'dose_number', type: 'radio', label: '本次接种剂次', options: ['第1针（12月龄）', '第2针（4岁加强）'], hint: '国家免疫规划：12月龄首针 + 4岁第2针；两针间隔≥3个月', source: '国家免疫规划疫苗儿童免疫程序' },
       { id: 'first_dose_date', type: 'radio', label: '如接种第2针：第1针水痘已接种多久？', options: ['<3个月', '3-6个月', '6-12个月', '>12个月', '尚未接种第1针'], hint: '两针之间必须间隔≥3个月', source: '北京民海水痘减毒活疫苗说明书' },
       { id: 'had_varicella', type: 'radio', label: '是否曾患过水痘？', options: ['否', '是，已康复', '是，正在患病'], hint: '已患过水痘一般无需再接种（终身免疫）', source: '水痘减毒活疫苗说明书 — 既往感染可免种' },
@@ -3066,6 +3066,14 @@ function evaluateVaricellaFree() {
   if (_intervalWarn) return { status: _intervalWarn.status, title: _intervalWarn.title, detail: _intervalWarn.message };
 
   const age = getAgeInYears();
+
+  // 适用年龄硬卡：免费水痘仅 1-12 岁儿童（2014.12.1 后出生），12 岁以上需前往社康自费
+  if (age !== null && age > 12) {
+    return { status: 'ineligible', title: '❌ 不在我院免费接种范围',
+      detail: `当前 ${age.toFixed(1)} 岁，已超过 12 周岁。<br><br>
+        <strong>免费水痘疫苗</strong>仅适用于 <strong>1-12 岁儿童</strong>（2014.12.1 后出生）。<br><br>
+        <strong>建议：</strong>请前往 <strong>就近社康中心</strong> 自费接种水痘疫苗。` };
+  }
   const dose = userAnswers['dose_number'];
   const firstDoseGap = userAnswers['first_dose_date'];
   const hadVaricella = userAnswers['had_varicella'];
