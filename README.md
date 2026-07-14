@@ -46,3 +46,7 @@ pip install python-calamine
 ## 页面地址
 
 GitHub Pages: https://jingmtan2-Jasmine.github.io/shekou-vaccine-stock/
+
+兼容旧链接（指向同一页面）:
+- `https://jingmtan2-Jasmine.github.io/shekou-vaccine-stock/vaccine-checker.html`
+- `https://jingmtan2-Jasmine.github.io/shekou-vaccine-stock/index.html`
