@@ -1905,6 +1905,16 @@ function selectVaccine(type, el) {
   showVaccineInfo(type);
 }
 
+// 当 age 单位的 select 变化时（比如从"月"改成"岁"），需要重新渲染问题列表以触发后续问题（如 4 岁前/后水痘第二针）的显示/隐藏
+function onAgeUnitChange() {
+  renderQuestions();
+}
+
+// age_detail 类型同样需要重渲染（例如 pcv13 切换月龄/年龄）
+function toggleAgeInput() {
+  renderQuestions();
+}
+
 function renderQuestions() {
   const config = vaccineConfigs[selectedVaccine];
   const container = document.getElementById('questions-container');
@@ -1935,8 +1945,8 @@ function renderQuestions() {
       html += `
         <div class="age-input-group">
           <input type="number" id="${q.id}" placeholder="请输入年龄" min="0" max="120"
-                 onchange="userAnswers['${q.id}'] = this.value; renderQuestions()">
-          <select id="${q.id}_unit" onchange="userAnswers['${q.id}_unit'] = this.value; renderQuestions()">
+                 oninput="userAnswers['${q.id}'] = this.value">
+          <select id="${q.id}_unit" onchange="userAnswers['${q.id}_unit'] = this.value; onAgeUnitChange()">
             <option value="years">岁</option>
             <option value="months">月</option>
           </select>
@@ -1944,22 +1954,35 @@ function renderQuestions() {
     } else if (q.type === 'age_detail') {
       html += `
         <div class="age-input-group">
-          <select id="${q.id}_unit" onchange="userAnswers['${q.id}_unit'] = this.value; toggleAgeInput('${q.id}')">
+          <select id="${q.id}_unit" onchange="userAnswers['${q.id}_unit'] = this.value; toggleAgeInput()">
             <option value="months">按月龄输入</option>
             <option value="years">按年龄输入</option>
           </select>
           <input type="number" id="${q.id}" placeholder="请输入" min="0" max="120"
-                 onchange="userAnswers['${q.id}'] = this.value">
+                 oninput="userAnswers['${q.id}'] = this.value">
         </div>`;
     } else if (q.type === 'number') {
       html += `<input type="number" id="${q.id}" placeholder="请输入" min="${q.min || 0}" max="${q.max || 999}"
-                     onchange="userAnswers['${q.id}'] = this.value">`;
+                     oninput="userAnswers['${q.id}'] = this.value">`;
     }
 
     html += '</div>';
   });
 
   container.innerHTML = html;
+
+  // 渲染后回填已填写的 input/select 值，避免 showIf 重渲染后丢失用户输入
+  Object.keys(userAnswers).forEach(key => {
+    const el = document.getElementById(key);
+    if (el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA')) {
+      el.value = userAnswers[key];
+    }
+    // radio 选中态
+    if (userAnswers[key] !== undefined) {
+      const radios = document.querySelectorAll(`input[type="radio"][name="${key}"]`);
+      radios.forEach(r => { r.checked = (r.value === userAnswers[key]); });
+    }
+  });
 }
 
 function goToStep(n) {
