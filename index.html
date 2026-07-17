@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>卓正医疗 · 疫苗接种查询 v2026.07.18</title>
+<title>卓正医疗 · 疫苗接种查询 v2026.07.19</title>
 <style>
   :root {
     --primary: #5A9B5F;
@@ -1064,7 +1064,7 @@
 
   <div class="disclaimer">
     ⚠️ 本工具为预约端快速筛查参考，不构成最终医学判断。最终接种决定需由执业医师在面诊后作出。如有疑问请引导客户使用卓正诊所小程序在线问诊。<br>
-    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-07-14 17:01</span> · 推荐计划：卓正2026年7月7日更新版 · 版本 v2026.07.18（HPV男性剂次补全 3针0/2/6月 / 男性超26岁给出替代方案）</span>
+    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-07-14 17:01</span> · 推荐计划：卓正2026年7月7日更新版 · 版本 v2026.07.19（HPV男性剂次补全 / 节点标签加底色边框区隔已过/下一节点）</span>
   </div>
 
 </div>
@@ -1413,8 +1413,8 @@ function renderScheduleResult() {
 
     // 如果之前还有最近的儿童节点，也显示提醒
     if (nearest && nearest.ageMonths < matchedRange.ageMonths) {
-      html += `<div style="margin:16px 0 6px;font-size:14px;color:var(--text-secondary);">
-        💡 过去接种节点（${nearest.age}）——请确认是否已完成：</div>`;
+      html += `<div style="margin:16px 0 6px;padding:6px 10px;background:#fff8e1;border-left:3px solid #f39c12;border-radius:4px;font-size:13px;color:#7a5c00;font-weight:600;">
+        ⏪ <strong>已过节点</strong>（${nearest.age}）—— 请核对是否已接种：</div>`;
       html += nearest.vaccines.map(v => renderScheduleCard(v, true)).join('');
     }
     el.innerHTML = html;
@@ -1423,13 +1423,13 @@ function renderScheduleResult() {
 
   // 纯儿童阶段：显示最近 + 下一个
   if (nearest) {
-    html += `<div style="margin-bottom:6px;font-size:14px;color:var(--text-secondary);">
-      上一个接种节点（${nearest.age}）：</div>`;
+    html += `<div style="margin-bottom:6px;padding:6px 10px;background:#fff8e1;border-left:3px solid #f39c12;border-radius:4px;font-size:13px;color:#7a5c00;font-weight:600;">
+      ⏪ <strong>已过节点</strong>（${nearest.age}）—— 请核对是否已接种：</div>`;
     html += nearest.vaccines.map(v => renderScheduleCard(v, true)).join('');
   }
   if (next) {
-    html += `<div style="margin:16px 0 6px;font-size:14px;color:var(--primary);font-weight:600;">
-      🔜 下一个接种节点（${next.age}）：</div>`;
+    html += `<div style="margin:16px 0 6px;padding:6px 10px;background:var(--primary-soft);border-left:3px solid var(--primary);border-radius:4px;font-size:13px;color:var(--primary);font-weight:600;">
+      ⏩ <strong>下一节点</strong>（${next.age}）—— 推荐接种：</div>`;
     html += next.vaccines.map(v => renderScheduleCard(v)).join('');
   }
   if (!nearest && !next) {
