@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>卓正医疗 · 疫苗接种查询 v2026.07.29</title>
+<title>卓正医疗 · 疫苗接种查询 v2026.07.30</title>
 <style>
   :root {
     --primary: #5A9B5F;
@@ -3224,6 +3224,10 @@ function evaluateVaricellaFree() {
       return { status: 'ineligible', title: '❌ 年龄不符合',
         detail: `当前 ${age.toFixed(1)} 岁，水痘第 2 针最早 4 岁接种。<br><br>建议：满 4 岁后再接种。` };
     }
+    if (!firstDoseGap) {
+      return { status: 'info', title: 'ℹ️ 请补充第 1 针接种时间',
+        detail: '您已选择第 2 针，请填写上方的<strong>「第 1 针水痘已接种多久？」</strong>问题，以便核对两针间隔（需 ≥3 个月）。' };
+    }
     if (firstDoseGap === '尚未接种第1针') {
       return { status: 'ineligible', title: '❌ 程序错误',
         detail: '尚未接种过第 1 针水痘疫苗，请先接种第 1 针（12 月龄起），间隔 ≥3 个月后再接种第 2 针。' };
@@ -3308,6 +3312,10 @@ function evaluateMMR() {
     if (age !== null && age < 18) {
       return { status: 'ineligible', title: '❌ 年龄不符合',
         detail: `当前 ${age.toFixed(1)} 月龄，麻腮风第 2 针最早 <strong>18 月龄</strong>接种。` };
+    }
+    if (!firstDoseGap) {
+      return { status: 'info', title: 'ℹ️ 请补充第 1 针接种时间',
+        detail: '您已选择第 2 针，请填写上方的<strong>「第 1 针麻腮风已接种多久？」</strong>问题，以便核对两针间隔（需 ≥6 个月）。' };
     }
     if (firstDoseGap === '尚未接种第1针') {
       return { status: 'ineligible', title: '❌ 程序错误',
@@ -3404,6 +3412,10 @@ function evaluateJE() {
     if (age !== null && age < 24) {
       return { status: 'ineligible', title: '❌ 年龄不符合',
         detail: `当前 ${age.toFixed(1)} 月龄，乙脑第 2 针最早 <strong>24 月龄</strong>接种。` };
+    }
+    if (!firstDoseGap) {
+      return { status: 'info', title: 'ℹ️ 请补充第 1 针接种时间',
+        detail: '您已选择第 2 针，请填写上方的<strong>「第 1 针乙脑已接种多久？」</strong>问题，以便核对两针间隔（需 ≥12 个月）。' };
     }
     if (firstDoseGap === '尚未接种第1针') {
       return { status: 'ineligible', title: '❌ 程序错误',
