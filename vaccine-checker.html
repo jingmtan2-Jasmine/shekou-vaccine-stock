@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>卓正医疗 · 疫苗接种查询 v2026.07.27</title>
+<title>卓正医疗 · 疫苗接种查询 v2026.07.28</title>
 <style>
   :root {
     --primary: #5A9B5F;
@@ -2195,6 +2195,14 @@ function getIntervalWarning() {
   const lastAny = userAnswers['last_any_vaccine'];
   const lastSame = userAnswers['last_same_vaccine'];
 
+  // 不同疫苗的同种最小间隔（活疫苗通常比 1 个月更长）
+  const sameMinIntervalMap = {
+    je: '≥12 个月',   // 乙脑：8月首针 + 24月加强，间隔 ≥12 个月
+    mmr: '≥6 个月',   // 麻腮风：8月首针 + 18月第2针，间隔 ≥6 个月
+    varicella_free: '≥3 个月', // 水痘：12月首针 + 4岁第2针，间隔 ≥3 个月
+  };
+  const sameMinDesc = sameMinIntervalMap[selectedVaccine] || '≥1 个自然月（活疫苗 ≥28 天）';
+
   // 任意疫苗间隔 <7 天 → 推迟
   if (lastAny === '<7天') {
     return {
@@ -2208,7 +2216,7 @@ function getIntervalWarning() {
     return {
       status: 'conditional',
       title: '⚠️ 建议推迟接种',
-      message: '同种疫苗两剂之间通常需要间隔 ≥1 个自然月（活疫苗需 ≥28 天）。请确认上次同种疫苗的接种时间，或推迟至满足最小间隔后再来。'
+      message: `同种疫苗两剂之间通常需要间隔 ${sameMinDesc}。请确认上次同种疫苗的接种时间，或推迟至满足最小间隔后再来。`
     };
   }
   return null;
