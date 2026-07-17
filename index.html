@@ -1909,7 +1909,7 @@ const vaccineConfigs = {
       { id: 'pregnant', type: 'radio', label: '（女性）是否已怀孕或近期备孕？', options: ['否/不适用', '是'], hint: '孕妇禁用减毒活疫苗，接种后1个月内应避免怀孕', source: '中国 CDC + FDA 水痘疫苗妊娠期禁忌',
         showIf: (a) => { const v = parseFloat(a.age || 0); return a.age_unit === 'years' ? v >= 12 : v >= 144; } },
       { id: 'household_immunocompromised', type: 'radio', label: '家庭成员是否有严重免疫缺陷者？', options: ['否', '是'], hint: '理论上活疫苗病毒可传播给免疫缺陷家属，建议先咨询医生', source: '美国 ACIP 减毒活疫苗指南' },
-      { id: 'last_any_vaccine', type: 'radio', label: '上一次任意疫苗接种距今多久？', options: ['<7天', '7-14天', '14-28天', '>28天', '从未接种过任何疫苗'], hint: '不同疫苗通常间隔 ≥7天（活疫苗仍需 ≥28天）', source: '中国疾控中心《预防接种工作规范》' },
+      { id: 'last_any_vaccine', type: 'radio', label: '上一次任意疫苗接种距今多久？', options: ['<7天', '7-27天', '>28天', '从未接种过任何疫苗'], hint: '不同疫苗通常间隔 ≥7天，活疫苗需 ≥28天', source: '中国疾控中心《预防接种工作规范》' },
       { id: 'last_same_vaccine', type: 'radio', label: '同种疫苗（水痘）上次接种距今多久？', options: ['<3个月', '3-6个月', '>6个月', '从未接种过水痘'], hint: '两针水痘之间必须间隔≥3个月', source: '北京民海水痘减毒活疫苗说明书' },
     ]
   }
