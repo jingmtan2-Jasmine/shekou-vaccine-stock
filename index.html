@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>卓正医疗 · 疫苗接种查询 v2026.07.21</title>
+<title>卓正医疗 · 疫苗接种查询 v2026.07.22</title>
 <style>
   :root {
     --primary: #5A9B5F;
@@ -1064,7 +1064,7 @@
 
   <div class="disclaimer">
     ⚠️ 本工具为预约端快速筛查参考，不构成最终医学判断。最终接种决定需由执业医师在面诊后作出。如有疑问请引导客户使用卓正诊所小程序在线问诊。<br>
-    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-07-14 17:01</span> · 推荐计划：卓正2026年7月7日更新版 · 版本 v2026.07.21（白破/百白破库存清空，避免与"不再领取"提示矛盾）</span>
+    <span style="font-size:12px;opacity:.7;">数据来源：<a href="https://alidocs.dingtalk.com/i/nodes/jQPRqwxd3NLWjdeA535zJYK6lrGM4795" target="_blank" style="color:var(--primary);text-decoration:underline;">钉钉「蛇口疫苗库存+问题转交登记」</a> · <span id="stock-snapshot-time">库存快照：2026-07-14 17:01</span> · 推荐计划：卓正2026年7月7日更新版 · 版本 v2026.07.22（白破/百白破"不再领取"文案统一完整：明确点出疫苗名）</span>
   </div>
 
 </div>
@@ -1141,7 +1141,7 @@ const vaccineSchedule = [
     { id: 'varicella_free',label: '水痘疫苗', note: '第2针 · 限1-12岁', type: 'free' }
   ]},
   { age: '6岁',   ageMonths: 72,  vaccines: [
-    { id: 'dtap_dt',     label: '百白破疫苗', note: '不能与流脑多糖同日接种 · 7y前接种百白破(含百日咳)，7y-12y接种白破 · 📌 本诊所不再领取，请前往社康免费接种', type: 'free' },
+    { id: 'dtap_dt',     label: '百白破疫苗', note: '不能与流脑多糖同日接种 · 7y前接种百白破(含百日咳)，7y-12y接种白破 · 📌 本诊所不再领取白破/百白破疫苗，请前往社康免费接种', type: 'free' },
     { id: 'meningococcal_ps', label: 'ACYW135多糖疫苗', note: '多糖（与上一剂间隔≥3年）⚠️ 不能与百白破同日接种', type: 'self' }
   ]},
   // ─── 6岁以上青少年 & 成人推荐 ───
@@ -1183,7 +1183,7 @@ const vaccineCatalog = [
   { id: 'hfmd',             name: '手足口疫苗（医科院 EV71 二倍体）',                     desc: '6月龄起，超5岁不能接种 · 188元 · 共2针',                ageTag: '6月-5岁',    cats: ['infant', 'child'],                         stock: 28,  stockNote: '医科院 28 支' },
   { id: 'hepa',             name: '甲肝灭活疫苗（国产）',                                 desc: '18月-15岁 · 138-213元 · 共2剂间隔6月',                ageTag: '18月-15岁',  cats: ['infant', 'child', 'teen'],                 stock: 80,  stockNote: '北京科兴 44 / 艾美行动 36' },
   { id: 'meningococcal_ps', name: 'ACYW135流脑<strong style="color:#5A9B5F">多糖</strong>疫苗（绿竹）', desc: '148元 · 加强/补种用：3岁（6-23月开针者）+ 6岁多糖 · 与上一剂间隔≥3年 · 无年龄上限', ageTag: '≥3岁',        cats: ['child'],                                   stock: 3,   stockNote: '绿竹 3 支' },
-  { id: 'dtap_dt',          name: '白破 / 百白破疫苗（武汉生物）',                        desc: '百白破(含百日咳):6-6岁11月 · 白破:7-11岁11月 · 国家免疫规划免费 · 不能与流脑多糖同接', ageTag: '6-11岁',     cats: ['child'],                                   stock: null,  stockNote: '本诊所不再领取，请前往社康免费接种', noStockRefresh: true },
+  { id: 'dtap_dt',          name: '白破 / 百白破疫苗（武汉生物）',                        desc: '百白破(含百日咳):6-6岁11月 · 白破:7-11岁11月 · 国家免疫规划免费 · 不能与流脑多糖同接', ageTag: '6-11岁',     cats: ['child'],                                   stock: null,  stockNote: '本诊所不再领取白破/百白破疫苗，请前往社康免费接种', noStockRefresh: true },
   { id: 'hpv',              name: 'HPV 九价疫苗（默沙东）',                               desc: '女9-14岁：2针（0、6月）/ 女15-45岁：3针（0、2、6月）/ 男16-26岁：3针（0、2、6月）· 1298元/针',     ageTag: '9-45岁（女）/ 16-26岁（男）',     cats: ['teen', 'adult'],                           stock: 0,   stockNote: '默沙东 0 支 · 暂时缺货' },
   { id: 'hepb',             name: '乙肝疫苗',                                             desc: '<strong>儿童</strong>（深圳康泰）· 预防乙型肝炎 · 0-1-6月程序 · 共3剂<br><strong>成人</strong>（艾美）· 预防乙型肝炎 · 抗体阴性补种 · 1针/剂',                ageTag: '全年龄',      cats: ['infant', 'child', 'teen', 'adult'],        stock: 71,  stockNote: '儿童(康泰) 36 / 成人(艾美) 35' },
   { id: 'flu',              name: '流感疫苗（4 种可选）',                                 desc: '鼻喷/巴斯德三价/巴斯德四价/华兰四价 · ≥6月龄 · 每年接种', ageTag: '≥6月龄',    cats: ['infant', 'child', 'teen', 'adult', 'senior'], stock: 0,   stockNote: '当前缺货，下批到苗约 9 月' },
@@ -2969,7 +2969,7 @@ function evaluateDtapDt() {
     return { status: 'eligible', title: '✅ 可以接种',
       detail: `根据筛查信息，接种者符合<strong>百白破疫苗（武汉生物，免费）</strong>接种条件。<br><br>
         <strong>程序：</strong>单针接种（3 岁前建议先完成 4 针五联，6 岁再接种 1 针百白破）。<br><br>
-        <strong>📌 重要提示：</strong>本诊所<strong>后续不再领取</strong>百白破/白破疫苗，请前往<strong>就近社康中心</strong>免费接种。<br><br>
+        <strong>📌 重要提示：</strong>本诊所<strong>不再领取白破/百白破疫苗</strong>，请前往<strong>就近社康中心</strong>免费接种。<br><br>
         <strong>⚠️ 重要禁忌：</strong>不能与 ACYW135 多糖流脑疫苗同时接种（仅蛇口疫苗中心规定）。` };
   }
 
@@ -2986,7 +2986,7 @@ function evaluateDtapDt() {
     return { status: 'eligible', title: '✅ 可以接种',
       detail: `根据筛查信息，接种者符合<strong>白破疫苗（武汉生物，免费）</strong>接种条件。<br><br>
         <strong>程序：</strong>7–11 岁 11 月单针接种。<br><br>
-        <strong>📌 重要提示：</strong>本诊所<strong>后续不再领取</strong>白破/百白破疫苗，请前往<strong>就近社康中心</strong>免费接种。<br><br>
+        <strong>📌 重要提示：</strong>本诊所<strong>不再领取白破/百白破疫苗</strong>，请前往<strong>就近社康中心</strong>免费接种。<br><br>
         <strong>⚠️ 重要禁忌：</strong>不能与 ACYW135 多糖流脑疫苗同时接种（仅蛇口疫苗中心规定）。` };
   }
 
@@ -2998,7 +2998,7 @@ function evaluateDtapDt() {
 
   return { status: 'info', title: 'ℹ️ 请根据年龄选择',
     detail: `${recommend}<br><br>
-      <strong>📌 重要提示：</strong>本诊所<strong>后续不再领取</strong>白破/百白破疫苗，请前往<strong>就近社康中心</strong>免费接种。<br><br>
+      <strong>📌 重要提示：</strong>本诊所<strong>不再领取白破/百白破疫苗</strong>，请前往<strong>就近社康中心</strong>免费接种。<br><br>
       <strong>⚠️ 重要禁忌：</strong>不能与 ACYW135 多糖流脑疫苗同时接种（仅蛇口疫苗中心规定）。` };
 }
 
