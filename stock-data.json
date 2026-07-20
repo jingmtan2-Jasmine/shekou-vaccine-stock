@@ -1,33 +1,33 @@
 {
-  "updated": "2026-07-13T17:53:08.786721+08:00",
+  "updated": "2026-07-20T11:48:06.076583+08:00",
   "source": "钉钉蛇口疫苗库存表",
   "vaccines": {
     "pentavalent": {
-      "stock": 48
+      "stock": 39
     },
     "rotavirus": {
-      "stock": 55
+      "stock": 52
     },
     "hfmd": {
-      "stock": 28
+      "stock": 25
     },
     "shingles": {
-      "stock": 21
+      "stock": 20
     },
     "hpv": {
-      "stock": 0
+      "stock": 10
     },
     "ppv23": {
-      "stock": 0
+      "stock": 1
     },
     "mmr": {
-      "stock": 56
+      "stock": 53
     },
     "je": {
-      "stock": 64
+      "stock": 62
     },
     "varicella_free": {
-      "stock": 37
+      "stock": 29
     },
     "ac_conjugate": {
       "stock": 0
@@ -36,26 +36,26 @@
       "stock": 0
     },
     "meningococcal_ps": {
-      "stock": 4
+      "stock": 10
     },
     "meningococcal": {
-      "stock": 51
+      "stock": 38
     },
     "hepb": {
-      "stock": 73,
-      "stockNote": "儿童 38 / 成人 35"
+      "stock": 68,
+      "stockNote": "儿童 35 / 成人 33"
     },
     "pcv13": {
-      "stock": 58,
-      "stockNote": "辉瑞 57 / 沃森 1"
+      "stock": 48,
+      "stockNote": "辉瑞 47 / 沃森 1"
     },
     "hepa": {
-      "stock": 81,
-      "stockNote": "北京科兴 44 / 艾美行动 75"
+      "stock": 78,
+      "stockNote": "北京科兴 43 / 艾美行动 70"
     },
     "dtap_dt": {
-      "stock": 15,
-      "stockNote": "白破 0 / 百白破 15"
+      "stock": 11,
+      "stockNote": "白破 0 / 百白破 11"
     },
     "flu": {
       "stock": 0,
