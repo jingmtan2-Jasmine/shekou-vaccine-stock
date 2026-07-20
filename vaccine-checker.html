@@ -2004,7 +2004,7 @@ function renderQuestions() {
         html += `
           <div class="radio-option">
             <input type="radio" name="${q.id}" id="${q.id}_${opt}" value="${opt}"
-                   onchange="userAnswers['${q.id}'] = '${opt}'">
+                   onchange="userAnswers['${q.id}'] = '${opt}'; renderQuestions()">
             <label for="${q.id}_${opt}">${opt}</label>
           </div>`;
       });
