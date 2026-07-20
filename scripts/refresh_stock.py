@@ -47,7 +47,7 @@ ROW_TO_ID = {
 # 需要汇总多行的疫苗（key = catalog ID, value = 汇总后 stockNote 格式）
 MULTI_ROW = {
     "hepb": ["儿童乙肝", "成人乙肝"],   # 儿童 + 成人汇总
-    "pcv13": ["13价肺炎（辉瑞进口）", "13价肺炎（国产玉溪沃森）"],
+    "pcv13": ["13价肺炎（辉瑞进口）"],   # 只保留辉瑞，不再汇总国产沃森
     "hepa": ["甲肝（国产  北京科兴", "甲肝（国产 艾美行动"],
     "dtap_dt": ["白破", "百白破"],
     "flu": ["华兰生物儿童流感", "儿童流感（三价/巴斯德", "成人流感（三价/巴斯德",
@@ -174,9 +174,7 @@ def map_to_vaccines(stock_map):
             if parts:
                 # 生成 stockNote
                 if vid == "pcv13":
-                    pfizer = sum(stock_map[k]["remaining"] for k in stock_map if "辉瑞" in k)
-                    wasen = sum(stock_map[k]["remaining"] for k in stock_map if "沃森" in k)
-                    vaccines[vid]["stockNote"] = f"辉瑞 {pfizer} / 沃森 {wasen}"
+                    vaccines[vid]["stockNote"] = f"辉瑞 {total} 支"
                 elif vid == "hepb":
                     child = sum(stock_map[k]["remaining"] for k in stock_map if "儿童" in k)
                     adult = sum(stock_map[k]["remaining"] for k in stock_map if "成人" in k)
