@@ -1468,12 +1468,10 @@ function renderScheduleCard(v, isPast) {
     badgeHtml = stockBadge(catalog);
   }
 
-  // 筛查链接：统一按钮样式
+  // 筛查链接：统一按钮样式（含免费疫苗，直接进入筛查流程）
   let linkHtml = '';
-  if (v.id && catalog && catalog.id !== 'general' && catalog.vaccineType !== 'free' && (catalog.stock > 0 || v.type === 'self')) {
+  if (v.id && catalog && catalog.id !== 'general' && (catalog.stock > 0 || v.type === 'self')) {
     linkHtml = `<div class="v-link" onclick="startScreening('${v.id}')">筛查 →</div>`;
-  } else if (v.type === 'free' || (catalog && catalog.vaccineType === 'free')) {
-    linkHtml = `<div class="v-link" onclick="showVaccineInfo('${v.id}')">免费 · 查看详情</div>`;
   } else if (catalog && catalog.stock === 0) {
     linkHtml = `<div class="v-link" style="color:var(--danger);">暂时缺货</div>`;
   }
