@@ -1191,7 +1191,7 @@ const vaccineCatalog = [
   { id: 'ppv23',            name: '23价肺炎多糖疫苗（默沙东）',                           desc: '≥65岁 或 2-64岁高危人群推荐 · 260元/针 · 单针',                    ageTag: '≥2岁',        cats: ['adult', 'senior'],                         stock: 0,   stockNote: '默沙东 0 支 · 暂时缺货' },
   { id: 'shingles',         name: '带状疱疹疫苗（Shingrix®）',                            desc: '预防带状疱疹及后遗神经痛 · ≥50岁成人 · 共2剂',          ageTag: '≥50岁',       cats: ['senior'],                                  stock: 20,  stockNote: 'GSK 20 支' },
   // ─── 免费疫苗（国家免疫规划，不显示筛查卡片，但推荐计划里带库存徽标）───
-  { id: 'mmr',              name: '麻腮风疫苗（MMR）',                                    desc: '国家免疫规划 · 8月+18月各一针',                         ageTag: '8月-18月',    cats: ['infant', 'child'],                         stock: 55,  stockNote: '上海生物 55 支', vaccineType: 'free' },
+  { id: 'mmr',              name: '麻腮风疫苗（MMR）',                                    desc: '国家免疫规划 · 8月+18月各一针 · 仅程序内，成人请前往社康自费',  ageTag: '8月-18月',    cats: ['infant', 'child'],                         stock: 55,  stockNote: '上海生物 55 支', vaccineType: 'free' },
   { id: 'je',               name: '乙型脑炎疫苗',                                         desc: '国家免疫规划 · 8月首针 + 24月加强',                     ageTag: '8月-24月',    cats: ['infant', 'child'],                         stock: 64,  stockNote: '武汉生物 64 支', vaccineType: 'free' },
   { id: 'varicella_free',   name: '水痘疫苗（免费）',                                      desc: '地方免疫规划 · 2014.12.1后出生 · 1-12岁 · 12月+4岁各一针 · 12岁以上需社康自费',      ageTag: '1-12岁',    cats: ['infant', 'child'],                         stock: 35,  stockNote: '北京民海 35 支', vaccineType: 'free' },
   // ─── 补充自费疫苗 ───
@@ -1919,8 +1919,8 @@ const vaccineConfigs = {
     name: '麻腮风疫苗（MMR）',
     fullName: '麻腮风减毒活疫苗（上海生物，国家免疫规划免费）',
     questions: [
-      { id: 'age', type: 'age', label: '接种者当前月龄/年龄', hint: '<strong>国家免疫规划：8月龄首针 + 18月龄第2针</strong>；成人未患过麻疹/风疹/腮腺炎者也可补种', source: '国家免疫规划疫苗儿童免疫程序说明（2016 版）' },
-      { id: 'dose_number', type: 'radio', label: '本次接种剂次', options: ['第1针（8月龄）', '第2针（18月龄）', '未患过麻疹/风疹/腮腺炎的成人补种'], hint: '常规程序为 8月+18月 各一针；成人未免疫者也推荐接种 1 针', source: '中国 CDC 麻疹风疹腮腺炎疫苗免疫程序' },
+      { id: 'age', type: 'age', label: '接种者当前月龄/年龄', hint: '<strong>国家免疫规划：8月龄首针 + 18月龄第2针</strong>；本院仅接种程序内剂次，成人如需接种请前往社康自费', source: '国家免疫规划疫苗儿童免疫程序说明（2016 版）' },
+      { id: 'dose_number', type: 'radio', label: '本次接种剂次', options: ['第1针（8月龄）', '第2针（18月龄）', '成人补种（需前往社康自费）'], hint: '常规程序为 8月+18月 各一针；本院仅做程序内剂次，成人请到社康自费接种', source: '中国 CDC 麻疹风疹腮腺炎疫苗免疫程序' },
       { id: 'first_dose_date', type: 'radio', label: '如接种第2针：第1针麻腮风已接种多久？', options: ['<6个月', '6-12个月', '>12个月', '尚未接种第1针'], hint: '两针之间通常间隔≥6个月', source: '上海生物麻腮风减毒活疫苗说明书',
         showIf: (a) => a.dose_number === '第2针（18月龄）' },
       { id: 'had_measles_rubella_mumps', type: 'radio', label: '是否曾患过麻疹、风疹或腮腺炎？', options: ['否', '是-麻疹', '是-风疹', '是-腮腺炎', '是-不确定哪种'], hint: '已自然感染过其中任一疾病者，对该病终身免疫；其他组分仍需疫苗保护', source: '中国 CDC 麻疹/风疹/腮腺炎自然感染后免疫' },
@@ -3256,6 +3256,16 @@ function evaluateMMR() {
   if (_intervalWarn) return { status: _intervalWarn.status, title: _intervalWarn.title, detail: _intervalWarn.message };
 
   const age = getAgeInMonths();
+  const ageYears = getAgeInYears();
+
+  // 适用年龄硬卡：麻腮风为国家免疫规划儿童疫苗（8月+18月），本院仅接种程序内剂次；
+  // 成人（≥18岁）不在本院免费接种范围，需前往社康自费接种
+  if (ageYears !== null && ageYears >= 18) {
+    return { status: 'ineligible', title: '❌ 不在我院免费接种范围',
+      detail: `当前 ${ageYears.toFixed(1)} 岁，已进入成人阶段。<br><br>
+        <strong>麻腮风疫苗（MMR）</strong> 为国家免疫规划 <strong>儿童</strong> 疫苗，本院仅接种程序内剂次（8 月龄首针 + 18 月龄第 2 针）。<br><br>
+        <strong>建议：</strong>请前往 <strong>就近社康中心</strong> <strong>自费</strong> 接种麻腮风疫苗。` };
+  }
   const dose = userAnswers['dose_number'];
   const firstDoseGap = userAnswers['first_dose_date'];
   const hadDisease = userAnswers['had_measles_rubella_mumps'];
@@ -3334,23 +3344,18 @@ function evaluateMMR() {
     }
   }
 
-  if (dose === '未患过麻疹/风疹/腮腺炎的成人补种') {
-    if (hadDisease && hadDisease !== '否' && hadDisease !== '是-不确定哪种') {
-      return { status: 'info', title: 'ℹ️ 部分组分无需接种',
-        detail: `您选择为<strong>${hadDisease.replace('是-', '')}</strong>既往感染者的成人补种。该病已自然感染并终身免疫，无需再接种相应组分。` };
-    }
-    return { status: 'eligible', title: '✅ 可以接种',
-      detail: `根据筛查信息，接种者符合<strong>麻腮风疫苗（上海生物，免费）</strong>成人补种条件。<br><br>
-        <strong>程序：</strong>未接种过麻腮风疫苗也未患过麻疹/风疹/腮腺炎的成人，接种 1 针即可获得保护。<br><br>
+  if (dose === '成人补种（需前往社康自费）') {
+    return { status: 'ineligible', title: '❌ 请前往社康自费接种',
+      detail: `麻腮风疫苗（MMR）为国家免疫规划 <strong>儿童</strong> 疫苗，本院仅接种程序内剂次（8 月龄首针 + 18 月龄第 2 针）。<br><br>
+        <strong>成人补种请前往 <strong>就近社康中心</strong> 自费</strong> 接种麻腮风疫苗。<br><br>
         <strong>温馨提示：</strong><br>
         • 麻腮风为减毒活疫苗，孕妇禁用<br>
         • 接种后 1 个月内应避免怀孕<br>
-        • 与其他活疫苗需间隔 ≥28 天
-        ${pregnant === '否/不适用' ? '' : ''}` };
+        • 与其他活疫苗需间隔 ≥28 天` };
   }
 
   return { status: 'info', title: 'ℹ️ 请补充剂次信息',
-    detail: '请选择本次接种剂次（第 1 针 / 第 2 针 / 成人补种）后再查看接种条件。' };
+    detail: '请选择本次接种剂次（第 1 针 / 第 2 针）后再查看接种条件。' };
 }
 
 function evaluateJE() {
