@@ -1911,6 +1911,7 @@ const vaccineConfigs = {
       { id: 'pregnant', type: 'radio', label: '（女性）是否已怀孕或近期备孕？', options: ['否/不适用', '是'], hint: '孕妇禁用减毒活疫苗，接种后1个月内应避免怀孕', source: '中国 CDC + FDA 水痘疫苗妊娠期禁忌',
         showIf: (a) => { const v = parseFloat(a.age || 0); return a.age_unit === 'years' ? v >= 12 : v >= 144; } },
       { id: 'household_immunocompromised', type: 'radio', label: '家庭成员是否有严重免疫缺陷者？', options: ['否', '是'], hint: '理论上活疫苗病毒可传播给免疫缺陷家属，建议先咨询医生', source: '美国 ACIP 减毒活疫苗指南' },
+      { id: 'immunoglobulin', type: 'radio', label: '近 3 个月内是否注射过免疫球蛋白或输过血？', options: ['否', '是'], hint: '近期被动免疫可能干扰水痘活疫苗效果，本院按免疫球蛋白用量计算间隔（最长可达 11 个月）', source: '中国 CDC 减毒活疫苗与被动免疫间隔' },
       { id: 'last_any_vaccine', type: 'radio', label: '上一次任意疫苗接种距今多久？', options: ['<7天', '7-27天', '>28天', '从未接种过任何疫苗'], hint: '不同疫苗通常间隔 ≥7天，活疫苗需 ≥28天', source: '中国疾控中心《预防接种工作规范》' },
       { id: 'last_same_vaccine', type: 'radio', label: '同种疫苗（水痘）上次接种距今多久？', options: ['<3个月', '3-6个月', '>6个月', '从未接种过水痘'], hint: '两针水痘之间必须间隔≥3个月', source: '北京民海水痘减毒活疫苗说明书' },
     ]
@@ -1930,7 +1931,7 @@ const vaccineConfigs = {
       { id: 'pregnant', type: 'radio', label: '（女性）是否已怀孕或近期备孕？', options: ['否/不适用', '是'], hint: '孕妇禁用减毒活疫苗；接种后 1 个月内应避免怀孕', source: '中国 CDC + FDA 麻腮风疫苗妊娠期禁忌',
         showIf: (a) => { const v = parseFloat(a.age || 0); return a.age_unit === 'years' ? v >= 12 : v >= 144; } },
       { id: 'household_immunocompromised', type: 'radio', label: '家庭成员是否有严重免疫缺陷者？', options: ['否', '是'], hint: '理论上活疫苗病毒可传播给免疫缺陷家属，建议先咨询医生', source: '美国 ACIP 减毒活疫苗指南' },
-      { id: 'immunoglobulin', type: 'radio', label: '近 3 个月内是否注射过免疫球蛋白或输过血？', options: ['否', '是'], hint: '近期被动免疫可能干扰麻腮风活疫苗效果，建议推迟 3 个月', source: '中国 CDC 麻腮风疫苗与被动免疫间隔' },
+      { id: 'immunoglobulin', type: 'radio', label: '近 3 个月内是否注射过免疫球蛋白或输过血？', options: ['否', '是'], hint: '近期被动免疫可能干扰麻腮风活疫苗效果，本院按免疫球蛋白用量计算间隔（最长可达 11 个月）', source: '中国 CDC 麻腮风疫苗与被动免疫间隔' },
       { id: 'last_any_vaccine', type: 'radio', label: '上一次任意疫苗接种距今多久？', options: ['<7天', '7-27天', '>28天', '从未接种过任何疫苗'], hint: '不同疫苗通常间隔 ≥7天，活疫苗需 ≥28天', source: '中国疾控中心《预防接种工作规范》' },
       { id: 'last_same_vaccine', type: 'radio', label: '同种疫苗（麻腮风）上次接种距今多久？', options: ['<1个自然月', '1-6个月', '>6个月', '从未接种过麻腮风'], hint: '同种活疫苗两剂之间建议间隔≥6个月', source: '上海生物麻腮风减毒活疫苗说明书' },
     ]
@@ -1949,7 +1950,7 @@ const vaccineConfigs = {
       { id: 'pregnant', type: 'radio', label: '（女性）是否已怀孕或近期备孕？', options: ['否/不适用', '是'], hint: '孕妇禁用减毒活疫苗；接种后 1 个月内应避免怀孕', source: '中国 CDC + FDA 减毒活疫苗妊娠期禁忌',
         showIf: (a) => { const v = parseFloat(a.age || 0); return a.age_unit === 'years' ? v >= 12 : v >= 144; } },
       { id: 'household_immunocompromised', type: 'radio', label: '家庭成员是否有严重免疫缺陷者？', options: ['否', '是'], hint: '理论上活疫苗病毒可传播给免疫缺陷家属，建议先咨询医生', source: '美国 ACIP 减毒活疫苗指南' },
-      { id: 'immunoglobulin', type: 'radio', label: '近 3 个月内是否注射过免疫球蛋白或输过血？', options: ['否', '是'], hint: '近期被动免疫可能干扰乙脑活疫苗效果，建议推迟 3 个月', source: '中国 CDC 减毒活疫苗与被动免疫间隔' },
+      { id: 'immunoglobulin', type: 'radio', label: '近 3 个月内是否注射过免疫球蛋白或输过血？', options: ['否', '是'], hint: '近期被动免疫可能干扰乙脑活疫苗效果，本院按免疫球蛋白用量计算间隔（最长可达 11 个月）', source: '中国 CDC 减毒活疫苗与被动免疫间隔' },
       { id: 'last_any_vaccine', type: 'radio', label: '上一次任意疫苗接种距今多久？', options: ['<7天', '7-27天', '>28天', '从未接种过任何疫苗'], hint: '不同疫苗通常间隔 ≥7天，活疫苗需 ≥28天', source: '中国疾控中心《预防接种工作规范》' },
       { id: 'last_same_vaccine', type: 'radio', label: '同种疫苗（乙脑）上次接种距今多久？', options: ['<1个自然月', '1-12个月', '>12个月', '从未接种过乙脑'], hint: '同种活疫苗两剂之间建议间隔≥12个月', source: '武汉生物乙脑减毒活疫苗说明书' },
     ]
@@ -2453,7 +2454,7 @@ function evaluatePCV13() {
       ${doseCheck}
       <br><br>
       <strong>温馨提示：</strong><br>
-            • 全程完成后无需常规加强接种<br>
+      • 全程完成后无需常规加强接种<br>
       • 不同起始月龄接种剂次不同，早接种早保护<br>
       • 得过肺炎仍需按程序完成接种<br>
       • 可与多种疫苗同时接种（不同部位）` };
@@ -2468,7 +2469,7 @@ function evaluatePCV13() {
       ${doseCheck}
       <br><br>
       <strong>温馨提示：</strong><br>
-            • 如已接种进口沛儿13，建议同品牌完成剩余剂次<br>
+      • 如已接种进口沛儿13，建议同品牌完成剩余剂次<br>
       • 不同起始月龄接种剂次不同，早接种早保护<br>
       • 得过肺炎仍需按程序完成接种<br>
       • 可与多种疫苗同时接种（不同部位）` };
@@ -3166,6 +3167,7 @@ function evaluateVaricellaFree() {
   const salicylate = userAnswers['salicylate'];
   const pregnant = userAnswers['pregnant'];
   const householdImm = userAnswers['household_immunocompromised'];
+  const immunoglobulin = userAnswers['immunoglobulin'];
 
   // 绝对禁忌
   if (allergy === '是') {
@@ -3183,6 +3185,15 @@ function evaluateVaricellaFree() {
   if (fever === '是') {
     return { status: 'conditional', title: '⚠️ 需推迟接种',
       detail: '中度以上急性疾病或发热期间应推迟接种，康复后再接种。' };
+  }
+
+  if (immunoglobulin === '是') {
+    return { status: 'conditional', title: '⚠️ 需推迟接种（间隔按免疫球蛋白用量计算）',
+      detail: '近 3 个月内注射过免疫球蛋白或输过血者，被动抗体可能干扰水痘减毒活疫苗的免疫效果。<br><br>
+        <strong>间隔说明：</strong><br>
+        • 疾控一般建议与免疫球蛋白/输血间隔 <strong>≥3 个月</strong><br>
+        • <strong>本院按免疫球蛋白实际用量计算</strong>：用量越大，所需间隔越长，部分情况需推迟至 <strong>≥11 个月</strong><br><br>
+        <strong>处理：</strong>请核实免疫球蛋白注射剂量与时间，由接种医生根据上述规则判定具体可接种日期，不要直接按 3 个月推算。' };
   }
 
   // 已患过水痘
@@ -3266,6 +3277,7 @@ function evaluateMMR() {
         <strong>麻腮风疫苗（MMR）</strong> 为国家免疫规划 <strong>儿童</strong> 疫苗，本院仅接种程序内剂次（8 月龄首针 + 18 月龄第 2 针）。<br><br>
         <strong>建议：</strong>请前往 <strong>就近社康中心</strong> <strong>自费</strong> 接种麻腮风疫苗。` };
   }
+
   const dose = userAnswers['dose_number'];
   const firstDoseGap = userAnswers['first_dose_date'];
   const hadDisease = userAnswers['had_measles_rubella_mumps'];
@@ -3294,8 +3306,12 @@ function evaluateMMR() {
       detail: '中度以上急性疾病或发热期间应推迟接种，康复后再接种。' };
   }
   if (immunoglobulin === '是') {
-    return { status: 'conditional', title: '⚠️ 建议推迟 3 个月',
-      detail: '近 3 个月内注射过免疫球蛋白或输血者，被动抗体可能干扰麻腮风活疫苗免疫效果，建议推迟 3 个月后再接种。' };
+    return { status: 'conditional', title: '⚠️ 需推迟接种（间隔按免疫球蛋白用量计算）',
+      detail: '近 3 个月内注射过免疫球蛋白或输过血者，被动抗体可能干扰麻腮风减毒活疫苗的免疫效果。<br><br>
+        <strong>间隔说明：</strong><br>
+        • 疾控一般建议与免疫球蛋白/输血间隔 <strong>≥3 个月</strong><br>
+        • <strong>本院按免疫球蛋白实际用量计算</strong>：用量越大，所需间隔越长，部分情况需推迟至 <strong>≥11 个月</strong><br><br>
+        <strong>处理：</strong>请核实免疫球蛋白注射剂量与时间，由接种医生根据上述规则判定具体可接种日期，不要直接按 3 个月推算。' };
   }
 
   // 剂次与年龄
@@ -3390,8 +3406,12 @@ function evaluateJE() {
       detail: '中度以上急性疾病或发热期间应推迟接种，康复后再接种。' };
   }
   if (immunoglobulin === '是') {
-    return { status: 'conditional', title: '⚠️ 建议推迟 3 个月',
-      detail: '近 3 个月内注射过免疫球蛋白或输血者，被动抗体可能干扰乙脑活疫苗免疫效果，建议推迟 3 个月后再接种。' };
+    return { status: 'conditional', title: '⚠️ 需推迟接种（间隔按免疫球蛋白用量计算）',
+      detail: '近 3 个月内注射过免疫球蛋白或输过血者，被动抗体可能干扰乙脑减毒活疫苗的免疫效果。<br><br>
+        <strong>间隔说明：</strong><br>
+        • 疾控一般建议与免疫球蛋白/输血间隔 <strong>≥3 个月</strong><br>
+        • <strong>本院按免疫球蛋白实际用量计算</strong>：用量越大，所需间隔越长，部分情况需推迟至 <strong>≥11 个月</strong><br><br>
+        <strong>处理：</strong>请核实免疫球蛋白注射剂量与时间，由接种医生根据上述规则判定具体可接种日期，不要直接按 3 个月推算。' };
   }
 
   // 剂次与年龄
