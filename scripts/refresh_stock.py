@@ -41,7 +41,7 @@ ROW_TO_ID = {
     "结合A+C": "ac_conjugate",
     "自费水痘": "varicella_paid",
     "ACYW135（绿竹，多糖）": "meningococcal_ps",
-    "ACYW135（康希诺生物，结合）": "meningococcal",
+    "康希诺": "meningococcal",
 }
 
 # 需要汇总多行的疫苗（key = catalog ID, value = 汇总后 stockNote 格式）
@@ -148,7 +148,7 @@ def map_to_vaccines(stock_map):
 
     # 1. 前缀匹配（表行名包含厂家/价格后缀，用前缀匹配）
     for row_prefix, vid in ROW_TO_ID.items():
-        matched = [k for k in stock_map if k.startswith(row_prefix)]
+        matched = [k for k in stock_map if k.startswith(row_prefix) or row_prefix in k]
         if matched:
             # 取第一个匹配（通常只有一个）
             s = stock_map[matched[0]]

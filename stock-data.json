@@ -1,15 +1,15 @@
 {
-  "updated": "2026-07-27T16:34:02.468105+08:00",
+  "updated": "2026-07-28T14:05:59.276252+08:00",
   "source": "钉钉蛇口疫苗库存表",
   "vaccines": {
     "pentavalent": {
-      "stock": 105
+      "stock": 102
     },
     "rotavirus": {
-      "stock": 79
+      "stock": 77
     },
     "hfmd": {
-      "stock": 49
+      "stock": 46
     },
     "shingles": {
       "stock": 20
@@ -27,7 +27,7 @@
       "stock": 59
     },
     "varicella_free": {
-      "stock": 26
+      "stock": 24
     },
     "ac_conjugate": {
       "stock": 0
@@ -36,18 +36,18 @@
       "stock": 0
     },
     "meningococcal_ps": {
-      "stock": 29
+      "stock": 28
     },
     "meningococcal": {
-      "stock": 55
+      "stock": 52
     },
     "hepb": {
-      "stock": 53,
-      "stockNote": "儿童 28 / 成人 25"
+      "stock": 51,
+      "stockNote": "儿童 28 / 成人 23"
     },
     "pcv13": {
-      "stock": 66,
-      "stockNote": "辉瑞 66 支"
+      "stock": 62,
+      "stockNote": "辉瑞 62 支"
     },
     "hepa": {
       "stock": 116,
