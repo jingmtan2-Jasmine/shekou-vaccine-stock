@@ -2604,8 +2604,8 @@ function evaluateMeningococcal() {
     scheduleNote = '本针为基础免疫第2/3针，或满3岁时的结合加强针；6岁再接种多糖（与3岁剂次间隔≥3年）。';
   } else if (firstDoseGroup === '已在6-23月龄接种过首针') {
     if (previousDoses === '已完成全程' || previousDoses === '2剂') {
-      return { status: 'info', title: 'ℹ️ 建议改接种多糖加强',
-        detail: '根据接种史，已完成康希诺ACYW135结合疫苗<strong>2针基础程序</strong>。满3岁（36月龄）后不再接种该厂家结合疫苗，应改接种 <strong>ACYW135多糖疫苗（绿竹，148元）加强</strong>；6岁时再接种第2剂多糖（与3岁针间隔≥3年）。<br><br>也可选择免费AC群多糖替代3岁加强针。' };
+      return { status: 'ineligible', title: '❌ 不建议接种结合疫苗',
+        detail: '根据接种史，已完成康希诺ACYW135结合疫苗<strong>2针基础程序</strong>。满3岁（36月龄）后不再接种该厂家结合疫苗。<br><br><strong>建议：</strong>请改选 <strong>ACYW135多糖疫苗（绿竹，148元）</strong> 查询接种。3岁加强针 + 6岁第2剂多糖（两剂间隔≥3年）。<br><br>也可选择免费AC群多糖替代3岁加强针。' };
     }
     schedule = '后续完成2针基础程序（结合2针基础 + 3岁多糖加强 + 6岁多糖）';
     scheduleNote = '与首针间隔1～3个月接种第2针；满3岁时接种多糖加强针（不再打结合）；6岁多糖与3岁间隔≥3年。';
