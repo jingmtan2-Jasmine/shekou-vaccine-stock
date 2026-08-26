@@ -58,7 +58,8 @@ MULTI_ROW = {
     "hepa": ["甲肝（国产  北京科兴", "甲肝（国产 艾美行动"],  # 北京科兴 + 艾美行动
     "dtap_dt": ["白破", "百白破"],       # 白破 + 百白破
     "flu": ["华兰生物儿童流感", "儿童流感（三价/巴斯德", "成人流感（三价/巴斯德",
-            "华兰生物成人流感", "冻干鼻喷流感", "巴斯德四价流感"],  # 流感系列汇总
+            "华兰生物成人流感", "冻干鼻喷流感", "巴斯德四价流感",
+            "三价流感病毒裂解疫苗", "三价流感病毒亚单位疫苗"],  # 流感系列汇总
 }
 
 # 不需要库存记录的疫苗（缺货默认值），仅当未在表中匹配到时填充
@@ -201,7 +202,10 @@ def map_to_vaccines(stock_map):
                                 if ("白破" in k and "百白破" not in k))
                     vaccines[vid]["stockNote"] = f"白破 {baipo} / 百白破 {baibai}"
                 elif vid == "flu":
-                    vaccines[vid]["stockNote"] = "当前缺货，下批到苗约 9 月"
+                    if total > 0:
+                        vaccines[vid]["stockNote"] = " / ".join(parts)
+                    else:
+                        vaccines[vid]["stockNote"] = "当前缺货，下批到苗约 9 月"
                 else:
                     vaccines[vid]["stockNote"] = " / ".join(parts)
             print(f"  {vid:25s} ← 汇总 {len(prefixes)} 行: {total}")

@@ -1,33 +1,33 @@
 {
-  "updated": "2026-08-19T10:04:18.564802+08:00",
+  "updated": "2026-08-26T15:33:24.978791+08:00",
   "source": "钉钉表格·深圳疫苗库存(axls)",
   "vaccines": {
     "pentavalent": {
-      "stock": 61
+      "stock": 101
     },
     "rotavirus": {
-      "stock": 63
+      "stock": 94
     },
     "hfmd": {
-      "stock": 28
+      "stock": 90
     },
     "shingles": {
-      "stock": 13
+      "stock": 19
     },
     "hpv": {
-      "stock": -2
-    },
-    "ppv23": {
       "stock": 0
     },
+    "ppv23": {
+      "stock": 2
+    },
     "mmr": {
-      "stock": 57
+      "stock": 50
     },
     "je": {
-      "stock": 56
+      "stock": 53
     },
     "varicella_free": {
-      "stock": 41
+      "stock": 33
     },
     "ac_conjugate": {
       "stock": 0
@@ -36,30 +36,30 @@
       "stock": 0
     },
     "meningococcal_ps": {
-      "stock": 21
+      "stock": 27
     },
     "meningococcal": {
-      "stock": 10
+      "stock": 70
     },
     "hepb": {
-      "stock": 15,
-      "stockNote": "儿童 9 / 成人 6"
+      "stock": 7,
+      "stockNote": "儿童 6 / 成人 1"
     },
     "pcv13": {
-      "stock": 38,
-      "stockNote": "辉瑞 38 支"
+      "stock": 88,
+      "stockNote": "辉瑞 88 支"
     },
     "hepa": {
-      "stock": 110,
-      "stockNote": "北京科兴 61 / 艾美行动 49"
+      "stock": 108,
+      "stockNote": "北京科兴 60 / 艾美行动 48"
     },
     "dtap_dt": {
-      "stock": 10,
-      "stockNote": "白破 0 / 百白破 10"
+      "stock": 7,
+      "stockNote": "白破 0 / 百白破 7"
     },
     "flu": {
-      "stock": 0,
-      "stockNote": "当前缺货，下批到苗约 9 月"
+      "stock": 197,
+      "stockNote": "华兰生物儿童流感 0 / 儿童流感 0 / 成人流感 0 / 华兰生物成人流感 0 / 冻干鼻喷流感【减毒】活疫苗 0 / 巴斯德四价流感疫苗 0 / 三价流感病毒裂解疫苗0.5ML 197 / 三价流感病毒亚单位疫苗0.5ML 0"
     }
   }
 }
